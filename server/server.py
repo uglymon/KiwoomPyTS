@@ -18,12 +18,12 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
     while True:
         try:
             msg = await ws.recv()
-            print("receive the msg {}".format(msg))
+            # print("receive the msg {}".format(msg))
             # await ws.send("send: " + msg)
 
             # parse json
             data = json.loads(msg)
-            print(data)
+            print("received data :", data)
 
             msg_id = data["id"]
             name = data["name"]
@@ -59,6 +59,7 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
                 return
 
             result = function(*params)
+            print("function result :", result)
             await ws.send(json.dumps({"id": msg_id, "name": name, "data": result}))
 
         except websockets.ConnectionClosed:
