@@ -82,7 +82,7 @@ async def server_loop():
     print("waiting for the client")
     asyncio.create_task(pump_messages())  # 메시지 펌프 작업 시작
     while True:
-        async with websockets.serve(msg_handler, "localhost", 5000) as ws:
+        async with websockets.serve(msg_handler, "0.0.0.0", 5000) as ws:
             await asyncio.Future()
 
 
