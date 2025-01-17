@@ -2,19 +2,25 @@ import asyncio
 import inspect
 import json
 
+import nest_asyncio
 import pythoncom
 import websockets
 from kiwoomapiwrapper import KiwoomAPIWrapper
+
+nest_asyncio.apply()
 
 # 웹소켓 연결을 전역적으로 관리
 websocket_connection = None
 
 kiwoom: KiwoomAPIWrapper = None
 
+waiting_receive_tr_data_complete = False
+
 
 async def msg_handler(ws: websockets.WebSocketServerProtocol):
     global websocket_connection
     websocket_connection = ws  # 웹소켓 연결 저장
+    global waiting_receive_tr_data_complete
     while True:
         try:
             msg = await ws.recv()
@@ -25,8 +31,12 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
             data = json.loads(msg)
             print("received data :", data)
 
-            msg_id = data["id"]
             name = data["name"]
+            if name == "on_receive_tr_data_complete":
+                waiting_receive_tr_data_complete = False
+                continue
+
+            msg_id = data["id"]
             params = data["params"]
 
             function = getattr(kiwoom, name, None)
@@ -75,8 +85,8 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
 
 async def pump_messages():
     while True:
+        await asyncio.sleep(0.05)
         pythoncom.PumpWaitingMessages()
-        await asyncio.sleep(0.1)  # 0.1초마다 메시지 펌프
 
 
 async def server_loop():
@@ -140,7 +150,11 @@ def on_receive_tr_data(
             "message": message,
             "splm_msg": splm_msg,
         }
+        global waiting_receive_tr_data_complete
+        waiting_receive_tr_data_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        while waiting_receive_tr_data_complete:
+            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
 
 
 def on_receive_real_data(code: str, real_type: str, real_data: str):
