@@ -2,14 +2,14 @@ import WebSocket from 'ws';
 import { KiwoomEventType } from './types';
 
 export interface IKiwoomEventHandler {
-    onEventConnect(err_code: number): void;
-    onReceiveMsg(scr_no: string, rq_name: string, tr_code: string, msg: string): void;
-    onReceiveTrData(scr_no: string, rq_name: string, tr_code: string, record_name: string, prev_next: string, data_length: number, error_code: string, message: string, splm_msg: string): void;
-    onReceiveRealData(code: string, real_type: string, real_data: string): void;
-    onReceiveChejanData(gubun: string, item_cnt: number, fid_list: string): void;
-    onReceiveConditionVer(ret: number, msg: string): void;
-    onReceiveRealCondition(code: string, type: string, condition_name: string, condition_index: string): void;
-    onReceiveTrCondition(scr_no: string, code_list: string, condition_name: string, index: number, next: number): void;
+    onEventConnect?: (err_code: number) => void;
+    onReceiveMsg?: (scr_no: string, rq_name: string, tr_code: string, msg: string) => void;
+    onReceiveTrData?: (scr_no: string, rq_name: string, tr_code: string, record_name: string, prev_next: string, data_length: number, error_code: string, message: string, splm_msg: string) => void;
+    onReceiveRealData?: (code: string, real_type: string, real_data: string) => void;
+    onReceiveChejanData?: (gubun: string, item_cnt: number, fid_list: string) => void;
+    onReceiveConditionVer?: (ret: number, msg: string) => void;
+    onReceiveRealCondition?: (code: string, type: string, condition_name: string, condition_index: string) => void;
+    onReceiveTrCondition?: (scr_no: string, code_list: string, condition_name: string, index: number, next: number) => void;
 }
 export interface IKiwoomAPI {
     CommConnect(): Promise<number>;
@@ -48,48 +48,6 @@ export interface IKiwoomAPI {
     GetSFutureList(strBaseAssetGb: string): Promise<string>;
 }
 
-class KiwoomDefaultEventHandler implements IKiwoomEventHandler {
-    onEventConnect(err_code: number) {
-        console.log('** onEventConnect\n    err_code :', err_code, '\n');
-    }
-    onReceiveMsg(scr_no: string, rq_name: string, tr_code: string, msg: string) {
-        console.log('** onReceiveMsg\n    scr_no :', scr_no, '');
-        console.log('    rq_name: ', rq_name, '\n    tr_code: ', tr_code);
-        console.log('    msg: ', msg, '\n');
-    }
-    onReceiveTrData(scr_no: string, rq_name: string, tr_code: string,
-        record_name: string, prev_next: string, data_length: number,
-        error_code: string, message: string, splm_msg: string) {
-        console.log('** onReceiveTrData\n    scr_no :', scr_no, '');
-        console.log('    rq_name: ', rq_name, '\n    tr_code: ', tr_code);
-        console.log('    record_name: ', record_name, '\n    prev_next: ', prev_next);
-        console.log('    data_length: ', data_length, '\n    error_code: ', error_code);
-        console.log('    message: ', message, '\n    splm_msg: ', splm_msg, '\n');
-    }
-    onReceiveRealData(code: string, real_type: string, real_data: string) {
-        console.log('** onReceiveRealData\n    code: ', code, '\n    real_type: ', real_type);
-        console.log('    real_data: ', real_data, '\n');
-    }
-    onReceiveChejanData(gubun: string, item_cnt: number, fid_list: string) {
-        console.log('** onReceiveChejanData\n    gubun: ', gubun, '\n    item_cnt: ', item_cnt);
-        console.log('    fid_list: ', fid_list, '\n');
-    }
-    onReceiveConditionVer(ret: number, msg: string) {
-        console.log('** onReceiveConditionVer\n    ret: ', ret, '\n    msg: ', msg, '\n');
-    }
-    onReceiveRealCondition(code: string, type: string, condition_name: string,
-        condition_index: string) {
-        console.log('** onReceiveRealCondition\n    code: ', code, '\n    type: ', type);
-        console.log('    condition_name: ', condition_name, '\n    condition_index: ', condition_index, '\n');
-    }
-    onReceiveTrCondition(scr_no: string, code_list: string, condition_name: string,
-        index: number, next: number) {
-        console.log('** onReceiveTrCondition\n    scr_no: ', scr_no, '\n    code_list: ', code_list);
-        console.log('    condition_name: ', condition_name, '\n    index: ', index, '\n    next: ', next, '\n');
-    }
-}
-
-
 export class KiwoomAPI implements IKiwoomAPI {
     private ws: WebSocket;
     private pendingRequests: Map<number, (response: string | number | null) => void>;
@@ -104,7 +62,7 @@ export class KiwoomAPI implements IKiwoomAPI {
         return this.seqno;
     }
 
-    constructor(ws: WebSocket, event_handler: IKiwoomEventHandler = new KiwoomDefaultEventHandler()) {
+    constructor(ws: WebSocket, event_handler: IKiwoomEventHandler = {}) {
         this.ws = ws;
         this.pendingRequests = new Map();
         this.handler = event_handler;
@@ -112,44 +70,55 @@ export class KiwoomAPI implements IKiwoomAPI {
         this.ws.addEventListener('message', (event) => {
             try {
                 const res = JSON.parse(event.data.toString());
-                console.log('response', res);
+                console.log('message', res);
 
                 const name = res.name as string;
                 if (name !== undefined && name.startsWith('on_')) {
-                    const e = res as KiwoomEventType;
-                    if (e.name === 'on_event_connect') {
-                        this.handler.onEventConnect(e.err_code);
+                    if (this.handler !== null) {
+                        const e = res as KiwoomEventType;
+                        if (e.name === 'on_event_connect'
+                            && this.handler.onEventConnect !== undefined) {
+                            this.handler.onEventConnect(e.err_code);
 
-                    } else if (e.name === 'on_receive_msg') {
-                        this.handler.onReceiveMsg(
-                            e.scr_no, e.rq_name, e.tr_code, e.msg);
+                        } else if (e.name === 'on_receive_msg'
+                            && this.handler.onReceiveMsg !== undefined) {
+                            this.handler.onReceiveMsg(
+                                e.scr_no, e.rq_name, e.tr_code, e.msg);
 
-                    } else if (e.name === 'on_receive_tr_data') {
-                        this.handler.onReceiveTrData(
-                            e.scr_no, e.rq_name, e.tr_code, e.record_name,
-                            e.prev_next, e.data_length, e.error_code,
-                            e.message, e.splm_msg);
+                        } else if (e.name === 'on_receive_tr_data'
+                            && this.handler.onReceiveTrData !== undefined) {
+                            this.handler.onReceiveTrData(
+                                e.scr_no, e.rq_name, e.tr_code, e.record_name,
+                                e.prev_next, e.data_length, e.error_code,
+                                e.message, e.splm_msg);
+                            this.ws.send(JSON.stringify({ name: 'on_receive_tr_data_complete' }));
 
-                    } else if (e.name === 'on_receive_real_data') {
-                        this.handler.onReceiveRealData(
-                            e.code, e.real_type, e.real_data);
+                        } else if (e.name === 'on_receive_real_data'
+                            && this.handler.onReceiveRealData !== undefined) {
+                            this.handler.onReceiveRealData(
+                                e.code, e.real_type, e.real_data);
 
-                    } else if (e.name === 'on_receive_chejan_data') {
-                        this.handler.onReceiveChejanData(
-                            e.gubun, e.item_cnt, e.fid_list);
+                        } else if (e.name === 'on_receive_chejan_data'
+                            && this.handler.onReceiveChejanData !== undefined) {
+                            this.handler.onReceiveChejanData(
+                                e.gubun, e.item_cnt, e.fid_list);
 
-                    } else if (e.name === 'on_receive_condition_ver') {
-                        this.handler.onReceiveConditionVer(e.ret, e.msg);
+                        } else if (e.name === 'on_receive_condition_ver'
+                            && this.handler.onReceiveConditionVer !== undefined) {
+                            this.handler.onReceiveConditionVer(e.ret, e.msg);
 
-                    } else if (e.name === 'on_receive_real_condition') {
-                        this.handler.onReceiveRealCondition(
-                            e.code, e.type, e.condition_name,
-                            e.condition_index);
+                        } else if (e.name === 'on_receive_real_condition'
+                            && this.handler.onReceiveRealCondition !== undefined) {
+                            this.handler.onReceiveRealCondition(
+                                e.code, e.type, e.condition_name,
+                                e.condition_index);
 
-                    } else if (e.name === 'on_receive_tr_condition') {
-                        this.handler.onReceiveTrCondition(
-                            e.scr_no, e.code_list, e.condition_name,
-                            e.index, e.next);
+                        } else if (e.name === 'on_receive_tr_condition'
+                            && this.handler.onReceiveTrCondition !== undefined) {
+                            this.handler.onReceiveTrCondition(
+                                e.scr_no, e.code_list, e.condition_name,
+                                e.index, e.next);
+                        }
                     }
 
                 } else if (this.pendingRequests.has(res.id)) {

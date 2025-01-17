@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import { KiwoomAPI } from './kiwoomapi';
-import { TestTrader } from './testtrader';
+import { KiwoomUtil } from './kiwoomutil';
 
 export class WSClient {
     private ws?: WebSocket;
@@ -31,16 +31,17 @@ export class WSClient {
 }
 
 if (require.main === module) {
+    const url = process.argv[2] || 'ws://127.0.0.1:5000';
     const main = async () => {
         const client = new WSClient();
-        const ws = await client.connect('ws://127.0.0.1:5000');
+        const ws = await client.connect(url);
         const kiwoom = new KiwoomAPI(ws);
 
         process.on('SIGINT', () => {
             client.close();
         });
 
-        const trader = new TestTrader(kiwoom);
+        const trader = new KiwoomUtil(kiwoom);
         trader.test();
     }
 
