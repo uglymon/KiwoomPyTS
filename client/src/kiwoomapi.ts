@@ -2,14 +2,14 @@ import WebSocket from 'ws';
 import { KiwoomEventType } from './types';
 
 export interface IKiwoomEventHandler {
-    onEventConnect?: (err_code: number) => void;
-    onReceiveMsg?: (scr_no: string, rq_name: string, tr_code: string, msg: string) => void;
-    onReceiveTrData?: (scr_no: string, rq_name: string, tr_code: string, record_name: string, prev_next: string, data_length: number, error_code: string, message: string, splm_msg: string) => void;
-    onReceiveRealData?: (code: string, real_type: string, real_data: string) => void;
-    onReceiveChejanData?: (gubun: string, item_cnt: number, fid_list: string) => void;
-    onReceiveConditionVer?: (ret: number, msg: string) => void;
-    onReceiveRealCondition?: (code: string, type: string, condition_name: string, condition_index: string) => void;
-    onReceiveTrCondition?: (scr_no: string, code_list: string, condition_name: string, index: number, next: number) => void;
+    onEventConnect?: (err_code: number) => Promise<void>;
+    onReceiveMsg?: (scr_no: string, rq_name: string, tr_code: string, msg: string) => Promise<void>;
+    onReceiveTrData?: (scr_no: string, rq_name: string, tr_code: string, record_name: string, prev_next: string, data_length: number, error_code: string, message: string, splm_msg: string) => Promise<void>;
+    onReceiveRealData?: (code: string, real_type: string, real_data: string) => Promise<void>;
+    onReceiveChejanData?: (gubun: string, item_cnt: number, fid_list: string) => Promise<void>;
+    onReceiveConditionVer?: (ret: number, msg: string) => Promise<void>;
+    onReceiveRealCondition?: (code: string, type: string, condition_name: string, condition_index: string) => Promise<void>;
+    onReceiveTrCondition?: (scr_no: string, code_list: string, condition_name: string, index: number, next: number) => Promise<void>;
 }
 export interface IKiwoomAPI {
     CommConnect(): Promise<number>;
@@ -67,7 +67,7 @@ export class KiwoomAPI implements IKiwoomAPI {
         this.pendingRequests = new Map();
         this.handler = event_handler;
 
-        this.ws.addEventListener('message', (event) => {
+        this.ws.addEventListener('message', async event => {
             try {
                 const res = JSON.parse(event.data.toString());
                 console.log('message', res);
@@ -78,16 +78,18 @@ export class KiwoomAPI implements IKiwoomAPI {
                         const e = res as KiwoomEventType;
                         if (e.name === 'on_event_connect'
                             && this.handler.onEventConnect !== undefined) {
-                            this.handler.onEventConnect(e.err_code);
+                            await this.handler.onEventConnect(e.err_code);
+                            this.ws.send(JSON.stringify({ name: 'on_event_connect_complete' }));
 
                         } else if (e.name === 'on_receive_msg'
                             && this.handler.onReceiveMsg !== undefined) {
-                            this.handler.onReceiveMsg(
+                            await this.handler.onReceiveMsg(
                                 e.scr_no, e.rq_name, e.tr_code, e.msg);
+                            this.ws.send(JSON.stringify({ name: 'on_receive_msg_complete' }));
 
                         } else if (e.name === 'on_receive_tr_data'
                             && this.handler.onReceiveTrData !== undefined) {
-                            this.handler.onReceiveTrData(
+                            await this.handler.onReceiveTrData(
                                 e.scr_no, e.rq_name, e.tr_code, e.record_name,
                                 e.prev_next, e.data_length, e.error_code,
                                 e.message, e.splm_msg);
@@ -95,29 +97,34 @@ export class KiwoomAPI implements IKiwoomAPI {
 
                         } else if (e.name === 'on_receive_real_data'
                             && this.handler.onReceiveRealData !== undefined) {
-                            this.handler.onReceiveRealData(
+                            await this.handler.onReceiveRealData(
                                 e.code, e.real_type, e.real_data);
+                            this.ws.send(JSON.stringify({ name: 'on_receive_real_data_complete' }));
 
                         } else if (e.name === 'on_receive_chejan_data'
                             && this.handler.onReceiveChejanData !== undefined) {
-                            this.handler.onReceiveChejanData(
+                            await this.handler.onReceiveChejanData(
                                 e.gubun, e.item_cnt, e.fid_list);
+                            this.ws.send(JSON.stringify({ name: 'on_receive_chejan_data_complete' }));
 
                         } else if (e.name === 'on_receive_condition_ver'
                             && this.handler.onReceiveConditionVer !== undefined) {
-                            this.handler.onReceiveConditionVer(e.ret, e.msg);
+                            await this.handler.onReceiveConditionVer(e.ret, e.msg);
+                            this.ws.send(JSON.stringify({ name: 'on_receive_condition_ver_complete' }));
 
                         } else if (e.name === 'on_receive_real_condition'
                             && this.handler.onReceiveRealCondition !== undefined) {
-                            this.handler.onReceiveRealCondition(
+                            await this.handler.onReceiveRealCondition(
                                 e.code, e.type, e.condition_name,
                                 e.condition_index);
+                            this.ws.send(JSON.stringify({ name: 'on_receive_real_condition_complete' }));
 
                         } else if (e.name === 'on_receive_tr_condition'
                             && this.handler.onReceiveTrCondition !== undefined) {
-                            this.handler.onReceiveTrCondition(
+                            await this.handler.onReceiveTrCondition(
                                 e.scr_no, e.code_list, e.condition_name,
                                 e.index, e.next);
+                            this.ws.send(JSON.stringify({ name: 'on_receive_tr_condition_complete' }));
                         }
                     }
 

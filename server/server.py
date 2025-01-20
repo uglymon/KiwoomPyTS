@@ -14,7 +14,16 @@ websocket_connection = None
 
 kiwoom: KiwoomAPIWrapper = None
 
+waiting_event_connect_complete = False
+waiting_receive_msg_complete = False
+
 waiting_receive_tr_data_complete = False
+waiting_receive_real_data_complete = False
+waiting_receive_chejan_data_complete = False
+
+waiting_receive_condition_ver_complete = False
+waiting_receive_real_condition_complete = False
+waiting_receive_tr_condition_complete = False
 
 
 async def msg_handler(ws: websockets.WebSocketServerProtocol):
@@ -32,8 +41,29 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
             print("received data :", data)
 
             name = data["name"]
+            if name == "on_event_connect_complete":
+                waiting_event_connect_complete = False
+                continue
+            if name == "on_receive_msg_complete":
+                waiting_receive_msg_complete = False
+                continue
             if name == "on_receive_tr_data_complete":
                 waiting_receive_tr_data_complete = False
+                continue
+            if name == "on_receive_real_data_complete":
+                waiting_receive_real_data_complete = False
+                continue
+            if name == "on_receive_chejan_data_complete":
+                waiting_receive_chejan_data_complete = False
+                continue
+            if name == "on_receive_condition_ver_complete":
+                waiting_receive_condition_ver_complete = False
+                continue
+            if name == "on_receive_real_condition_complete":
+                waiting_receive_real_condition_complete = False
+                continue
+            if name == "on_receive_tr_condition_complete":
+                waiting_receive_tr_condition_complete = False
                 continue
 
             msg_id = data["id"]
@@ -104,7 +134,11 @@ def on_event_connect(err_code: int):
             "name": "on_event_connect",
             "err_code": err_code,
         }
+        global waiting_event_connect_complete
+        waiting_event_connect_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        while waiting_event_connect_complete:
+            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
 
 
 def on_receive_msg(scr_no: str, rq_name: str, tr_code: str, msg: str):
@@ -118,7 +152,11 @@ def on_receive_msg(scr_no: str, rq_name: str, tr_code: str, msg: str):
             "tr_code": tr_code,
             "msg": msg,
         }
+        global waiting_receive_msg_complete
+        waiting_receive_msg_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        while waiting_receive_msg_complete:
+            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
 
 
 def on_receive_tr_data(
@@ -167,7 +205,11 @@ def on_receive_real_data(code: str, real_type: str, real_data: str):
             "real_type": real_type,
             "real_data": real_data,
         }
+        global waiting_receive_real_data_complete
+        waiting_receive_real_data_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        while waiting_receive_real_data_complete:
+            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
 
 
 def on_receive_chejan_data(gubun: str, item_cnt: int, fid_list: str):
@@ -180,7 +222,11 @@ def on_receive_chejan_data(gubun: str, item_cnt: int, fid_list: str):
             "item_cnt": item_cnt,
             "fid_list": fid_list,
         }
+        global waiting_receive_chejan_data_complete
+        waiting_receive_chejan_data_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        while waiting_receive_chejan_data_complete:
+            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
 
 
 def on_receive_condition_ver(ret: int, msg: str):
@@ -191,7 +237,11 @@ def on_receive_condition_ver(ret: int, msg: str):
             "ret": ret,
             "msg": msg,
         }
+        global waiting_receive_condition_ver_complete
+        waiting_receive_condition_ver_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        while waiting_receive_condition_ver_complete:
+            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
 
 
 def on_receive_real_condition(
@@ -208,7 +258,11 @@ def on_receive_real_condition(
             "condition_name": condition_name,
             "condition_index": condition_index,
         }
+        global waiting_receive_real_condition_complete
+        waiting_receive_real_condition_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        while waiting_receive_real_condition_complete:
+            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
 
 
 def on_receive_tr_condition(
@@ -226,7 +280,11 @@ def on_receive_tr_condition(
             "index": index,
             "next": next,
         }
+        global waiting_receive_tr_condition_complete
+        waiting_receive_tr_condition_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        while waiting_receive_tr_condition_complete:
+            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
 
 
 if __name__ == "__main__":

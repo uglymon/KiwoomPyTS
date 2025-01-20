@@ -26,14 +26,14 @@ export class KiwoomUtil {
 
 
     private on_receive_condition_ver: IKiwoomEventHandler['onReceiveConditionVer']
-        = (ret, msg) => {
+        = async (ret, msg) => {
             const callback = this.waitingevent.onReceiveConditionVer.shift();
-            if (callback) callback(ret, msg);
+            if (callback) await callback(ret, msg);
         };
     private on_receive_tr_condition: IKiwoomEventHandler['onReceiveTrCondition']
-        = (scr_no, code_list, condition_name, index, next) => {
+        = async (scr_no, code_list, condition_name, index, next) => {
             const callback = this.waitingevent.onReceiveTrCondition.shift();
-            if (callback) callback(scr_no, code_list, condition_name, index, next);
+            if (callback) await callback(scr_no, code_list, condition_name, index, next);
         };
     private on_receive_tr_data: IKiwoomEventHandler['onReceiveTrData']
         = async (scr_no, rq_name, tr_code, record_name, prev_next, data_length, error_code, message, splm_msg) => {
