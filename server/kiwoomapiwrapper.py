@@ -40,6 +40,9 @@ class KiwoomAPIWrapper:
         self.ocx.OnReceiveRealCondition.connect(on_receive_real_condition)
         self.ocx.OnReceiveTrCondition.connect(on_receive_tr_condition)
 
+    def GetAPIModulePath(self) -> str:
+        return self.ocx.dynamicCall("GetAPIModulePath()")
+
     def CommConnect(self) -> int:
         """
         LONG CommConnect()

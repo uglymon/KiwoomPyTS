@@ -298,6 +298,8 @@ if __name__ == "__main__":
         on_receive_real_condition=on_receive_real_condition,
         on_receive_tr_condition=on_receive_tr_condition,
     )
+    module_path = kiwoom.GetAPIModulePath()
+    print("module_path :", module_path)
     kiwoom.CommConnect()
 
     asyncio.run(server_loop())
