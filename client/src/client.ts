@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import { KiwoomAPI } from './kiwoomapi';
-import { KiwoomUtil } from './kiwoomutil';
+import { CLI } from './cli';
 
 export class WSClient {
     private ws?: WebSocket;
@@ -41,8 +41,10 @@ if (require.main === module) {
             client.close();
         });
 
-        const trader = new KiwoomUtil(kiwoom);
-        trader.test();
+        const cli = new CLI(kiwoom, () => {
+            client.close();
+        });
+        cli.start();
     }
 
     main();
