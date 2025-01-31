@@ -78,27 +78,75 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
             name = data["name"]
             if name == "on_event_connect_complete":
                 waiting_event_connect_complete = False
+                print(
+                    "received",
+                    colorama.Fore.MAGENTA,
+                    "on_event_connect_complete",
+                    colorama.Fore.RESET,
+                )
                 continue
             if name == "on_receive_msg_complete":
                 waiting_receive_msg_complete = False
+                print(
+                    "received",
+                    colorama.Fore.MAGENTA,
+                    "on_receive_msg_complete",
+                    colorama.Fore.RESET,
+                )
                 continue
             if name == "on_receive_tr_data_complete":
                 waiting_receive_tr_data_complete = False
+                print(
+                    "received",
+                    colorama.Fore.MAGENTA,
+                    "on_receive_tr_data_complete",
+                    colorama.Fore.RESET,
+                )
                 continue
             if name == "on_receive_real_data_complete":
                 waiting_receive_real_data_complete = False
+                print(
+                    "received",
+                    colorama.Fore.MAGENTA,
+                    "on_receive_real_data_complete",
+                    colorama.Fore.RESET,
+                )
                 continue
             if name == "on_receive_chejan_data_complete":
                 waiting_receive_chejan_data_complete = False
+                print(
+                    "received",
+                    colorama.Fore.MAGENTA,
+                    "on_receive_chejan_data_complete",
+                    colorama.Fore.RESET,
+                )
                 continue
             if name == "on_receive_condition_ver_complete":
                 waiting_receive_condition_ver_complete = False
+                print(
+                    "received",
+                    colorama.Fore.MAGENTA,
+                    "on_receive_condition_ver_complete",
+                    colorama.Fore.RESET,
+                )
                 continue
             if name == "on_receive_real_condition_complete":
                 waiting_receive_real_condition_complete = False
+                print(
+                    "received",
+                    colorama.Fore.MAGENTA,
+                    "on_receive_real_condition_complete",
+                    colorama.Fore.RESET,
+                )
                 continue
             if name == "on_receive_tr_condition_complete":
                 waiting_receive_tr_condition_complete = False
+                print(
+                    "received",
+                    colorama.Fore.MAGENTA,
+                    "on_receive_tr_condition_complete",
+                    colorama.Fore.RESET,
+                )
                 continue
 
             print(colorama.Fore.BLUE, "received data :", colorama.Fore.RESET)
