@@ -1,7 +1,9 @@
 import asyncio
 import inspect
 import json
+import re
 
+import colorama
 import nest_asyncio
 import pythoncom
 import websockets
@@ -26,19 +28,52 @@ waiting_receive_real_condition_complete = False
 waiting_receive_tr_condition_complete = False
 
 
+def print_colored_json(data):
+    # JSON 문자열로 변환, utf-8 인코딩
+    json_str = json.dumps(data, ensure_ascii=False, indent=4)
+
+    # 정규 표현식을 사용하여 JSON의 각 요소에 색상 입히기
+    json_str = re.sub(
+        r"(?P<brace>[\{\}\[\]])",
+        colorama.Fore.CYAN + r"\g<brace>" + colorama.Fore.RESET,
+        json_str,
+    )
+    json_str = re.sub(
+        r'(?P<key>"[^"]*")\s*:',
+        colorama.Fore.YELLOW + r"\g<key>" + colorama.Fore.RESET + ":",
+        json_str,
+    )
+    json_str = re.sub(
+        r':\s*(?P<value>"[^"]*"|\d+)',
+        r": " + colorama.Fore.GREEN + r"\g<value>" + colorama.Fore.RESET,
+        json_str,
+    )
+    json_str = re.sub(
+        r"(?P<comma>,)",
+        colorama.Fore.MAGENTA + r"\g<comma>" + colorama.Fore.RESET,
+        json_str,
+    )
+
+    print(json_str)
+
+
 async def msg_handler(ws: websockets.WebSocketServerProtocol):
     global websocket_connection
     websocket_connection = ws  # 웹소켓 연결 저장
+
+    global waiting_event_connect_complete
+    global waiting_receive_msg_complete
     global waiting_receive_tr_data_complete
+    global waiting_receive_real_data_complete
+    global waiting_receive_chejan_data_complete
+    global waiting_receive_condition_ver_complete
+    global waiting_receive_real_condition_complete
+    global waiting_receive_tr_condition_complete
+
     while True:
         try:
             msg = await ws.recv()
-            # print("receive the msg {}".format(msg))
-            # await ws.send("send: " + msg)
-
-            # parse json
             data = json.loads(msg)
-            print("received data :", data)
 
             name = data["name"]
             if name == "on_event_connect_complete":
@@ -66,6 +101,9 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
                 waiting_receive_tr_condition_complete = False
                 continue
 
+            print(colorama.Fore.BLUE, "received data :", colorama.Fore.RESET)
+            print_colored_json(data)
+
             msg_id = data["id"]
             params = data["params"]
 
@@ -76,7 +114,11 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
                         {"id": msg_id, "name": name, "error": "function not found"}
                     )
                 )
-                print(f"function not found [{name}]")
+                print(
+                    colorama.Fore.RED,
+                    f"function not found [{name}]",
+                    colorama.Fore.RESET,
+                )
                 return
 
             # 함수의 인자 개수 및 타입 힌트 확인
@@ -94,20 +136,31 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
                     )
                 )
                 print(
-                    f"parameter count mismatch : required {param_count}, but got {len(params)}"
+                    colorama.Fore.RED,
+                    "parameter count mismatch :",
+                    f" required {colorama.Fore.GREEN}{param_count}{colorama.Fore.RESET},",
+                    f" but got {colorama.Fore.GREEN}{len(params)}{colorama.Fore.RESET}",
+                    colorama.Fore.RESET,
                 )
                 return
 
             result = function(*params)
-            print("function result :", result)
+            print(
+                colorama.Fore.BLUE,
+                "function result :",
+                colorama.Fore.GREEN,
+                result,
+                colorama.Fore.RESET,
+                "\n",
+            )
             await ws.send(json.dumps({"id": msg_id, "name": name, "data": result}))
 
         except websockets.ConnectionClosed:
-            print("client disconnected")
+            print(colorama.Fore.RED, "client disconnected", colorama.Fore.RESET)
             break
 
         except Exception as e:
-            print("error :", e)
+            print(colorama.Fore.RED, "error :", e, colorama.Fore.RESET)
             break
 
     websocket_connection = None
@@ -120,7 +173,7 @@ async def pump_messages():
 
 
 async def server_loop():
-    print("waiting for the client")
+    print(colorama.Fore.BLUE, "server starting...", colorama.Fore.RESET)
     asyncio.create_task(pump_messages())  # 메시지 펌프 작업 시작
     while True:
         async with websockets.serve(msg_handler, "0.0.0.0", 5000) as ws:
@@ -128,7 +181,9 @@ async def server_loop():
 
 
 def on_event_connect(err_code: int):
-    print(f"** on_event_connect\n    err_code : {err_code}\n")
+    print(colorama.Fore.MAGENTA, "** on_event_connect")
+    print_colored_json({"err_code": err_code})
+    print("")
     if websocket_connection:
         data = {
             "name": "on_event_connect",
@@ -139,11 +194,17 @@ def on_event_connect(err_code: int):
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
         while waiting_event_connect_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+    else:
+        print(
+            colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
+        )
 
 
 def on_receive_msg(scr_no: str, rq_name: str, tr_code: str, msg: str):
-    print(f"** on_receive_msg\n    scr_no : {scr_no}\n    rq_name : {rq_name}")
-    print(f"    tr_code : {tr_code}\n    msg : {msg}\n")
+    print(colorama.Fore.MAGENTA, "** on_receive_msg")
+    print_colored_json(
+        {"scr_no": scr_no, "rq_name": rq_name, "tr_code": tr_code, "msg": msg}
+    )
     if websocket_connection:
         data = {
             "name": "on_receive_msg",
@@ -157,6 +218,10 @@ def on_receive_msg(scr_no: str, rq_name: str, tr_code: str, msg: str):
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
         while waiting_receive_msg_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+    else:
+        print(
+            colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
+        )
 
 
 def on_receive_tr_data(
@@ -170,11 +235,21 @@ def on_receive_tr_data(
     message: str,
     splm_msg: str,
 ):
-    print(f"** on_receive_tr_data\n    scr_no : {scr_no}\n    rq_name : {rq_name}")
-    print(f"    tr_code : {tr_code}\n    record_name : {record_name}")
-    print(f"    prev_next : {prev_next}\n    data_length : {data_length}")
-    print(f"    error_code : {error_code}\n    message : {message}")
-    print(f"    splm_msg : {splm_msg}\n")
+    print(colorama.Fore.MAGENTA, "** on_receive_tr_data")
+    print_colored_json(
+        {
+            "scr_no": scr_no,
+            "rq_name": rq_name,
+            "tr_code": tr_code,
+            "record_name": record_name,
+            "prev_next": prev_next,
+            "data_length": data_length,
+            "error_code": error_code,
+            "message": message,
+            "splm_msg": splm_msg,
+        }
+    )
+    print("")
     if websocket_connection:
         data = {
             "name": "on_receive_tr_data",
@@ -193,11 +268,16 @@ def on_receive_tr_data(
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
         while waiting_receive_tr_data_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+    else:
+        print(
+            colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
+        )
 
 
 def on_receive_real_data(code: str, real_type: str, real_data: str):
-    print(f"** on_receive_real_data\n    code : {code}\n    real_type : {real_type}")
-    print(f"    real_data : {real_data}\n")
+    print(colorama.Fore.MAGENTA, "** on_receive_real_data")
+    print_colored_json({"code": code, "real_type": real_type, "real_data": real_data})
+    print("")
     if websocket_connection:
         data = {
             "name": "on_receive_real_data",
@@ -210,11 +290,16 @@ def on_receive_real_data(code: str, real_type: str, real_data: str):
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
         while waiting_receive_real_data_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+    else:
+        print(
+            colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
+        )
 
 
 def on_receive_chejan_data(gubun: str, item_cnt: int, fid_list: str):
-    print(f"** on_receive_chejan_data\n    gubun : {gubun}\n    item_cnt : {item_cnt}")
-    print(f"    fid_list : {fid_list}\n")
+    print(colorama.Fore.MAGENTA, "** on_receive_chejan_data")
+    print_colored_json({"gubun": gubun, "item_cnt": item_cnt, "fid_list": fid_list})
+    print("")
     if websocket_connection:
         data = {
             "name": "on_receive_chejan_data",
@@ -227,10 +312,16 @@ def on_receive_chejan_data(gubun: str, item_cnt: int, fid_list: str):
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
         while waiting_receive_chejan_data_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+    else:
+        print(
+            colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
+        )
 
 
 def on_receive_condition_ver(ret: int, msg: str):
-    print(f"** on_receive_condition_ver\n    ret : {ret}\n    msg : {msg}\n")
+    print(colorama.Fore.MAGENTA, "** on_receive_condition_ver")
+    print_colored_json({"ret": ret, "msg": msg})
+    print("")
     if websocket_connection:
         data = {
             "name": "on_receive_condition_ver",
@@ -242,14 +333,25 @@ def on_receive_condition_ver(ret: int, msg: str):
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
         while waiting_receive_condition_ver_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+    else:
+        print(
+            colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
+        )
 
 
 def on_receive_real_condition(
     code: str, type: str, condition_name: str, condition_index: str
 ):
-    print(f"** on_receive_real_condition\n    code : {code}\n    type : {type}")
-    print(f"    condition_name : {condition_name}")
-    print(f"    condition_index : {condition_index}\n")
+    print(colorama.Fore.MAGENTA, "** on_receive_real_condition")
+    print_colored_json(
+        {
+            "code": code,
+            "type": type,
+            "condition_name": condition_name,
+            "condition_index": condition_index,
+        }
+    )
+    print("")
     if websocket_connection:
         data = {
             "name": "on_receive_real_condition",
@@ -263,14 +365,26 @@ def on_receive_real_condition(
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
         while waiting_receive_real_condition_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+    else:
+        print(
+            colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
+        )
 
 
 def on_receive_tr_condition(
     scr_no: str, code_list: str, condition_name: str, index: int, next: int
 ):
-    print(f"** on_receive_tr_condition\n    scr_no : {scr_no}")
-    print(f"    code_list : {code_list}\n    condition_name : {condition_name}")
-    print(f"    index : {index}\n    next : {next}\n")
+    print(colorama.Fore.MAGENTA, "** on_receive_tr_condition")
+    print_colored_json(
+        {
+            "scr_no": scr_no,
+            "code_list": code_list,
+            "condition_name": condition_name,
+            "index": index,
+            "next": next,
+        }
+    )
+    print("")
     if websocket_connection:
         data = {
             "name": "on_receive_tr_condition",
@@ -285,6 +399,10 @@ def on_receive_tr_condition(
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
         while waiting_receive_tr_condition_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+    else:
+        print(
+            colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
+        )
 
 
 if __name__ == "__main__":
