@@ -76,6 +76,16 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
             data = json.loads(msg)
 
             name = data["name"]
+            if name == "close":
+                waiting_event_connect_complete = False
+                waiting_receive_msg_complete = False
+                waiting_receive_tr_data_complete = False
+                waiting_receive_real_data_complete = False
+                waiting_receive_chejan_data_complete = False
+                waiting_receive_condition_ver_complete = False
+                waiting_receive_real_condition_complete = False
+                waiting_receive_tr_condition_complete = False
+                continue
             if name == "on_event_connect_complete":
                 waiting_event_connect_complete = False
                 print(
