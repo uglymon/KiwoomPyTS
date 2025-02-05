@@ -42,6 +42,7 @@ if (require.main === module) {
         });
 
         const cli = new CLI(kiwoom, () => {
+            kiwoom.close();
             client.close();
         });
         cli.start();

@@ -154,6 +154,10 @@ export class KiwoomAPI implements IKiwoomAPI {
         });
     }
 
+    close() {
+        this.ws.send(JSON.stringify({ name: 'close' }));
+    }
+
     setEventHandler(handler: IKiwoomEventHandler) {
         this.handler = handler;
     }
@@ -323,6 +327,15 @@ export class KiwoomAPI implements IKiwoomAPI {
      */
     async SendOrderCredit(sRQName: string, sScreenNo: string, sAccNo: string, nOrderType: number, sCode: string, nQty: number, nPrice: number, sHogaGb: string, sCreditGb: string, sLoanDate: string, sOrgOrderNo: string): Promise<number> {
         return await this.call("SendOrderCredit", [sRQName, sScreenNo, sAccNo, nOrderType, sCode, nQty, nPrice, sHogaGb, sCreditGb, sLoanDate, sOrgOrderNo]) as number;
+    }
+
+    /**
+     * 체결잔고 데이터를 반환한다
+     * @param {number} fid FID
+     * @returns {Promise<string>} 체결잔고 데이터
+     */
+    async GetChejanData(fid: number): Promise<string> {
+        return await this.call("GetChejanData", [fid]) as string;
     }
 
     /**

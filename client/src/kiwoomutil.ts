@@ -1,4 +1,5 @@
 import { IKiwoomEventHandler, KiwoomAPI } from './kiwoomapi';
+import { TRBase, ITRInputBase, ITROutputBase } from './trinfo';
 import { StockItemType } from './types';
 import { FIDList } from './types_fid';
 import { RealList } from './types_real';
@@ -11,13 +12,15 @@ export class KiwoomUtil {
     private waitingevent: {
         onReceiveConditionVer: IKiwoomEventHandler['onReceiveConditionVer'][]
         onReceiveTrCondition: IKiwoomEventHandler['onReceiveTrCondition'][]
+        onReceiveTrData: { rqname: string, callback: IKiwoomEventHandler['onReceiveTrData'] }[]
     } = {
             onReceiveConditionVer: [],
-            onReceiveTrCondition: []
+            onReceiveTrCondition: [],
+            onReceiveTrData: []
         };
 
+    private account = '';
     stock_list: { [key: string]: StockItemType } = {};
-
 
     constructor(kiwoom: KiwoomAPI) {
         this.kiwoom = kiwoom;
@@ -26,11 +29,16 @@ export class KiwoomUtil {
             onReceiveTrCondition: this.on_receive_tr_condition,
             onReceiveTrData: this.on_receive_tr_data,
             onReceiveRealData: this.on_receive_real_data,
+            onReceiveChejanData: this.on_receive_chejan_data,
         };
         this.kiwoom.SetRealRemove('ALL', 'ALL');
         this.kiwoom.setEventHandler(this.event_handler);
-    }
 
+        this.kiwoom.GetLoginInfo('ACCNO').then(info => {
+            this.account = info.split(';')[0];
+            console.log(`default account : ${this.account}`);
+        });
+    }
 
     private on_receive_condition_ver: IKiwoomEventHandler['onReceiveConditionVer']
         = async (ret, msg) => {
@@ -42,11 +50,27 @@ export class KiwoomUtil {
             const callback = this.waitingevent.onReceiveTrCondition.shift();
             if (callback) await callback(scr_no, code_list, condition_name, index, next);
         };
+    private on_receive_chejan_data: IKiwoomEventHandler['onReceiveChejanData']
+        = async (gubun, item_cnt, fid_list) => {
+            // gubun : 체결구분. 접수와 체결시 '0'값, 국내주식 잔고변경은 '1'값, 파생잔고변경은 '4'
+            const fidlist = fid_list.split(';').map(fid => parseInt(fid));
+            for (const fid of fidlist) {
+                const fidname = FIDList[fid];
+                if (fidname !== undefined) {
+                    const data = (await this.kiwoom.GetChejanData(fid)).trim();
+                    console.log(fidname, data);
+                }
+            }
+        };
     private on_receive_tr_data: IKiwoomEventHandler['onReceiveTrData']
         = async (scr_no, rq_name, tr_code, record_name, prev_next, data_length, error_code, message, splm_msg) => {
-            console.log('onReceiveTrData', scr_no, rq_name, tr_code, record_name, prev_next, data_length, error_code, message, splm_msg);
-            const data = await this.kiwoom.GetCommData(tr_code, rq_name, 0, "예수금");
-            console.log(data);
+            const index = this.waitingevent.onReceiveTrData.findIndex(cb => cb.rqname === rq_name);
+            console.log('on_receive_tr_data, callback index : ', index);
+            if (index !== -1) {
+                const callback = this.waitingevent.onReceiveTrData[index].callback;
+                this.waitingevent.onReceiveTrData.splice(index, 1);
+                if (callback) await callback(scr_no, rq_name, tr_code, record_name, prev_next, data_length, error_code, message, splm_msg);
+            }
         };
     private on_receive_real_data: IKiwoomEventHandler['onReceiveRealData']
         = async (code, real_type) => {
@@ -73,7 +97,7 @@ export class KiwoomUtil {
                         const fidname = FIDList[fid];
                         if (fidname !== undefined && fidname in stockitem) {
                             const data = await this.kiwoom.GetCommRealData(code, fid);
-                            stockitem[fidname as keyof StockItemType] = data as never;
+                            stockitem[fidname as keyof StockItemType] = data.trim() as never;
                             console.log(fidname ?? fid, data);
                         }
                     }
@@ -110,6 +134,55 @@ export class KiwoomUtil {
                 resolve(code_list.split(';'));
             });
         });
+    }
+
+    async sendTR<T extends TRBase<ITRInputBase, ITROutputBase>>(
+        trinfo: new (input: T['input']) => T, trdata: Omit<T['input'], 'tr_code'>): Promise<T['outputT']> {
+
+        const input = { ...trdata, tr_code: '' } as T['input'];
+        const tr = new trinfo(input);
+
+        for (const key in input) {
+            if (key === 'tr_code') continue;
+            console.log(key, input[key]);
+            this.kiwoom.SetInputValue(key, input[key] as string);
+        }
+        const rqname = input.tr_code + '_req';
+        this.kiwoom.CommRqData(rqname, input.tr_code, 0, '0101');
+        return new Promise<T['outputT']>(resolve => {
+            this.waitingevent.onReceiveTrData.push({
+                rqname,
+                callback: async (scr_no, rq_name, tr_code,
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    record_name, prev_next, data_length, error_code, message, splm_msg) => {
+                    const result = new tr.outputT();
+                    for (const key in result) {
+                        if (key === 'multi_items') {
+                            if (result.multiT === null || result.multi_items === undefined) continue;
+                            const count = await this.kiwoom.GetRepeatCnt(tr_code, rq_name);
+                            const multi_item = new result.multiT() as unknown as { [key: string]: string };
+                            for (let i = 0; i < count; i++) {
+                                for (const multikey in multi_item) {
+                                    const value = await this.kiwoom.GetCommData(tr_code, rq_name, i, multikey);
+                                    multi_item[multikey as keyof typeof multi_item] = value.trim() as never;
+                                }
+                                result.multi_items.push(multi_item);
+                            }
+
+                        } else if (key !== 'multiT') {
+                            const value = await this.kiwoom.GetCommData(tr_code, rq_name, 0, key);
+                            result[key as keyof typeof result] = value.trim() as never;
+                        }
+
+                    }
+                    resolve(result as unknown as T['outputT']);
+                }
+            });
+        });
+    }
+
+    async buy(code: string, qty: number, price: number) {
+        // this.kiwoom.SendOrder('buyorder', '2000', '8093398911', code, 1, '03', '00', qty, price, '');
     }
 
     async test1() {
