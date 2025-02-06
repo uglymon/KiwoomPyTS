@@ -30,7 +30,7 @@ waiting_receive_tr_condition_complete = False
 
 def print_colored_json(data):
     # JSON 문자열로 변환, utf-8 인코딩
-    json_str = json.dumps(data, ensure_ascii=False, indent=4)
+    json_str = json.dumps(data, ensure_ascii=False)
 
     # 정규 표현식을 사용하여 JSON의 각 요소에 색상 입히기
     json_str = re.sub(
