@@ -2,15 +2,15 @@ import readline from 'readline';
 import { KiwoomUtil } from './kiwoomutil';
 import { KiwoomAPI } from './kiwoomapi';
 import chalk from 'chalk';
-import { TR_OPT10046, TR_OPW00001 } from './trinfo';
+import { TR_OPT10046, TR_OPW00001, TR_OPW00007, TR_OPW00009, TR_OPW00018 } from './trinfo';
 export class CLI {
     private kiwoomapi: KiwoomAPI;
     private kiwoomutil: KiwoomUtil;
     private onexit: () => void;
 
-    constructor(kiwoomapi: KiwoomAPI, onexit: () => void) {
+    constructor(kiwoomapi: KiwoomAPI, oninit: () => void, onexit: () => void) {
         this.kiwoomapi = kiwoomapi;
-        this.kiwoomutil = new KiwoomUtil(kiwoomapi);
+        this.kiwoomutil = new KiwoomUtil(kiwoomapi, oninit);
         this.onexit = onexit;
     }
 
@@ -61,6 +61,67 @@ export class CLI {
             체결강도구분: '1',
         });
         console.log(result);
+    }
+
+    async test4(cli: CLI) {
+        const result = await cli.kiwoomutil.sendTR(TR_OPW00018, {
+            계좌번호: '8093398911',
+            비밀번호: '0000',
+            비밀번호입력매체구분: '00',
+            조회구분: '2',
+        });
+        console.log(result);
+        for (const item of result.multi_items) {
+            const info = {
+                code: item.종목번호,
+                name: item.종목명,
+                get_price: parseInt(item.매입가),
+                count: parseInt(item.보유수량),
+                current_price: parseInt(item.현재가),
+                get_value: 0,
+                current_value: 0,
+                current_value_ratio: 0,
+            }
+            info.get_value = info.get_price * info.count;
+            info.current_value = info.current_price * info.count;
+            info.current_value_ratio = info.current_value / info.get_value;
+            console.log(info);
+        }
+    }
+
+    async test5(cli: CLI) {
+        const result = await cli.kiwoomutil.sendTR(TR_OPW00007, {
+            주문일자: '20250206',
+            계좌번호: '8093398911',
+            비밀번호: '',
+            비밀번호입력매체구분: '00',
+            조회구분: '4',
+            주식채권구분: '1',
+            매도수구분: '0',
+            종목코드: '',
+            시작주문번호: '',
+        });
+        console.log(result);
+    }
+
+    async test6(cli: CLI) {
+        const result = await cli.kiwoomutil.sendTR(TR_OPW00009, {
+            주문일자: '20250206',
+            계좌번호: '8093398911',
+            비밀번호: '',
+            비밀번호입력매체구분: '00',
+            주식채권구분: '1',
+            시장구분: '0',
+            매도수구분: '0',
+            조회구분: '0',
+            종목코드: '',
+            시작주문번호: '0',
+        });
+        console.log(result);
+    }
+
+    async getAccountStatus(cli: CLI) {
+        await cli.kiwoomutil.getAccountStatus();
     }
 
     async help(cli: CLI, ...args: string[]) {

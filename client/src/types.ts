@@ -47,18 +47,36 @@ export type KiwoomEventType = {
     next: number;
 };
 
-export type StockItemType = {
-    종목코드: string;
-    종목명: string;
-    현재가: number;
-    전일대비: number;
-    등락율: number;
-    매도호가: number;
-    매수호가: number;
-    거래량: number;
-    시가: number;
-    고가: number;
-    저가: number;
-    체결시간: string;
-    체결강도: number;
+export type StockInfoType = {
+    code: string;
+    name: string;
+    price: number;
+    price_delta: number;
+    price_delta_ratio: number;
+    ask_price: number;
+    bid_price: number;
+    trading_vol: number;
+    opening_price: number;
+    highest_price: number;
+    lowest_price: number;
+    exec_time: string;
+    exec_strength: number;
+}
+
+export type StockHoldingInfoType = {
+    code: string;
+    name: string;
+    positions: {
+        price: number;
+        count: number;
+    }[];
+    total_buy_count: number;
+    total_sell_count: number;
+    total_buy_value: number;
+    total_sell_value: number;
+    current_count: number;
+    current_price: number;
+    current_value: number;
+    trading_value: number;
+    trading_value_ratio: number;
 }

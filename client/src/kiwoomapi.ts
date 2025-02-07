@@ -53,6 +53,7 @@ export class KiwoomAPI implements IKiwoomAPI {
     private pendingRequests: Map<number, (response: string | number | null) => void>;
     private seqno = 0;
     private handler: IKiwoomEventHandler;
+    private ws_log: boolean;
 
     private getSeqNo() {
         this.seqno++;
@@ -63,19 +64,20 @@ export class KiwoomAPI implements IKiwoomAPI {
     }
 
     private send: WebSocket['send'] = data => {
-        this.ws.send(JSON.stringify(data));
-        console.log('send data :', data);
+        this.ws.send(data);
+        if (this.ws_log) console.log('send data :', data);
     };
 
-    constructor(ws: WebSocket, event_handler: IKiwoomEventHandler = {}) {
+    constructor(ws: WebSocket, event_handler: IKiwoomEventHandler = {}, ws_log = true) {
         this.ws = ws;
         this.pendingRequests = new Map();
         this.handler = event_handler;
+        this.ws_log = ws_log;
 
         this.ws.addEventListener('message', async event => {
             try {
                 const res = JSON.parse(event.data.toString());
-                console.log('received data :', res);
+                if (this.ws_log) console.log('received data :', res);
 
                 const name = res.name as string;
                 if (name !== undefined && name.startsWith('on_')) {
@@ -84,13 +86,13 @@ export class KiwoomAPI implements IKiwoomAPI {
                         if (e.name === 'on_event_connect') {
                             if (this.handler.onEventConnect !== undefined)
                                 await this.handler.onEventConnect(e.err_code);
-                            this.ws.send(JSON.stringify({ name: 'on_event_connect_complete' }));
+                            this.send(JSON.stringify({ name: 'on_event_connect_complete' }));
 
                         } else if (e.name === 'on_receive_msg') {
                             if (this.handler.onReceiveMsg !== undefined)
                                 await this.handler.onReceiveMsg(
                                     e.scr_no, e.rq_name, e.tr_code, e.msg);
-                            this.ws.send(JSON.stringify({ name: 'on_receive_msg_complete' }));
+                            this.send(JSON.stringify({ name: 'on_receive_msg_complete' }));
 
                         } else if (e.name === 'on_receive_tr_data') {
                             if (this.handler.onReceiveTrData !== undefined)
@@ -98,38 +100,38 @@ export class KiwoomAPI implements IKiwoomAPI {
                                     e.scr_no, e.rq_name, e.tr_code, e.record_name,
                                     e.prev_next, e.data_length, e.error_code,
                                     e.message, e.splm_msg);
-                            this.ws.send(JSON.stringify({ name: 'on_receive_tr_data_complete' }));
+                            this.send(JSON.stringify({ name: 'on_receive_tr_data_complete' }));
 
                         } else if (e.name === 'on_receive_real_data') {
                             if (this.handler.onReceiveRealData !== undefined)
                                 await this.handler.onReceiveRealData(
                                     e.code, e.real_type, e.real_data);
-                            this.ws.send(JSON.stringify({ name: 'on_receive_real_data_complete' }));
+                            this.send(JSON.stringify({ name: 'on_receive_real_data_complete' }));
 
                         } else if (e.name === 'on_receive_chejan_data') {
                             if (this.handler.onReceiveChejanData !== undefined)
                                 await this.handler.onReceiveChejanData(
                                     e.gubun, e.item_cnt, e.fid_list);
-                            this.ws.send(JSON.stringify({ name: 'on_receive_chejan_data_complete' }));
+                            this.send(JSON.stringify({ name: 'on_receive_chejan_data_complete' }));
 
                         } else if (e.name === 'on_receive_condition_ver') {
                             if (this.handler.onReceiveConditionVer !== undefined)
                                 await this.handler.onReceiveConditionVer(e.ret, e.msg);
-                            this.ws.send(JSON.stringify({ name: 'on_receive_condition_ver_complete' }));
+                            this.send(JSON.stringify({ name: 'on_receive_condition_ver_complete' }));
 
                         } else if (e.name === 'on_receive_real_condition') {
                             if (this.handler.onReceiveRealCondition !== undefined)
                                 await this.handler.onReceiveRealCondition(
                                     e.code, e.type, e.condition_name,
                                     e.condition_index);
-                            this.ws.send(JSON.stringify({ name: 'on_receive_real_condition_complete' }));
+                            this.send(JSON.stringify({ name: 'on_receive_real_condition_complete' }));
 
                         } else if (e.name === 'on_receive_tr_condition') {
                             if (this.handler.onReceiveTrCondition !== undefined)
                                 await this.handler.onReceiveTrCondition(
                                     e.scr_no, e.code_list, e.condition_name,
                                     e.index, e.next);
-                            this.ws.send(JSON.stringify({ name: 'on_receive_tr_condition_complete' }));
+                            this.send(JSON.stringify({ name: 'on_receive_tr_condition_complete' }));
                         }
                     }
 
@@ -155,7 +157,7 @@ export class KiwoomAPI implements IKiwoomAPI {
     }
 
     close() {
-        this.ws.send(JSON.stringify({ name: 'close' }));
+        this.send(JSON.stringify({ name: 'close' }));
     }
 
     setEventHandler(handler: IKiwoomEventHandler) {
@@ -168,7 +170,7 @@ export class KiwoomAPI implements IKiwoomAPI {
 
             this.pendingRequests.set(id, resolve);
 
-            this.ws.send(JSON.stringify({ id, name, params }));
+            this.send(JSON.stringify({ id, name, params }));
         });
     }
 
@@ -191,10 +193,19 @@ export class KiwoomAPI implements IKiwoomAPI {
 
     /**
      * 로그인한 사용자 정보를 반환한다.
-     * @param {string} tag "ACCOUNT_CNT":전체계좌수, "ACCNO":전체계좌번호, "USER_ID":사용자ID, "USER_NAME":사용자명, "KEY_BSECGB":키보드보안해지여부, "FIREW_SECGB":방화벽설정여부
+     * ACCOUNT_CNT : 보유계좌 갯수를 반환합니다.
+     * ACCNO : 구분자 ';'로 연결된 보유계좌 목록을 반환합니다.
+     * USER_ID : 사용자 ID를 반환합니다.
+     * USER_NAME : 사용자 이름을 반환합니다.
+     * GetServerGubun : 접속서버 구분을 반환합니다.(1 : 모의투자, 나머지 : 실거래 서버)
+     * KEY_BSECGB : 키보드 보안 해지여부를 반환합니다.(0 : 정상, 1 : 해지)
+     * FIREW_SECGB : 방화벽 설정여부를 반환합니다.(0 : 미설정, 1 : 설정, 2 : 해지)
+     * @param {string} tag 
      * @returns {Promise<string>} tag에 대한 정보
      */
-    async GetLoginInfo(tag: string): Promise<string> {
+    async GetLoginInfo(
+        tag: 'ACCOUNT_CNT' | 'ACCNO' | 'USER_ID' | 'USER_NAME'
+            | 'GetServerGubun' | 'KEY_BSECGB' | 'FIREW_SECGB'): Promise<string> {
         return await this.call("GetLoginInfo", [tag]) as string;
     }
 

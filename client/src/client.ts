@@ -1,6 +1,7 @@
 import WebSocket from 'ws';
 import { KiwoomAPI } from './kiwoomapi';
 import { CLI } from './cli';
+import { Env } from './env';
 
 export class WSClient {
     private ws?: WebSocket;
@@ -31,21 +32,23 @@ export class WSClient {
 }
 
 if (require.main === module) {
-    const url = process.argv[2] || 'ws://127.0.0.1:5000';
+    const url = process.argv[2] || Env.API_ADDR;
     const main = async () => {
         const client = new WSClient();
         const ws = await client.connect(url);
-        const kiwoom = new KiwoomAPI(ws);
+        const kiwoom = new KiwoomAPI(ws, {}, false);
 
         process.on('SIGINT', () => {
             client.close();
         });
 
-        const cli = new CLI(kiwoom, () => {
-            kiwoom.close();
-            client.close();
-        });
-        cli.start();
+        const cli = new CLI(kiwoom,
+            () => { cli.start(); },
+            () => {
+                kiwoom.close();
+                client.close();
+            }
+        );
     }
 
     main();

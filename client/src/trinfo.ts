@@ -8,11 +8,13 @@ export interface ITROutputBase {
 }
 export class TRBase<InputT extends ITRInputBase, OutputT extends ITROutputBase> {
     input: InputT;
+    output: OutputT;
     outputT: new () => OutputT;
 
     constructor(input: InputT, outputT: new () => OutputT) {
         this.input = input;
         this.outputT = outputT;
+        this.output = new outputT();
     }
 }
 
