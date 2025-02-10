@@ -5,6 +5,7 @@ export interface ITRInputBase {
 export interface ITROutputBase {
     multiT: null | (new () => unknown);
     multi_items?: unknown[];
+    next: boolean;
 }
 export class TRBase<InputT extends ITRInputBase, OutputT extends ITROutputBase> {
     input: InputT;
