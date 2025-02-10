@@ -250,8 +250,21 @@ def on_event_connect(err_code: int):
         global waiting_event_connect_complete
         waiting_event_connect_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        timeout = 3
         while waiting_event_connect_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+            timeout -= 0.05
+            if timeout <= 0:
+                print(
+                    "    ",
+                    colorama.Fore.YELLOW,
+                    "on_event_connect",
+                    colorama.Fore.RED,
+                    "timeout",
+                    colorama.Fore.RESET,
+                )
+                break
+
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -274,8 +287,19 @@ def on_receive_msg(scr_no: str, rq_name: str, tr_code: str, msg: str):
         global waiting_receive_msg_complete
         waiting_receive_msg_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        timeout = 3
         while waiting_receive_msg_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+            timeout -= 0.05
+            if timeout <= 0:
+                print(
+                    "    ",
+                    colorama.Fore.YELLOW,
+                    "on_receive_msg",
+                    colorama.Fore.RED,
+                    "timeout",
+                    colorama.Fore.RESET,
+                )
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -324,8 +348,19 @@ def on_receive_tr_data(
         global waiting_receive_tr_data_complete
         waiting_receive_tr_data_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        timeout = 3
         while waiting_receive_tr_data_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+            timeout -= 0.05
+            if timeout <= 0:
+                print(
+                    "    ",
+                    colorama.Fore.YELLOW,
+                    "on_receive_tr_data",
+                    colorama.Fore.RED,
+                    "timeout",
+                    colorama.Fore.RESET,
+                )
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -346,8 +381,19 @@ def on_receive_real_data(code: str, real_type: str, real_data: str):
         global waiting_receive_real_data_complete
         waiting_receive_real_data_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        timeout = 3
         while waiting_receive_real_data_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+            timeout -= 0.05
+            if timeout <= 0:
+                print(
+                    "    ",
+                    colorama.Fore.YELLOW,
+                    "on_receive_real_data",
+                    colorama.Fore.RED,
+                    "timeout",
+                    colorama.Fore.RESET,
+                )
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -368,8 +414,20 @@ def on_receive_chejan_data(gubun: str, item_cnt: int, fid_list: str):
         global waiting_receive_chejan_data_complete
         waiting_receive_chejan_data_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        timeout = 3
         while waiting_receive_chejan_data_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+            timeout -= 0.05
+            if timeout <= 0:
+                print(
+                    "    ",
+                    colorama.Fore.YELLOW,
+                    "on_receive_chejan_data",
+                    colorama.Fore.RED,
+                    "timeout",
+                    colorama.Fore.RESET,
+                )
+                break
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -389,8 +447,20 @@ def on_receive_condition_ver(ret: int, msg: str):
         global waiting_receive_condition_ver_complete
         waiting_receive_condition_ver_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        timeout = 3
         while waiting_receive_condition_ver_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+            timeout -= 0.05
+            if timeout <= 0:
+                print(
+                    "    ",
+                    colorama.Fore.YELLOW,
+                    "on_receive_condition_ver",
+                    colorama.Fore.RED,
+                    "timeout",
+                    colorama.Fore.RESET,
+                )
+                break
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -421,8 +491,19 @@ def on_receive_real_condition(
         global waiting_receive_real_condition_complete
         waiting_receive_real_condition_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        timeout = 3
         while waiting_receive_real_condition_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+            timeout -= 0.05
+            if timeout <= 0:
+                print(
+                    "    ",
+                    colorama.Fore.YELLOW,
+                    "on_receive_real_condition",
+                    colorama.Fore.RED,
+                    "timeout",
+                    colorama.Fore.RESET,
+                )
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -455,8 +536,19 @@ def on_receive_tr_condition(
         global waiting_receive_tr_condition_complete
         waiting_receive_tr_condition_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        timeout = 3
         while waiting_receive_tr_condition_complete:
             asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+            timeout -= 0.05
+            if timeout <= 0:
+                print(
+                    "    ",
+                    colorama.Fore.YELLOW,
+                    "on_receive_tr_condition",
+                    colorama.Fore.RED,
+                    "timeout",
+                    colorama.Fore.RESET,
+                )
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
