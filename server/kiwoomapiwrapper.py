@@ -292,15 +292,17 @@ class KiwoomAPIWrapper:
         """
         return self.ocx.dynamicCall(
             "SendOrder(QString, QString, QString, int, QString, int, int, QString, QString)",
-            sRQName,
-            sScreenNo,
-            sAccNo,
-            nOrderType,
-            sCode,
-            nQty,
-            nPrice,
-            sHogaGb,
-            sOrgOrderNo,
+            [
+                sRQName,
+                sScreenNo,
+                sAccNo,
+                nOrderType,
+                sCode,
+                nQty,
+                nPrice,
+                sHogaGb,
+                sOrgOrderNo,
+            ],
         )
 
     def SendOrderFO(
