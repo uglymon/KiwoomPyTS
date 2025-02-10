@@ -47,6 +47,23 @@ export type KiwoomEventType = {
     next: number;
 };
 
+export type StockInfoRawType = {
+    종목코드: string;
+    종목명: string;
+    현재가: string;
+    전일대비: string;
+    등락율: string;
+    매도호가: string;
+    매수호가: string;
+    거래량: string;
+    시가: string;
+    고가: string;
+    저가: string;
+    체결시간: string;
+    체결강도: string;
+
+}
+
 export type StockInfoType = {
     code: string;
     name: string;
@@ -55,12 +72,9 @@ export type StockInfoType = {
     price_delta_ratio: number;
     ask_price: number;
     bid_price: number;
-    trading_vol: number;
     opening_price: number;
     highest_price: number;
     lowest_price: number;
-    exec_time: string;
-    exec_strength: number;
 }
 
 export type StockHoldingInfoType = {
