@@ -212,6 +212,7 @@ export class OPMetadata {
             result += `    multiT = null;\n`;
             result += `    multi_items?: unknown[];\n`;
         }
+        result += `    next: boolean = false;\n`;
         for (const output of item.output_single) {
             if (item.tr_code === 'OPW20009' && output.offset === 126) continue;//예외처리
             result += `    '${output.name}': string = '';\n`;

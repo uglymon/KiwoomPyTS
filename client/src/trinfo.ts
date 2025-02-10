@@ -28,6 +28,7 @@ export class TR_OPT10001Input implements ITRInputBase {
 export class TR_OPT10001Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '종목코드': string = '';
     '종목명': string = '';
     '결산월': string = '';
@@ -131,6 +132,7 @@ export class TR_OPT10002Output implements ITROutputBase {
     multiT: new () => TR_OPT10002MultiItem;
     multi_items: TR_OPT10002MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10002MultiItem; }
+    next: boolean = false;
 };
 /**
  * 주식거래원요청
@@ -163,6 +165,7 @@ export class TR_OPT10003Output implements ITROutputBase {
     multiT: new () => TR_OPT10003MultiItem;
     multi_items: TR_OPT10003MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10003MultiItem; }
+    next: boolean = false;
 };
 /**
  * 체결정보요청
@@ -253,6 +256,7 @@ export class TR_OPT10004Output implements ITROutputBase {
     multiT: new () => TR_OPT10004MultiItem;
     multi_items: TR_OPT10004MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10004MultiItem; }
+    next: boolean = false;
 };
 /**
  * 주식호가요청
@@ -291,6 +295,7 @@ export class TR_OPT10005Output implements ITROutputBase {
     multiT: new () => TR_OPT10005MultiItem;
     multi_items: TR_OPT10005MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10005MultiItem; }
+    next: boolean = false;
 };
 /**
  * 주식일주월시분요청
@@ -322,6 +327,7 @@ export class TR_OPT10006Output implements ITROutputBase {
     multiT: new () => TR_OPT10006MultiItem;
     multi_items: TR_OPT10006MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10006MultiItem; }
+    next: boolean = false;
 };
 /**
  * 주식시분요청
@@ -467,6 +473,7 @@ export class TR_OPT10007Output implements ITROutputBase {
     multiT: new () => TR_OPT10007MultiItem;
     multi_items: TR_OPT10007MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10007MultiItem; }
+    next: boolean = false;
 };
 /**
  * 시세표성정보요청
@@ -499,6 +506,7 @@ export class TR_OPT10008Output implements ITROutputBase {
     multiT: new () => TR_OPT10008MultiItem;
     multi_items: TR_OPT10008MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10008MultiItem; }
+    next: boolean = false;
 };
 /**
  * 주식외국인요청
@@ -527,6 +535,7 @@ export class TR_OPT10009Output implements ITROutputBase {
     multiT: new () => TR_OPT10009MultiItem;
     multi_items: TR_OPT10009MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10009MultiItem; }
+    next: boolean = false;
 };
 /**
  * 주식기관요청
@@ -566,6 +575,7 @@ export class TR_OPT10010Output implements ITROutputBase {
     multiT: new () => TR_OPT10010MultiItem;
     multi_items: TR_OPT10010MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10010MultiItem; }
+    next: boolean = false;
 };
 /**
  * 업종프로그램요청
@@ -599,6 +609,7 @@ export class TR_OPT10011Output implements ITROutputBase {
     multiT: new () => TR_OPT10011MultiItem;
     multi_items: TR_OPT10011MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10011MultiItem; }
+    next: boolean = false;
 };
 /**
  * 신주인수권전체시세요청
@@ -681,6 +692,7 @@ export class TR_OPT10012Output implements ITROutputBase {
     multiT: new () => TR_OPT10012MultiItem;
     multi_items: TR_OPT10012MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10012MultiItem; }
+    next: boolean = false;
 };
 /**
  * 주문체결요청
@@ -716,6 +728,7 @@ export class TR_OPT10013Output implements ITROutputBase {
     multiT: new () => TR_OPT10013MultiItem;
     multi_items: TR_OPT10013MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10013MultiItem; }
+    next: boolean = false;
 };
 /**
  * 신용매매동향요청
@@ -750,6 +763,7 @@ export class TR_OPT10014Output implements ITROutputBase {
     multiT: new () => TR_OPT10014MultiItem;
     multi_items: TR_OPT10014MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10014MultiItem; }
+    next: boolean = false;
 };
 /**
  * 공매도추이요청
@@ -801,6 +815,7 @@ export class TR_OPT10015Output implements ITROutputBase {
     multiT: new () => TR_OPT10015MultiItem;
     multi_items: TR_OPT10015MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10015MultiItem; }
+    next: boolean = false;
 };
 /**
  * 일별거래상세요청
@@ -841,6 +856,7 @@ export class TR_OPT10016Output implements ITROutputBase {
     multiT: new () => TR_OPT10016MultiItem;
     multi_items: TR_OPT10016MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10016MultiItem; }
+    next: boolean = false;
 };
 /**
  * 신고저가요청
@@ -882,6 +898,7 @@ export class TR_OPT10017Output implements ITROutputBase {
     multiT: new () => TR_OPT10017MultiItem;
     multi_items: TR_OPT10017MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10017MultiItem; }
+    next: boolean = false;
 };
 /**
  * 상하한가요청
@@ -919,6 +936,7 @@ export class TR_OPT10018Output implements ITROutputBase {
     multiT: new () => TR_OPT10018MultiItem;
     multi_items: TR_OPT10018MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10018MultiItem; }
+    next: boolean = false;
 };
 /**
  * 고저가근접요청
@@ -959,6 +977,7 @@ export class TR_OPT10019Output implements ITROutputBase {
     multiT: new () => TR_OPT10019MultiItem;
     multi_items: TR_OPT10019MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10019MultiItem; }
+    next: boolean = false;
 };
 /**
  * 가격급등락요청
@@ -994,6 +1013,7 @@ export class TR_OPT10020Output implements ITROutputBase {
     multiT: new () => TR_OPT10020MultiItem;
     multi_items: TR_OPT10020MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10020MultiItem; }
+    next: boolean = false;
 };
 /**
  * 호가잔량상위요청
@@ -1030,6 +1050,7 @@ export class TR_OPT10021Output implements ITROutputBase {
     multiT: new () => TR_OPT10021MultiItem;
     multi_items: TR_OPT10021MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10021MultiItem; }
+    next: boolean = false;
 };
 /**
  * 호가잔량급증요청
@@ -1065,6 +1086,7 @@ export class TR_OPT10022Output implements ITROutputBase {
     multiT: new () => TR_OPT10022MultiItem;
     multi_items: TR_OPT10022MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10022MultiItem; }
+    next: boolean = false;
 };
 /**
  * 잔량율급증요청
@@ -1102,6 +1124,7 @@ export class TR_OPT10023Output implements ITROutputBase {
     multiT: new () => TR_OPT10023MultiItem;
     multi_items: TR_OPT10023MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10023MultiItem; }
+    next: boolean = false;
 };
 /**
  * 거래량급증요청
@@ -1135,6 +1158,7 @@ export class TR_OPT10024Output implements ITROutputBase {
     multiT: new () => TR_OPT10024MultiItem;
     multi_items: TR_OPT10024MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10024MultiItem; }
+    next: boolean = false;
 };
 /**
  * 거래량갱신요청
@@ -1171,6 +1195,7 @@ export class TR_OPT10025Output implements ITROutputBase {
     multiT: new () => TR_OPT10025MultiItem;
     multi_items: TR_OPT10025MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10025MultiItem; }
+    next: boolean = false;
 };
 /**
  * 매물대집중요청
@@ -1202,6 +1227,7 @@ export class TR_OPT10026Output implements ITROutputBase {
     multiT: new () => TR_OPT10026MultiItem;
     multi_items: TR_OPT10026MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10026MultiItem; }
+    next: boolean = false;
 };
 /**
  * 고저PER요청
@@ -1242,6 +1268,7 @@ export class TR_OPT10027Output implements ITROutputBase {
     multiT: new () => TR_OPT10027MultiItem;
     multi_items: TR_OPT10027MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10027MultiItem; }
+    next: boolean = false;
 };
 /**
  * 전일대비등락률상위요청
@@ -1282,6 +1309,7 @@ export class TR_OPT10028Output implements ITROutputBase {
     multiT: new () => TR_OPT10028MultiItem;
     multi_items: TR_OPT10028MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10028MultiItem; }
+    next: boolean = false;
 };
 /**
  * 시가대비등락률요청
@@ -1320,6 +1348,7 @@ export class TR_OPT10029Output implements ITROutputBase {
     multiT: new () => TR_OPT10029MultiItem;
     multi_items: TR_OPT10029MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10029MultiItem; }
+    next: boolean = false;
 };
 /**
  * 예상체결등락률상위요청
@@ -1370,6 +1399,7 @@ export class TR_OPT10030Output implements ITROutputBase {
     multiT: new () => TR_OPT10030MultiItem;
     multi_items: TR_OPT10030MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10030MultiItem; }
+    next: boolean = false;
 };
 /**
  * 당일거래량상위요청
@@ -1400,6 +1430,7 @@ export class TR_OPT10031Output implements ITROutputBase {
     multiT: new () => TR_OPT10031MultiItem;
     multi_items: TR_OPT10031MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10031MultiItem; }
+    next: boolean = false;
 };
 /**
  * 전일거래량상위요청
@@ -1435,6 +1466,7 @@ export class TR_OPT10032Output implements ITROutputBase {
     multiT: new () => TR_OPT10032MultiItem;
     multi_items: TR_OPT10032MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10032MultiItem; }
+    next: boolean = false;
 };
 /**
  * 거래대금상위요청
@@ -1471,6 +1503,7 @@ export class TR_OPT10033Output implements ITROutputBase {
     multiT: new () => TR_OPT10033MultiItem;
     multi_items: TR_OPT10033MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10033MultiItem; }
+    next: boolean = false;
 };
 /**
  * 신용비율상위요청
@@ -1505,6 +1538,7 @@ export class TR_OPT10034Output implements ITROutputBase {
     multiT: new () => TR_OPT10034MultiItem;
     multi_items: TR_OPT10034MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10034MultiItem; }
+    next: boolean = false;
 };
 /**
  * 외인기간별매매상위요청
@@ -1541,6 +1575,7 @@ export class TR_OPT10035Output implements ITROutputBase {
     multiT: new () => TR_OPT10035MultiItem;
     multi_items: TR_OPT10035MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10035MultiItem; }
+    next: boolean = false;
 };
 /**
  * 외인연속순매매상위요청
@@ -1575,6 +1610,7 @@ export class TR_OPT10036Output implements ITROutputBase {
     multiT: new () => TR_OPT10036MultiItem;
     multi_items: TR_OPT10036MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10036MultiItem; }
+    next: boolean = false;
 };
 /**
  * 외인한도소진율증가상위
@@ -1613,6 +1649,7 @@ export class TR_OPT10037Output implements ITROutputBase {
     multiT: new () => TR_OPT10037MultiItem;
     multi_items: TR_OPT10037MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10037MultiItem; }
+    next: boolean = false;
 };
 /**
  * 외국계창구매매상위요청
@@ -1643,6 +1680,7 @@ export class TR_OPT10038Output implements ITROutputBase {
     multiT: new () => TR_OPT10038MultiItem;
     multi_items: TR_OPT10038MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10038MultiItem; }
+    next: boolean = false;
     '순위1': string = '';
     '순위2': string = '';
     '순위3': string = '';
@@ -1684,6 +1722,7 @@ export class TR_OPT10039Output implements ITROutputBase {
     multiT: new () => TR_OPT10039MultiItem;
     multi_items: TR_OPT10039MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10039MultiItem; }
+    next: boolean = false;
 };
 /**
  * 증권사별매매상위요청
@@ -1713,6 +1752,7 @@ export class TR_OPT10040Output implements ITROutputBase {
     multiT: new () => TR_OPT10040MultiItem;
     multi_items: TR_OPT10040MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10040MultiItem; }
+    next: boolean = false;
     '매도거래원별증감1': string = '';
     '매도거래원수량1': string = '';
     '매도거래원1': string = '';
@@ -1781,6 +1821,7 @@ export class TR_OPT10041Output implements ITROutputBase {
     multiT: new () => TR_OPT10041MultiItem;
     multi_items: TR_OPT10041MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10041MultiItem; }
+    next: boolean = false;
 };
 /**
  * 조기종료통화단위요청
@@ -1811,6 +1852,7 @@ export class TR_OPT10042Output implements ITROutputBase {
     multiT: new () => TR_OPT10042MultiItem;
     multi_items: TR_OPT10042MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10042MultiItem; }
+    next: boolean = false;
 };
 /**
  * 순매수거래원순위요청
@@ -1848,6 +1890,7 @@ export class TR_OPT10043Output implements ITROutputBase {
     multiT: new () => TR_OPT10043MultiItem;
     multi_items: TR_OPT10043MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10043MultiItem; }
+    next: boolean = false;
 };
 /**
  * 거래원매물대분석요청
@@ -1880,6 +1923,7 @@ export class TR_OPT10044Output implements ITROutputBase {
     multiT: new () => TR_OPT10044MultiItem;
     multi_items: TR_OPT10044MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10044MultiItem; }
+    next: boolean = false;
 };
 /**
  * 일별기관매매종목요청
@@ -1918,6 +1962,7 @@ export class TR_OPT10045Output implements ITROutputBase {
     multiT: new () => TR_OPT10045MultiItem;
     multi_items: TR_OPT10045MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10045MultiItem; }
+    next: boolean = false;
     '기관추정평균가': string = '';
     '외인추정평균가': string = '';
 };
@@ -1955,6 +2000,7 @@ export class TR_OPT10046Output implements ITROutputBase {
     multiT: new () => TR_OPT10046MultiItem;
     multi_items: TR_OPT10046MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10046MultiItem; }
+    next: boolean = false;
 };
 /**
  * 체결강도추이시간별요청
@@ -1990,6 +2036,7 @@ export class TR_OPT10047Output implements ITROutputBase {
     multiT: new () => TR_OPT10047MultiItem;
     multi_items: TR_OPT10047MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10047MultiItem; }
+    next: boolean = false;
 };
 /**
  * 체결강도추이일별요청
@@ -2019,6 +2066,7 @@ export class TR_OPT10048Output implements ITROutputBase {
     multiT: new () => TR_OPT10048MultiItem;
     multi_items: TR_OPT10048MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10048MultiItem; }
+    next: boolean = false;
 };
 /**
  * ELW일별민감도지표요청
@@ -2049,6 +2097,7 @@ export class TR_OPT10049Output implements ITROutputBase {
     multiT: new () => TR_OPT10049MultiItem;
     multi_items: TR_OPT10049MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10049MultiItem; }
+    next: boolean = false;
     '연속구분': string = '';
     '연속키': string = '';
 };
@@ -2082,6 +2131,7 @@ export class TR_OPT10050Output implements ITROutputBase {
     multiT: new () => TR_OPT10050MultiItem;
     multi_items: TR_OPT10050MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10050MultiItem; }
+    next: boolean = false;
 };
 /**
  * ELW민감도지표요청
@@ -2125,6 +2175,7 @@ export class TR_OPT10051Output implements ITROutputBase {
     multiT: new () => TR_OPT10051MultiItem;
     multi_items: TR_OPT10051MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10051MultiItem; }
+    next: boolean = false;
 };
 /**
  * 업종별투자자순매수요청
@@ -2160,6 +2211,7 @@ export class TR_OPT10052Output implements ITROutputBase {
     multiT: new () => TR_OPT10052MultiItem;
     multi_items: TR_OPT10052MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10052MultiItem; }
+    next: boolean = false;
 };
 /**
  * 거래원순간거래량요청
@@ -2189,6 +2241,7 @@ export class TR_OPT10053Output implements ITROutputBase {
     multiT: new () => TR_OPT10053MultiItem;
     multi_items: TR_OPT10053MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10053MultiItem; }
+    next: boolean = false;
 };
 /**
  * 당일상위이탈원요청
@@ -2234,6 +2287,7 @@ export class TR_OPT10054Output implements ITROutputBase {
     multiT: new () => TR_OPT10054MultiItem;
     multi_items: TR_OPT10054MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10054MultiItem; }
+    next: boolean = false;
 };
 /**
  * 변동성완화장치발동종목요청
@@ -2264,6 +2318,7 @@ export class TR_OPT10055Output implements ITROutputBase {
     multiT: new () => TR_OPT10055MultiItem;
     multi_items: TR_OPT10055MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10055MultiItem; }
+    next: boolean = false;
 };
 /**
  * 당일전일체결대량요청
@@ -2300,6 +2355,7 @@ export class TR_OPT10058Output implements ITROutputBase {
     multiT: new () => TR_OPT10058MultiItem;
     multi_items: TR_OPT10058MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10058MultiItem; }
+    next: boolean = false;
 };
 /**
  * 투자자별일별매매종목요청
@@ -2345,6 +2401,7 @@ export class TR_OPT10059Output implements ITROutputBase {
     multiT: new () => TR_OPT10059MultiItem;
     multi_items: TR_OPT10059MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10059MultiItem; }
+    next: boolean = false;
 };
 /**
  * 종목별투자자기관별요청
@@ -2387,6 +2444,7 @@ export class TR_OPT10060Output implements ITROutputBase {
     multiT: new () => TR_OPT10060MultiItem;
     multi_items: TR_OPT10060MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10060MultiItem; }
+    next: boolean = false;
 };
 /**
  * 종목별투자자기관별차트요청
@@ -2426,6 +2484,7 @@ export class TR_OPT10061Output implements ITROutputBase {
     multiT: new () => TR_OPT10061MultiItem;
     multi_items: TR_OPT10061MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10061MultiItem; }
+    next: boolean = false;
 };
 /**
  * 종목별투자자기관별합계요청
@@ -2468,6 +2527,7 @@ export class TR_OPT10062Output implements ITROutputBase {
     multiT: new () => TR_OPT10062MultiItem;
     multi_items: TR_OPT10062MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10062MultiItem; }
+    next: boolean = false;
 };
 /**
  * 동일순매매순위요청
@@ -2514,6 +2574,7 @@ export class TR_OPT10063Output implements ITROutputBase {
     multiT: new () => TR_OPT10063MultiItem;
     multi_items: TR_OPT10063MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10063MultiItem; }
+    next: boolean = false;
 };
 /**
  * 장중투자자별매매요청
@@ -2547,6 +2608,7 @@ export class TR_OPT10064Output implements ITROutputBase {
     multiT: new () => TR_OPT10064MultiItem;
     multi_items: TR_OPT10064MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10064MultiItem; }
+    next: boolean = false;
 };
 /**
  * 장중투자자별매매차트요청
@@ -2575,6 +2637,7 @@ export class TR_OPT10065Output implements ITROutputBase {
     multiT: new () => TR_OPT10065MultiItem;
     multi_items: TR_OPT10065MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10065MultiItem; }
+    next: boolean = false;
 };
 /**
  * 장중투자자별매매상위요청
@@ -2618,6 +2681,7 @@ export class TR_OPT10066Output implements ITROutputBase {
     multiT: new () => TR_OPT10066MultiItem;
     multi_items: TR_OPT10066MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10066MultiItem; }
+    next: boolean = false;
 };
 /**
  * 장중투자자별매매차트요청
@@ -2646,6 +2710,7 @@ export class TR_OPT10067Output implements ITROutputBase {
     multiT: new () => TR_OPT10067MultiItem;
     multi_items: TR_OPT10067MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10067MultiItem; }
+    next: boolean = false;
 };
 /**
  * 대차거래내역요청
@@ -2676,6 +2741,7 @@ export class TR_OPT10068Output implements ITROutputBase {
     multiT: new () => TR_OPT10068MultiItem;
     multi_items: TR_OPT10068MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10068MultiItem; }
+    next: boolean = false;
 };
 /**
  * 대차거래추이요청
@@ -2705,6 +2771,7 @@ export class TR_OPT10069Output implements ITROutputBase {
     multiT: new () => TR_OPT10069MultiItem;
     multi_items: TR_OPT10069MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10069MultiItem; }
+    next: boolean = false;
     '대차거래체결주수합': string = '';
     '대차거래상환주수합': string = '';
     '잔고주수합': string = '';
@@ -2731,6 +2798,7 @@ export class TR_OPT10070Input implements ITRInputBase {
 export class TR_OPT10070Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '매도거래원별증감1': string = '';
     '매도거래원수량1': string = '';
     '매도거래원1': string = '';
@@ -2806,6 +2874,7 @@ export class TR_OPT10071Output implements ITROutputBase {
     multiT: new () => TR_OPT10071MultiItem;
     multi_items: TR_OPT10071MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10071MultiItem; }
+    next: boolean = false;
 };
 /**
  * 시간대별전일비거래비중요청
@@ -2845,6 +2914,7 @@ export class TR_OPT10072Output implements ITROutputBase {
     multiT: new () => TR_OPT10072MultiItem;
     multi_items: TR_OPT10072MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10072MultiItem; }
+    next: boolean = false;
 };
 /**
  * 일자별종목별실현손익요청
@@ -2883,6 +2953,7 @@ export class TR_OPT10073Output implements ITROutputBase {
     multiT: new () => TR_OPT10073MultiItem;
     multi_items: TR_OPT10073MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10073MultiItem; }
+    next: boolean = false;
 };
 /**
  * 일자별종목별실현손익요청
@@ -2912,6 +2983,7 @@ export class TR_OPT10074Output implements ITROutputBase {
     multiT: new () => TR_OPT10074MultiItem;
     multi_items: TR_OPT10074MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10074MultiItem; }
+    next: boolean = false;
     '총매수금액': string = '';
     '총매도금액': string = '';
     '실현손익': string = '';
@@ -2968,6 +3040,7 @@ export class TR_OPT10075Output implements ITROutputBase {
     multiT: new () => TR_OPT10075MultiItem;
     multi_items: TR_OPT10075MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10075MultiItem; }
+    next: boolean = false;
 };
 /**
  * 미체결요청
@@ -3010,6 +3083,7 @@ export class TR_OPT10076Output implements ITROutputBase {
     multiT: new () => TR_OPT10076MultiItem;
     multi_items: TR_OPT10076MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10076MultiItem; }
+    next: boolean = false;
 };
 /**
  * 체결요청
@@ -3042,6 +3116,7 @@ export class TR_OPT10077Output implements ITROutputBase {
     multiT: new () => TR_OPT10077MultiItem;
     multi_items: TR_OPT10077MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10077MultiItem; }
+    next: boolean = false;
     '당일실현손익': string = '';
 };
 /**
@@ -3076,6 +3151,7 @@ export class TR_OPT10078Output implements ITROutputBase {
     multiT: new () => TR_OPT10078MultiItem;
     multi_items: TR_OPT10078MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10078MultiItem; }
+    next: boolean = false;
 };
 /**
  * 증권사별종목매매동향요청
@@ -3112,6 +3188,7 @@ export class TR_OPT10079Output implements ITROutputBase {
     multiT: new () => TR_OPT10079MultiItem;
     multi_items: TR_OPT10079MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10079MultiItem; }
+    next: boolean = false;
     '종목코드': string = '';
     '마지막틱갯수': string = '';
 };
@@ -3150,6 +3227,7 @@ export class TR_OPT10080Output implements ITROutputBase {
     multiT: new () => TR_OPT10080MultiItem;
     multi_items: TR_OPT10080MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10080MultiItem; }
+    next: boolean = false;
     '종목코드': string = '';
 };
 /**
@@ -3189,6 +3267,7 @@ export class TR_OPT10081Output implements ITROutputBase {
     multiT: new () => TR_OPT10081MultiItem;
     multi_items: TR_OPT10081MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10081MultiItem; }
+    next: boolean = false;
     '종목코드': string = '';
 };
 /**
@@ -3228,6 +3307,7 @@ export class TR_OPT10082Output implements ITROutputBase {
     multiT: new () => TR_OPT10082MultiItem;
     multi_items: TR_OPT10082MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10082MultiItem; }
+    next: boolean = false;
     '종목코드': string = '';
 };
 /**
@@ -3267,6 +3347,7 @@ export class TR_OPT10083Output implements ITROutputBase {
     multiT: new () => TR_OPT10083MultiItem;
     multi_items: TR_OPT10083MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10083MultiItem; }
+    next: boolean = false;
     '종목코드': string = '';
 };
 /**
@@ -3303,6 +3384,7 @@ export class TR_OPT10084Output implements ITROutputBase {
     multiT: new () => TR_OPT10084MultiItem;
     multi_items: TR_OPT10084MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10084MultiItem; }
+    next: boolean = false;
 };
 /**
  * 당일전일체결요청
@@ -3341,6 +3423,7 @@ export class TR_OPT10085Output implements ITROutputBase {
     multiT: new () => TR_OPT10085MultiItem;
     multi_items: TR_OPT10085MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10085MultiItem; }
+    next: boolean = false;
 };
 /**
  * 계좌수익률요청
@@ -3386,6 +3469,7 @@ export class TR_OPT10086Output implements ITROutputBase {
     multiT: new () => TR_OPT10086MultiItem;
     multi_items: TR_OPT10086MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10086MultiItem; }
+    next: boolean = false;
 };
 /**
  * 일별주가요청
@@ -3453,6 +3537,7 @@ export class TR_OPT10087Output implements ITROutputBase {
     multiT: new () => TR_OPT10087MultiItem;
     multi_items: TR_OPT10087MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10087MultiItem; }
+    next: boolean = false;
 };
 /**
  * 시간외단일가요청
@@ -3491,6 +3576,7 @@ export class TR_OPT10094Output implements ITROutputBase {
     multiT: new () => TR_OPT10094MultiItem;
     multi_items: TR_OPT10094MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10094MultiItem; }
+    next: boolean = false;
     '종목코드': string = '';
 };
 /**
@@ -3531,6 +3617,7 @@ export class TR_OPT10098Output implements ITROutputBase {
     multiT: new () => TR_OPT10098MultiItem;
     multi_items: TR_OPT10098MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10098MultiItem; }
+    next: boolean = false;
 };
 /**
  * 시간외단일가등락율순위요청
@@ -3577,6 +3664,7 @@ export class TR_OPT10131Output implements ITROutputBase {
     multiT: new () => TR_OPT10131MultiItem;
     multi_items: TR_OPT10131MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10131MultiItem; }
+    next: boolean = false;
 };
 /**
  * 기관외국인연속매매현황요청
@@ -3613,6 +3701,7 @@ export class TR_OPT10170Output implements ITROutputBase {
     multiT: new () => TR_OPT10170MultiItem;
     multi_items: TR_OPT10170MultiItem[] = [];
     constructor() { this.multiT = TR_OPT10170MultiItem; }
+    next: boolean = false;
     '총매도금액': string = '';
     '총매수금액': string = '';
     '총수수료_세금': string = '';
@@ -3648,6 +3737,7 @@ export class TR_OPT20001Output implements ITROutputBase {
     multiT: new () => TR_OPT20001MultiItem;
     multi_items: TR_OPT20001MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20001MultiItem; }
+    next: boolean = false;
     '현재가': string = '';
     '전일대비기호': string = '';
     '전일대비': string = '';
@@ -3704,6 +3794,7 @@ export class TR_OPT20002Output implements ITROutputBase {
     multiT: new () => TR_OPT20002MultiItem;
     multi_items: TR_OPT20002MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20002MultiItem; }
+    next: boolean = false;
 };
 /**
  * 업종별주가요청
@@ -3740,6 +3831,7 @@ export class TR_OPT20003Output implements ITROutputBase {
     multiT: new () => TR_OPT20003MultiItem;
     multi_items: TR_OPT20003MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20003MultiItem; }
+    next: boolean = false;
 };
 /**
  * 전업종지수요청
@@ -3772,6 +3864,7 @@ export class TR_OPT20004Output implements ITROutputBase {
     multiT: new () => TR_OPT20004MultiItem;
     multi_items: TR_OPT20004MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20004MultiItem; }
+    next: boolean = false;
     '업종코드': string = '';
 };
 /**
@@ -3805,6 +3898,7 @@ export class TR_OPT20005Output implements ITROutputBase {
     multiT: new () => TR_OPT20005MultiItem;
     multi_items: TR_OPT20005MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20005MultiItem; }
+    next: boolean = false;
     '업종코드': string = '';
 };
 /**
@@ -3839,6 +3933,7 @@ export class TR_OPT20006Output implements ITROutputBase {
     multiT: new () => TR_OPT20006MultiItem;
     multi_items: TR_OPT20006MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20006MultiItem; }
+    next: boolean = false;
     '업종코드': string = '';
 };
 /**
@@ -3873,6 +3968,7 @@ export class TR_OPT20007Output implements ITROutputBase {
     multiT: new () => TR_OPT20007MultiItem;
     multi_items: TR_OPT20007MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20007MultiItem; }
+    next: boolean = false;
     '업종코드': string = '';
 };
 /**
@@ -3907,6 +4003,7 @@ export class TR_OPT20008Output implements ITROutputBase {
     multiT: new () => TR_OPT20008MultiItem;
     multi_items: TR_OPT20008MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20008MultiItem; }
+    next: boolean = false;
     '업종코드': string = '';
 };
 /**
@@ -3936,6 +4033,7 @@ export class TR_OPT20009Output implements ITROutputBase {
     multiT: new () => TR_OPT20009MultiItem;
     multi_items: TR_OPT20009MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20009MultiItem; }
+    next: boolean = false;
     '현재가': string = '';
     '전일대비기호': string = '';
     '전일대비': string = '';
@@ -3991,6 +4089,7 @@ export class TR_OPT20019Output implements ITROutputBase {
     multiT: new () => TR_OPT20019MultiItem;
     multi_items: TR_OPT20019MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20019MultiItem; }
+    next: boolean = false;
     '업종코드': string = '';
 };
 /**
@@ -4022,6 +4121,7 @@ export class TR_OPT20068Output implements ITROutputBase {
     multiT: new () => TR_OPT20068MultiItem;
     multi_items: TR_OPT20068MultiItem[] = [];
     constructor() { this.multiT = TR_OPT20068MultiItem; }
+    next: boolean = false;
 };
 /**
  * 대차거래추이요청(종목별)
@@ -4061,6 +4161,7 @@ export class TR_OPT30001Output implements ITROutputBase {
     multiT: new () => TR_OPT30001MultiItem;
     multi_items: TR_OPT30001MultiItem[] = [];
     constructor() { this.multiT = TR_OPT30001MultiItem; }
+    next: boolean = false;
     '기준가시간': string = '';
 };
 /**
@@ -4095,6 +4196,7 @@ export class TR_OPT30002Output implements ITROutputBase {
     multiT: new () => TR_OPT30002MultiItem;
     multi_items: TR_OPT30002MultiItem[] = [];
     constructor() { this.multiT = TR_OPT30002MultiItem; }
+    next: boolean = false;
 };
 /**
  * 거래원별ELW순매매상위요청
@@ -4127,6 +4229,7 @@ export class TR_OPT30003Output implements ITROutputBase {
     multiT: new () => TR_OPT30003MultiItem;
     multi_items: TR_OPT30003MultiItem[] = [];
     constructor() { this.multiT = TR_OPT30003MultiItem; }
+    next: boolean = false;
 };
 /**
  * ELWLP보유일별추이요청
@@ -4167,6 +4270,7 @@ export class TR_OPT30004Output implements ITROutputBase {
     multiT: new () => TR_OPT30004MultiItem;
     multi_items: TR_OPT30004MultiItem[] = [];
     constructor() { this.multiT = TR_OPT30004MultiItem; }
+    next: boolean = false;
 };
 /**
  * ELW괴리율요청
@@ -4231,6 +4335,7 @@ export class TR_OPT30005Output implements ITROutputBase {
     multiT: new () => TR_OPT30005MultiItem;
     multi_items: TR_OPT30005MultiItem[] = [];
     constructor() { this.multiT = TR_OPT30005MultiItem; }
+    next: boolean = false;
 };
 /**
  * ELW조건검색요청
@@ -4249,6 +4354,7 @@ export class TR_OPT30006Input implements ITRInputBase {
 export class TR_OPT30006Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '조기종료여부': string = '';
     '이론가': string = '';
     '괴리율': string = '';
@@ -4370,6 +4476,7 @@ export class TR_OPT30007Output implements ITROutputBase {
     multiT: new () => TR_OPT30007MultiItem;
     multi_items: TR_OPT30007MultiItem[] = [];
     constructor() { this.multiT = TR_OPT30007MultiItem; }
+    next: boolean = false;
 };
 /**
  * ELW종목상세요청
@@ -4399,6 +4506,7 @@ export class TR_OPT30008Output implements ITROutputBase {
     multiT: new () => TR_OPT30008MultiItem;
     multi_items: TR_OPT30008MultiItem[] = [];
     constructor() { this.multiT = TR_OPT30008MultiItem; }
+    next: boolean = false;
 };
 /**
  * ELW민감도지표요청
@@ -4433,6 +4541,7 @@ export class TR_OPT30009Output implements ITROutputBase {
     multiT: new () => TR_OPT30009MultiItem;
     multi_items: TR_OPT30009MultiItem[] = [];
     constructor() { this.multiT = TR_OPT30009MultiItem; }
+    next: boolean = false;
 };
 /**
  * ELW등락율순위요청
@@ -4468,6 +4577,7 @@ export class TR_OPT30010Output implements ITROutputBase {
     multiT: new () => TR_OPT30010MultiItem;
     multi_items: TR_OPT30010MultiItem[] = [];
     constructor() { this.multiT = TR_OPT30010MultiItem; }
+    next: boolean = false;
 };
 /**
  * ELW잔량순위요청
@@ -4497,6 +4607,7 @@ export class TR_OPT30011Output implements ITROutputBase {
     multiT: new () => TR_OPT30011MultiItem;
     multi_items: TR_OPT30011MultiItem[] = [];
     constructor() { this.multiT = TR_OPT30011MultiItem; }
+    next: boolean = false;
 };
 /**
  * ELW근접율요청
@@ -4515,6 +4626,7 @@ export class TR_OPT30012Input implements ITRInputBase {
 export class TR_OPT30012Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '자산코드': string = '';
     '현재가': string = '';
     '전일대비기호': string = '';
@@ -4607,6 +4719,7 @@ export class TR_OPT40001Output implements ITROutputBase {
     multiT: new () => TR_OPT40001MultiItem;
     multi_items: TR_OPT40001MultiItem[] = [];
     constructor() { this.multiT = TR_OPT40001MultiItem; }
+    next: boolean = false;
 };
 /**
  * ETF수익율요청
@@ -4625,6 +4738,7 @@ export class TR_OPT40002Input implements ITRInputBase {
 export class TR_OPT40002Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '종목명': string = '';
     'ETF대상지수명': string = '';
     '원주가격': string = '';
@@ -4665,6 +4779,7 @@ export class TR_OPT40003Output implements ITROutputBase {
     multiT: new () => TR_OPT40003MultiItem;
     multi_items: TR_OPT40003MultiItem[] = [];
     constructor() { this.multiT = TR_OPT40003MultiItem; }
+    next: boolean = false;
 };
 /**
  * ETF일별추이요청
@@ -4708,6 +4823,7 @@ export class TR_OPT40004Output implements ITROutputBase {
     multiT: new () => TR_OPT40004MultiItem;
     multi_items: TR_OPT40004MultiItem[] = [];
     constructor() { this.multiT = TR_OPT40004MultiItem; }
+    next: boolean = false;
 };
 /**
  * ETF전체시세요청
@@ -4743,6 +4859,7 @@ export class TR_OPT40005Output implements ITROutputBase {
     multiT: new () => TR_OPT40005MultiItem;
     multi_items: TR_OPT40005MultiItem[] = [];
     constructor() { this.multiT = TR_OPT40005MultiItem; }
+    next: boolean = false;
 };
 /**
  * ETF일별추이요청
@@ -4778,6 +4895,7 @@ export class TR_OPT40006Output implements ITROutputBase {
     multiT: new () => TR_OPT40006MultiItem;
     multi_items: TR_OPT40006MultiItem[] = [];
     constructor() { this.multiT = TR_OPT40006MultiItem; }
+    next: boolean = false;
     '종목명': string = '';
     'ETF대상지수명': string = '';
     '원주가격': string = '';
@@ -4809,6 +4927,7 @@ export class TR_OPT40007Output implements ITROutputBase {
     multiT: new () => TR_OPT40007MultiItem;
     multi_items: TR_OPT40007MultiItem[] = [];
     constructor() { this.multiT = TR_OPT40007MultiItem; }
+    next: boolean = false;
     '종목분류': string = '';
     '종목명': string = '';
     'ETF대상지수명': string = '';
@@ -4843,6 +4962,7 @@ export class TR_OPT40008Output implements ITROutputBase {
     multiT: new () => TR_OPT40008MultiItem;
     multi_items: TR_OPT40008MultiItem[] = [];
     constructor() { this.multiT = TR_OPT40008MultiItem; }
+    next: boolean = false;
     '체결시간': string = '';
     '현재가': string = '';
     '대비기호': string = '';
@@ -4882,6 +5002,7 @@ export class TR_OPT40009Output implements ITROutputBase {
     multiT: new () => TR_OPT40009MultiItem;
     multi_items: TR_OPT40009MultiItem[] = [];
     constructor() { this.multiT = TR_OPT40009MultiItem; }
+    next: boolean = false;
 };
 /**
  * ETF시간대별체결요청
@@ -4908,6 +5029,7 @@ export class TR_OPT40010Output implements ITROutputBase {
     multiT: new () => TR_OPT40010MultiItem;
     multi_items: TR_OPT40010MultiItem[] = [];
     constructor() { this.multiT = TR_OPT40010MultiItem; }
+    next: boolean = false;
 };
 /**
  * ETF시간대별추이요청
@@ -4943,6 +5065,7 @@ export class TR_OPT50001Output implements ITROutputBase {
     multiT: new () => TR_OPT50001MultiItem;
     multi_items: TR_OPT50001MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50001MultiItem; }
+    next: boolean = false;
     '현재가': string = '';
     '대비기호': string = '';
     '전일대비': string = '';
@@ -5069,6 +5192,7 @@ export class TR_OPT50002Output implements ITROutputBase {
     multiT: new () => TR_OPT50002MultiItem;
     multi_items: TR_OPT50002MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50002MultiItem; }
+    next: boolean = false;
     '종목명': string = '';
     '현재가': string = '';
     '대비기호': string = '';
@@ -5093,6 +5217,7 @@ export class TR_OPT50003Input implements ITRInputBase {
 export class TR_OPT50003Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '일자': string = '';
     '현재가': string = '';
     '기준가': string = '';
@@ -5137,6 +5262,7 @@ export class TR_OPT50004Output implements ITROutputBase {
     multiT: new () => TR_OPT50004MultiItem;
     multi_items: TR_OPT50004MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50004MultiItem; }
+    next: boolean = false;
 };
 /**
  * 콜옵션행사가요청
@@ -5162,6 +5288,7 @@ export class TR_OPT50005Output implements ITROutputBase {
     multiT: new () => TR_OPT50005MultiItem;
     multi_items: TR_OPT50005MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50005MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선옵시간별거래량요청
@@ -5194,6 +5321,7 @@ export class TR_OPT50006Output implements ITROutputBase {
     multiT: new () => TR_OPT50006MultiItem;
     multi_items: TR_OPT50006MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50006MultiItem; }
+    next: boolean = false;
     '종목명': string = '';
 };
 /**
@@ -5233,6 +5361,7 @@ export class TR_OPT50007Output implements ITROutputBase {
     multiT: new () => TR_OPT50007MultiItem;
     multi_items: TR_OPT50007MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50007MultiItem; }
+    next: boolean = false;
     '현재가': string = '';
     '대비기호': string = '';
     '전일대비': string = '';
@@ -5272,6 +5401,7 @@ export class TR_OPT50008Output implements ITROutputBase {
     multiT: new () => TR_OPT50008MultiItem;
     multi_items: TR_OPT50008MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50008MultiItem; }
+    next: boolean = false;
 };
 /**
  * 프로그램매매추이차트요청
@@ -5298,6 +5428,7 @@ export class TR_OPT50009Output implements ITROutputBase {
     multiT: new () => TR_OPT50009MultiItem;
     multi_items: TR_OPT50009MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50009MultiItem; }
+    next: boolean = false;
     '시가': string = '';
     '고가': string = '';
     '저가': string = '';
@@ -5332,6 +5463,7 @@ export class TR_OPT50010Output implements ITROutputBase {
     multiT: new () => TR_OPT50010MultiItem;
     multi_items: TR_OPT50010MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50010MultiItem; }
+    next: boolean = false;
     '시가': string = '';
     '고가': string = '';
     '저가': string = '';
@@ -5367,6 +5499,7 @@ export class TR_OPT50011Output implements ITROutputBase {
     multiT: new () => TR_OPT50011MultiItem;
     multi_items: TR_OPT50011MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50011MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선옵호가잔량추이요청
@@ -5391,6 +5524,7 @@ export class TR_OPT50012Output implements ITROutputBase {
     multiT: new () => TR_OPT50012MultiItem;
     multi_items: TR_OPT50012MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50012MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선옵타임스프레드차트요청
@@ -5416,6 +5550,7 @@ export class TR_OPT50013Output implements ITROutputBase {
     multiT: new () => TR_OPT50013MultiItem;
     multi_items: TR_OPT50013MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50013MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선물가격대별비중차트요청
@@ -5441,6 +5576,7 @@ export class TR_OPT50014Output implements ITROutputBase {
     multiT: new () => TR_OPT50014MultiItem;
     multi_items: TR_OPT50014MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50014MultiItem; }
+    next: boolean = false;
     '현재가': string = '';
     '대비기호': string = '';
     '전일대비': string = '';
@@ -5477,6 +5613,7 @@ export class TR_OPT50015Output implements ITROutputBase {
     multiT: new () => TR_OPT50015MultiItem;
     multi_items: TR_OPT50015MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50015MultiItem; }
+    next: boolean = false;
     '현재가s': string = '';
     '대비기호s': string = '';
     '전일대비s': string = '';
@@ -5518,6 +5655,7 @@ export class TR_OPT50016Output implements ITROutputBase {
     multiT: new () => TR_OPT50016MultiItem;
     multi_items: TR_OPT50016MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50016MultiItem; }
+    next: boolean = false;
     '전일종가': string = '';
 };
 /**
@@ -5549,6 +5687,7 @@ export class TR_OPT50017Output implements ITROutputBase {
     multiT: new () => TR_OPT50017MultiItem;
     multi_items: TR_OPT50017MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50017MultiItem; }
+    next: boolean = false;
 };
 /**
  * 베이시스추이차트요청
@@ -5573,6 +5712,7 @@ export class TR_OPT50018Output implements ITROutputBase {
     multiT: new () => TR_OPT50018MultiItem;
     multi_items: TR_OPT50018MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50018MultiItem; }
+    next: boolean = false;
 };
 /**
  * 풋콜옵션비율차트요청
@@ -5591,6 +5731,7 @@ export class TR_OPT50019Input implements ITRInputBase {
 export class TR_OPT50019Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '종목명': string = '';
     '현재가': string = '';
     '대비기호': string = '';
@@ -5704,6 +5845,7 @@ export class TR_OPT50020Output implements ITROutputBase {
     multiT: new () => TR_OPT50020MultiItem;
     multi_items: TR_OPT50020MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50020MultiItem; }
+    next: boolean = false;
 };
 /**
  * 복수종목결제월별시세요청
@@ -5760,6 +5902,7 @@ export class TR_OPT50021Output implements ITROutputBase {
     multiT: new () => TR_OPT50021MultiItem;
     multi_items: TR_OPT50021MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50021MultiItem; }
+    next: boolean = false;
 };
 /**
  * 콜종목결제월별시세요청
@@ -5816,6 +5959,7 @@ export class TR_OPT50022Output implements ITROutputBase {
     multiT: new () => TR_OPT50022MultiItem;
     multi_items: TR_OPT50022MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50022MultiItem; }
+    next: boolean = false;
 };
 /**
  * 풋종목결제월별시세요청
@@ -5856,6 +6000,7 @@ export class TR_OPT50023Output implements ITROutputBase {
     multiT: new () => TR_OPT50023MultiItem;
     multi_items: TR_OPT50023MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50023MultiItem; }
+    next: boolean = false;
     '이론가': string = '';
     '괴리율': string = '';
     '내재변동성': string = '';
@@ -5915,6 +6060,7 @@ export class TR_OPT50024Output implements ITROutputBase {
     multiT: new () => TR_OPT50024MultiItem;
     multi_items: TR_OPT50024MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50024MultiItem; }
+    next: boolean = false;
 };
 /**
  * 일별변동성분석그래프요청
@@ -5952,6 +6098,7 @@ export class TR_OPT50025Output implements ITROutputBase {
     multiT: new () => TR_OPT50025MultiItem;
     multi_items: TR_OPT50025MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50025MultiItem; }
+    next: boolean = false;
 };
 /**
  * 시간별변동성분석그래프요청
@@ -5991,6 +6138,7 @@ export class TR_OPT50026Output implements ITROutputBase {
     multiT: new () => TR_OPT50026MultiItem;
     multi_items: TR_OPT50026MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50026MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선옵주문체결요청
@@ -6056,6 +6204,7 @@ export class TR_OPT50027Output implements ITROutputBase {
     multiT: new () => TR_OPT50027MultiItem;
     multi_items: TR_OPT50027MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50027MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선옵잔고요청
@@ -6085,6 +6234,7 @@ export class TR_OPT50028Output implements ITROutputBase {
     multiT: new () => TR_OPT50028MultiItem;
     multi_items: TR_OPT50028MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50028MultiItem; }
+    next: boolean = false;
     '종목코드': string = '';
     '마지막틱갯수': string = '';
 };
@@ -6117,6 +6267,7 @@ export class TR_OPT50029Output implements ITROutputBase {
     multiT: new () => TR_OPT50029MultiItem;
     multi_items: TR_OPT50029MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50029MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선물분차트요청
@@ -6147,6 +6298,7 @@ export class TR_OPT50030Output implements ITROutputBase {
     multiT: new () => TR_OPT50030MultiItem;
     multi_items: TR_OPT50030MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50030MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선물일차트요청
@@ -6181,6 +6333,7 @@ export class TR_OPT50031Output implements ITROutputBase {
     multiT: new () => TR_OPT50031MultiItem;
     multi_items: TR_OPT50031MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50031MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선옵잔고손익요청
@@ -6212,6 +6365,7 @@ export class TR_OPT50032Output implements ITROutputBase {
     multiT: new () => TR_OPT50032MultiItem;
     multi_items: TR_OPT50032MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50032MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선옵당일실현손익요청
@@ -6231,6 +6385,7 @@ export class TR_OPT50033Input implements ITRInputBase {
 export class TR_OPT50033Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '대표내재변동성': string = '';
     '콜내재변동성': string = '';
     '풋내재변동성': string = '';
@@ -6270,6 +6425,7 @@ export class TR_OPT50034Output implements ITROutputBase {
     multiT: new () => TR_OPT50034MultiItem;
     multi_items: TR_OPT50034MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50034MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선옵전일가격요청
@@ -6303,6 +6459,7 @@ export class TR_OPT50035Output implements ITROutputBase {
     multiT: new () => TR_OPT50035MultiItem;
     multi_items: TR_OPT50035MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50035MultiItem; }
+    next: boolean = false;
 };
 /**
  * 지수변동성차트요청
@@ -6330,6 +6487,7 @@ export class TR_OPT50036Output implements ITROutputBase {
     multiT: new () => TR_OPT50036MultiItem;
     multi_items: TR_OPT50036MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50036MultiItem; }
+    next: boolean = false;
 };
 /**
  * 주요지수변동성차트요청
@@ -6354,6 +6512,7 @@ export class TR_OPT50037Output implements ITROutputBase {
     multiT: new () => TR_OPT50037MultiItem;
     multi_items: TR_OPT50037MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50037MultiItem; }
+    next: boolean = false;
 };
 /**
  * 코스피200지수요청
@@ -6398,6 +6557,7 @@ export class TR_OPT50038Output implements ITROutputBase {
     multiT: new () => TR_OPT50038MultiItem;
     multi_items: TR_OPT50038MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50038MultiItem; }
+    next: boolean = false;
 };
 /**
  * 투자자별만기손익차트요청
@@ -6462,6 +6622,7 @@ export class TR_OPT50039Output implements ITROutputBase {
     multiT: new () => TR_OPT50039MultiItem;
     multi_items: TR_OPT50039MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50039MultiItem; }
+    next: boolean = false;
 };
 /**
  * 투자자별포지션종합요청
@@ -6503,6 +6664,7 @@ export class TR_OPT50040Output implements ITROutputBase {
     multiT: new () => TR_OPT50040MultiItem;
     multi_items: TR_OPT50040MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50040MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선옵시고저가요청
@@ -6532,6 +6694,7 @@ export class TR_OPT50043Output implements ITROutputBase {
     multiT: new () => TR_OPT50043MultiItem;
     multi_items: TR_OPT50043MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50043MultiItem; }
+    next: boolean = false;
 };
 /**
  * 주식선물거래량상위종목요청
@@ -6571,6 +6734,7 @@ export class TR_OPT50044Output implements ITROutputBase {
     multiT: new () => TR_OPT50044MultiItem;
     multi_items: TR_OPT50044MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50044MultiItem; }
+    next: boolean = false;
     '거래량합계': string = '';
     '거래대금합계': string = '';
 };
@@ -6599,6 +6763,7 @@ export class TR_OPT50062Output implements ITROutputBase {
     multiT: new () => TR_OPT50062MultiItem;
     multi_items: TR_OPT50062MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50062MultiItem; }
+    next: boolean = false;
     '현재가s': string = '';
     '대비기호s': string = '';
     '전일대비s': string = '';
@@ -6634,6 +6799,7 @@ export class TR_OPT50063Output implements ITROutputBase {
     multiT: new () => TR_OPT50063MultiItem;
     multi_items: TR_OPT50063MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50063MultiItem; }
+    next: boolean = false;
     '현재가s': string = '';
     '대비기호s': string = '';
     '전일대비s': string = '';
@@ -6669,6 +6835,7 @@ export class TR_OPT50064Output implements ITROutputBase {
     multiT: new () => TR_OPT50064MultiItem;
     multi_items: TR_OPT50064MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50064MultiItem; }
+    next: boolean = false;
     '현재가s': string = '';
     '대비기호s': string = '';
     '전일대비s': string = '';
@@ -6702,6 +6869,7 @@ export class TR_OPT50065Output implements ITROutputBase {
     multiT: new () => TR_OPT50065MultiItem;
     multi_items: TR_OPT50065MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50065MultiItem; }
+    next: boolean = false;
 };
 /**
  * 풋옵션행사가요청
@@ -6731,6 +6899,7 @@ export class TR_OPT50066Output implements ITROutputBase {
     multiT: new () => TR_OPT50066MultiItem;
     multi_items: TR_OPT50066MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50066MultiItem; }
+    next: boolean = false;
     '종목코드': string = '';
     '마지막틱갯수': string = '';
 };
@@ -6762,6 +6931,7 @@ export class TR_OPT50067Output implements ITROutputBase {
     multiT: new () => TR_OPT50067MultiItem;
     multi_items: TR_OPT50067MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50067MultiItem; }
+    next: boolean = false;
 };
 /**
  * 옵션분차트요청
@@ -6791,6 +6961,7 @@ export class TR_OPT50068Output implements ITROutputBase {
     multiT: new () => TR_OPT50068MultiItem;
     multi_items: TR_OPT50068MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50068MultiItem; }
+    next: boolean = false;
 };
 /**
  * 옵션일차트요청
@@ -6820,6 +6991,7 @@ export class TR_OPT50071Output implements ITROutputBase {
     multiT: new () => TR_OPT50071MultiItem;
     multi_items: TR_OPT50071MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50071MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선물주차트요청
@@ -6849,6 +7021,7 @@ export class TR_OPT50072Output implements ITROutputBase {
     multiT: new () => TR_OPT50072MultiItem;
     multi_items: TR_OPT50072MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50072MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선물월차트요청
@@ -6878,6 +7051,7 @@ export class TR_OPT50073Output implements ITROutputBase {
     multiT: new () => TR_OPT50073MultiItem;
     multi_items: TR_OPT50073MultiItem[] = [];
     constructor() { this.multiT = TR_OPT50073MultiItem; }
+    next: boolean = false;
 };
 /**
  * 선물년차트요청
@@ -6912,6 +7086,7 @@ export class TR_OPT90001Output implements ITROutputBase {
     multiT: new () => TR_OPT90001MultiItem;
     multi_items: TR_OPT90001MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90001MultiItem; }
+    next: boolean = false;
 };
 /**
  * 테마그룹별요청
@@ -6946,6 +7121,7 @@ export class TR_OPT90002Output implements ITROutputBase {
     multiT: new () => TR_OPT90002MultiItem;
     multi_items: TR_OPT90002MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90002MultiItem; }
+    next: boolean = false;
     '등락률': string = '';
     '기간수익률': string = '';
 };
@@ -6982,6 +7158,7 @@ export class TR_OPT90003Output implements ITROutputBase {
     multiT: new () => TR_OPT90003MultiItem;
     multi_items: TR_OPT90003MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90003MultiItem; }
+    next: boolean = false;
 };
 /**
  * 프로그램순매수상위50요청
@@ -7015,6 +7192,7 @@ export class TR_OPT90004Output implements ITROutputBase {
     multiT: new () => TR_OPT90004MultiItem;
     multi_items: TR_OPT90004MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90004MultiItem; }
+    next: boolean = false;
     '합계1': string = '';
     '합계2': string = '';
     '합계3': string = '';
@@ -7064,6 +7242,7 @@ export class TR_OPT90005Output implements ITROutputBase {
     multiT: new () => TR_OPT90005MultiItem;
     multi_items: TR_OPT90005MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90005MultiItem; }
+    next: boolean = false;
 };
 /**
  * 프로그램매매추이요청
@@ -7092,6 +7271,7 @@ export class TR_OPT90006Output implements ITROutputBase {
     multiT: new () => TR_OPT90006MultiItem;
     multi_items: TR_OPT90006MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90006MultiItem; }
+    next: boolean = false;
 };
 /**
  * 프로그램매매차익잔고추이요청
@@ -7124,6 +7304,7 @@ export class TR_OPT90007Output implements ITROutputBase {
     multiT: new () => TR_OPT90007MultiItem;
     multi_items: TR_OPT90007MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90007MultiItem; }
+    next: boolean = false;
 };
 /**
  * 프로그램매매누적추이요청
@@ -7165,6 +7346,7 @@ export class TR_OPT90008Output implements ITROutputBase {
     multiT: new () => TR_OPT90008MultiItem;
     multi_items: TR_OPT90008MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90008MultiItem; }
+    next: boolean = false;
 };
 /**
  * 종목시간별프로그램매매추이요청
@@ -7206,6 +7388,7 @@ export class TR_OPT90009Output implements ITROutputBase {
     multiT: new () => TR_OPT90009MultiItem;
     multi_items: TR_OPT90009MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90009MultiItem; }
+    next: boolean = false;
 };
 /**
  * 외국인기관매매상위요청
@@ -7278,6 +7461,7 @@ export class TR_OPT90010Output implements ITROutputBase {
     multiT: new () => TR_OPT90010MultiItem;
     multi_items: TR_OPT90010MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90010MultiItem; }
+    next: boolean = false;
     '기준일자': string = '';
 };
 /**
@@ -7351,6 +7535,7 @@ export class TR_OPT90011Output implements ITROutputBase {
     multiT: new () => TR_OPT90011MultiItem;
     multi_items: TR_OPT90011MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90011MultiItem; }
+    next: boolean = false;
     '기준일자': string = '';
 };
 /**
@@ -7380,6 +7565,7 @@ export class TR_OPT90012Output implements ITROutputBase {
     multiT: new () => TR_OPT90012MultiItem;
     multi_items: TR_OPT90012MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90012MultiItem; }
+    next: boolean = false;
 };
 /**
  * 대차거래내역요청
@@ -7421,6 +7607,7 @@ export class TR_OPT90013Output implements ITROutputBase {
     multiT: new () => TR_OPT90013MultiItem;
     multi_items: TR_OPT90013MultiItem[] = [];
     constructor() { this.multiT = TR_OPT90013MultiItem; }
+    next: boolean = false;
 };
 /**
  * 종목일별프로그램매매추이요청
@@ -7452,6 +7639,7 @@ export class TR_OPT99999Output implements ITROutputBase {
     multiT: new () => TR_OPT99999MultiItem;
     multi_items: TR_OPT99999MultiItem[] = [];
     constructor() { this.multiT = TR_OPT99999MultiItem; }
+    next: boolean = false;
 };
 /**
  * 대차거래상위10종목요청
@@ -7470,6 +7658,7 @@ export class TR_OPTFOFIDInput implements ITRInputBase {
 export class TR_OPTFOFIDOutput implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '종목코드': string = '';
     '종목명': string = '';
     '현재가': string = '';
@@ -7584,6 +7773,7 @@ export class TR_OPTKWFIDOutput implements ITROutputBase {
     multiT: new () => TR_OPTKWFIDMultiItem;
     multi_items: TR_OPTKWFIDMultiItem[] = [];
     constructor() { this.multiT = TR_OPTKWFIDMultiItem; }
+    next: boolean = false;
 };
 /**
  * 관심종목정보요청
@@ -7612,6 +7802,7 @@ export class TR_OPTKWINVOutput implements ITROutputBase {
     multiT: new () => TR_OPTKWINVMultiItem;
     multi_items: TR_OPTKWINVMultiItem[] = [];
     constructor() { this.multiT = TR_OPTKWINVMultiItem; }
+    next: boolean = false;
 };
 /**
  * 관심종목투자자정보요청
@@ -7652,6 +7843,7 @@ export class TR_OPTKWPROOutput implements ITROutputBase {
     multiT: new () => TR_OPTKWPROMultiItem;
     multi_items: TR_OPTKWPROMultiItem[] = [];
     constructor() { this.multiT = TR_OPTKWPROMultiItem; }
+    next: boolean = false;
 };
 /**
  * 관심종목프로그램정보요청
@@ -7689,6 +7881,7 @@ export class TR_OPW00001Output implements ITROutputBase {
     multiT: new () => TR_OPW00001MultiItem;
     multi_items: TR_OPW00001MultiItem[] = [];
     constructor() { this.multiT = TR_OPW00001MultiItem; }
+    next: boolean = false;
     '예수금': string = '';
     '주식증거금현금': string = '';
     '수익증권증거금현금': string = '';
@@ -7789,6 +7982,7 @@ export class TR_OPW00002Output implements ITROutputBase {
     multiT: new () => TR_OPW00002MultiItem;
     multi_items: TR_OPW00002MultiItem[] = [];
     constructor() { this.multiT = TR_OPW00002MultiItem; }
+    next: boolean = false;
     '출력건수': string = '';
 };
 /**
@@ -7810,6 +8004,7 @@ export class TR_OPW00003Input implements ITRInputBase {
 export class TR_OPW00003Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '추정예탁자산': string = '';
 };
 /**
@@ -7850,6 +8045,7 @@ export class TR_OPW00004Output implements ITROutputBase {
     multiT: new () => TR_OPW00004MultiItem;
     multi_items: TR_OPW00004MultiItem[] = [];
     constructor() { this.multiT = TR_OPW00004MultiItem; }
+    next: boolean = false;
     '계좌명': string = '';
     '지점명': string = '';
     '예수금': string = '';
@@ -7905,6 +8101,7 @@ export class TR_OPW00005Output implements ITROutputBase {
     multiT: new () => TR_OPW00005MultiItem;
     multi_items: TR_OPW00005MultiItem[] = [];
     constructor() { this.multiT = TR_OPW00005MultiItem; }
+    next: boolean = false;
     '예수금': string = '';
     '예수금D+1': string = '';
     '예수금D+2': string = '';
@@ -7976,6 +8173,7 @@ export class TR_OPW00006Output implements ITROutputBase {
     multiT: new () => TR_OPW00006MultiItem;
     multi_items: TR_OPW00006MultiItem[] = [];
     constructor() { this.multiT = TR_OPW00006MultiItem; }
+    next: boolean = false;
     '출력건수': string = '';
 };
 /**
@@ -8026,6 +8224,7 @@ export class TR_OPW00007Output implements ITROutputBase {
     multiT: new () => TR_OPW00007MultiItem;
     multi_items: TR_OPW00007MultiItem[] = [];
     constructor() { this.multiT = TR_OPW00007MultiItem; }
+    next: boolean = false;
     '출력건수': string = '';
 };
 /**
@@ -8066,6 +8265,7 @@ export class TR_OPW00008Output implements ITROutputBase {
     multiT: new () => TR_OPW00008MultiItem;
     multi_items: TR_OPW00008MultiItem[] = [];
     constructor() { this.multiT = TR_OPW00008MultiItem; }
+    next: boolean = false;
     '매매일자': string = '';
     '결제일자': string = '';
     '매도정산합': string = '';
@@ -8121,6 +8321,7 @@ export class TR_OPW00009Output implements ITROutputBase {
     multiT: new () => TR_OPW00009MultiItem;
     multi_items: TR_OPW00009MultiItem[] = [];
     constructor() { this.multiT = TR_OPW00009MultiItem; }
+    next: boolean = false;
     '매도약정금액': string = '';
     '매수약정금액': string = '';
     '약정금액': string = '';
@@ -8151,6 +8352,7 @@ export class TR_OPW00010Input implements ITRInputBase {
 export class TR_OPW00010Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '증거금20주문가능금액': string = '';
     '증거금20주문가능수량': string = '';
     '증거금30주문가능금액': string = '';
@@ -8201,6 +8403,7 @@ export class TR_OPW00011Input implements ITRInputBase {
 export class TR_OPW00011Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '종목증거금율': string = '';
     '계좌증거금율': string = '';
     '적용증거금율': string = '';
@@ -8259,6 +8462,7 @@ export class TR_OPW00012Input implements ITRInputBase {
 export class TR_OPW00012Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '종목보증금율': string = '';
     '종목보증금율명': string = '';
     '보증금30주문가능금액': string = '';
@@ -8305,6 +8509,7 @@ export class TR_OPW00013Input implements ITRInputBase {
 export class TR_OPW00013Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '금일재사용대상금액': string = '';
     '금일재사용사용금액': string = '';
     '금일재사용가능금액': string = '';
@@ -8373,6 +8578,7 @@ export class TR_OPW00014Input implements ITRInputBase {
 export class TR_OPW00014Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '일치여부': string = '';
 };
 /**
@@ -8458,6 +8664,7 @@ export class TR_OPW00015Output implements ITROutputBase {
     multiT: new () => TR_OPW00015MultiItem;
     multi_items: TR_OPW00015MultiItem[] = [];
     constructor() { this.multiT = TR_OPW00015MultiItem; }
+    next: boolean = false;
     '계좌번호': string = '';
     '출력건수': string = '';
 };
@@ -8482,6 +8689,7 @@ export class TR_OPW00016Input implements ITRInputBase {
 export class TR_OPW00016Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '관리사원번호': string = '';
     '관리자명': string = '';
     '관리자지점': string = '';
@@ -8541,6 +8749,7 @@ export class TR_OPW00017Input implements ITRInputBase {
 export class TR_OPW00017Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     'D+2추정예수금': string = '';
     '신용이자미납금': string = '';
     '기타대여금': string = '';
@@ -8613,6 +8822,7 @@ export class TR_OPW00018Output implements ITROutputBase {
     multiT: new () => TR_OPW00018MultiItem;
     multi_items: TR_OPW00018MultiItem[] = [];
     constructor() { this.multiT = TR_OPW00018MultiItem; }
+    next: boolean = false;
     '총매입금액': string = '';
     '총평가금액': string = '';
     '총평가손익금액': string = '';
@@ -8646,6 +8856,7 @@ export class TR_OPW20001Input implements ITRInputBase {
 export class TR_OPW20001Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '현재위탁증거금총액': string = '';
     '현재현금예탁필요액': string = '';
     '체결위탁증거금총액': string = '';
@@ -8674,6 +8885,7 @@ export class TR_OPW20002Input implements ITRInputBase {
 export class TR_OPW20002Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '선물수수료': string = '';
     '옵션수수료': string = '';
     '주식옵션수수료': string = '';
@@ -8758,6 +8970,7 @@ export class TR_OPW20003Output implements ITROutputBase {
     multiT: new () => TR_OPW20003MultiItem;
     multi_items: TR_OPW20003MultiItem[] = [];
     constructor() { this.multiT = TR_OPW20003MultiItem; }
+    next: boolean = false;
     '선물약정금액': string = '';
     '옵션약정금액': string = '';
     '선물정산손익': string = '';
@@ -8814,6 +9027,7 @@ export class TR_OPW20004Output implements ITROutputBase {
     multiT: new () => TR_OPW20004MultiItem;
     multi_items: TR_OPW20004MultiItem[] = [];
     constructor() { this.multiT = TR_OPW20004MultiItem; }
+    next: boolean = false;
     '출력건수': string = '';
 };
 /**
@@ -8861,6 +9075,7 @@ export class TR_OPW20005Output implements ITROutputBase {
     multiT: new () => TR_OPW20005MultiItem;
     multi_items: TR_OPW20005MultiItem[] = [];
     constructor() { this.multiT = TR_OPW20005MultiItem; }
+    next: boolean = false;
     '출력건수': string = '';
 };
 /**
@@ -8897,6 +9112,7 @@ export class TR_OPW20006Output implements ITROutputBase {
     multiT: new () => TR_OPW20006MultiItem;
     multi_items: TR_OPW20006MultiItem[] = [];
     constructor() { this.multiT = TR_OPW20006MultiItem; }
+    next: boolean = false;
     '선물매도수량': string = '';
     '선물매수수량': string = '';
     '콜매도수량': string = '';
@@ -8945,6 +9161,7 @@ export class TR_OPW20007Output implements ITROutputBase {
     multiT: new () => TR_OPW20007MultiItem;
     multi_items: TR_OPW20007MultiItem[] = [];
     constructor() { this.multiT = TR_OPW20007MultiItem; }
+    next: boolean = false;
     '약정금액합계': string = '';
     '평가손익합계': string = '';
     '출력건수': string = '';
@@ -8968,6 +9185,7 @@ export class TR_OPW20008Input implements ITRInputBase {
 export class TR_OPW20008Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '계좌명': string = '';
     '예탁총액': string = '';
     '추정예탁총액': string = '';
@@ -9019,6 +9237,7 @@ export class TR_OPW20009Input implements ITRInputBase {
 export class TR_OPW20009Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '예탁총액': string = '';
     '예탁현금': string = '';
     '위탁증거금': string = '';
@@ -9056,6 +9275,7 @@ export class TR_OPW20010Input implements ITRInputBase {
 export class TR_OPW20010Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '예탁총액': string = '';
     '예탁현금': string = '';
     '에탁대용': string = '';
@@ -9174,6 +9394,7 @@ export class TR_OPW20011Output implements ITROutputBase {
     multiT: new () => TR_OPW20011MultiItem;
     multi_items: TR_OPW20011MultiItem[] = [];
     constructor() { this.multiT = TR_OPW20011MultiItem; }
+    next: boolean = false;
     '출력건수': string = '';
 };
 /**
@@ -9195,6 +9416,7 @@ export class TR_OPW20012Input implements ITRInputBase {
 export class TR_OPW20012Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '예탁총액': string = '';
     '예탁현금': string = '';
     '예탁대용': string = '';
@@ -9261,6 +9483,7 @@ export class TR_OPW20013Input implements ITRInputBase {
 export class TR_OPW20013Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '미결제수량': string = '';
     '청산가능수량': string = '';
     '현재증거금총액': string = '';
@@ -9298,6 +9521,7 @@ export class TR_OPW20014Output implements ITROutputBase {
     multiT: new () => TR_OPW20014MultiItem;
     multi_items: TR_OPW20014MultiItem[] = [];
     constructor() { this.multiT = TR_OPW20014MultiItem; }
+    next: boolean = false;
     '계좌명': string = '';
     '예탁총액': string = '';
     '예탁현금': string = '';
@@ -9360,6 +9584,7 @@ export class TR_OPW20015Output implements ITROutputBase {
     multiT: new () => TR_OPW20015MultiItem;
     multi_items: TR_OPW20015MultiItem[] = [];
     constructor() { this.multiT = TR_OPW20015MultiItem; }
+    next: boolean = false;
     '종목코드': string = '';
     'ATM행사가격': string = '';
     '위치': string = '';
@@ -9394,6 +9619,7 @@ export class TR_OPW20016Output implements ITROutputBase {
     multiT: new () => TR_OPW20016MultiItem;
     multi_items: TR_OPW20016MultiItem[] = [];
     constructor() { this.multiT = TR_OPW20016MultiItem; }
+    next: boolean = false;
     '신용융자가능여부': string = '';
     '출력건수': string = '';
 };
@@ -9414,6 +9640,7 @@ export class TR_OPW20017Input implements ITRInputBase {
 export class TR_OPW20017Output implements ITROutputBase {
     multiT = null;
     multi_items?: unknown[];
+    next: boolean = false;
     '신용가능여부': string = '';
 };
 /**
