@@ -1,6 +1,6 @@
 import { normalize } from 'path';
 import { IKiwoomEventHandler, KiwoomAPI } from './kiwoomapi';
-import { TRBase, ITRInputBase, ITROutputBase, TR_OPW00007, TR_OPW00018, TR_OPW00007MultiItem, TR_OPT10001 } from './trinfo';
+import { TRBase, ITRInputBase, ITROutputBase, TR_OPW00007, TR_OPW00018, TR_OPW00007MultiItem } from './trinfo';
 import { StockHoldingInfoType, StockInfoRawType, StockInfoType } from './types';
 import { FIDList } from './types_fid';
 import { RealList } from './types_real';
@@ -63,6 +63,7 @@ export class KiwoomUtil {
         if (existsSync(this.data_dir) === false) {
             mkdirSync(this.data_dir, { recursive: true });
         }
+        this.stockholding_list.length = 0;
 
         const startdate = new Date(this.start_date);
         const enddate = new Date();
@@ -177,27 +178,15 @@ export class KiwoomUtil {
             total_buy_value += info.total_buy_value;
             total_sell_value += info.total_sell_value;
             total_current_value += info.current_value;
-
-            const iteminfo = await this.sendTR(TR_OPT10001, { 종목코드: info.code });
-            const rawitem: StockInfoRawType = {
-                종목코드: iteminfo.종목코드,
-                종목명: iteminfo.종목명,
-                현재가: iteminfo.현재가,
-                전일대비: iteminfo.전일대비,
-                등락율: iteminfo.등락율,
-                매도호가: '0',
-                매수호가: '0',
-                거래량: iteminfo.거래량,
-                시가: iteminfo.시가,
-                고가: iteminfo.고가,
-                저가: iteminfo.저가,
-                체결시간: '',
-                체결강도: '0',
-            }
-            await this.updateStockList(rawitem);
-
-            this.kiwoom.SetRealReg('0023', item.종목번호.slice(-6), '10', '1');
         }
+
+        const itemlist = this.stockholding_list.map(h => h.code);
+        const infolist = await this.getStockInfo(itemlist);
+        for (const info of infolist) {
+            await this.updateStockList(info);
+        }
+        this.kiwoom.SetRealReg('0022', itemlist.join(';'), '10', '0');
+
         console.log('total_buy_value', total_buy_value);
         console.log('total_sell_value', total_sell_value);
         console.log('total_current_value', total_current_value);
@@ -327,8 +316,41 @@ export class KiwoomUtil {
         });
     }
 
+    async getStockInfo(codelist: string[]): Promise<StockInfoRawType[]> {
+        this.kiwoom.CommKwRqData(codelist.join(';'), false, codelist.length, 0, 'get_items', '0300');
+        return new Promise<StockInfoRawType[]>(resolve => {
+            this.waitingevent.onReceiveTrData.push({
+                rqname: 'get_items',
+                callback: async (scr_no, rq_name, tr_code) => {
+                    const result: StockInfoRawType[] = [];
+                    const count = await this.kiwoom.GetRepeatCnt(tr_code, rq_name);
+                    for (let i = 0; i < count; i++) {
+                        const rawitem: StockInfoRawType = {
+                            종목코드: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '종목코드')).trim(),
+                            종목명: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '종목명')).trim(),
+                            현재가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '현재가')).trim(),
+                            전일대비: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '전일대비')).trim(),
+                            등락율: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '등락율')).trim(),
+                            매도호가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '매도호가')).trim(),
+                            매수호가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '매수호가')).trim(),
+                            거래량: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '거래량')).trim(),
+                            시가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '시가')).trim(),
+                            고가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '고가')).trim(),
+                            저가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '저가')).trim(),
+                            체결시간: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '체결시간')).trim(),
+                            체결강도: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '체결강도')).trim(),
+                        }
+                        result.push(rawitem);
+                    }
+                    resolve(result);
+                }
+            });
+        });
+    }
+
     async sendTR<T extends TRBase<ITRInputBase, ITROutputBase>>(
         trinfo: new (input: T['input']) => T, trdata: Omit<T['input'], 'tr_code'>, next = false): Promise<T['output']> {
+
 
         const input = { ...trdata, tr_code: '' } as T['input'];
         const tr = new trinfo(input);
@@ -371,34 +393,7 @@ export class KiwoomUtil {
         });
     }
 
-    // TODO
-    // async buy(code: string, qty: number, price: number) {
-    //     this.kiwoom.SendOrder('buyorder', '2000', '8093398911', code, 1, '03', '00', qty, price, '');
-    // }
-
-    async test1() {
-        const condlist = await this.getConditionList();
-        console.log(condlist);
-
-        const cond = condlist.find(c => c.name.startsWith('Real'));
-        if (cond === undefined) return;
-
-        const condresult = await this.getConditionResult(cond);
-        console.log(condresult);
-
-        const info = await this.kiwoom.GetLoginInfo('ACCNO');
-        console.log(info);
-    }
-
-    async test2() {
-        this.kiwoom.SetInputValue("계좌번호", '8093398911');
-        this.kiwoom.SetInputValue("비밀번호", '0000');
-        this.kiwoom.SetInputValue("비밀번호입력매체구분", '00');
-        this.kiwoom.SetInputValue("조회구분", '2');
-        this.kiwoom.CommRqData("a0001", "opw00001", 0, "0102");
-    }
-
-    async test3() {
-        this.kiwoom.SetRealReg('0110', '005930', '10', '0');
+    async buy(code: string, qty: number, price: number) {
+        return this.kiwoom.SendOrder('buyorder', '2000', this.account, 1, code, qty, price, '00', '');
     }
 }
