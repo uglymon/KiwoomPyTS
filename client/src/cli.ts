@@ -2,7 +2,6 @@ import readline from 'readline';
 import { KiwoomUtil } from './kiwoomutil';
 import { KiwoomAPI } from './kiwoomapi';
 import chalk from 'chalk';
-import { TR_OPT10046 } from './trinfo';
 export class CLI {
     private kiwoomapi: KiwoomAPI;
     private kiwoomutil: KiwoomUtil;
@@ -47,7 +46,8 @@ export class CLI {
             rl.prompt();
 
         });
-        rl.on('close', () => {
+        rl.on('close', async () => {
+            await this.kiwoomapi.SetRealRemove('ALL', 'ALL');
             this.onexit();
         });
     }
@@ -77,33 +77,11 @@ export class CLI {
     }
 
     async cmd_test1(cli: CLI) {
-        const result = await cli.kiwoomutil.sendTR(TR_OPT10046, {
-            종목코드: '310210',
-
-            틱구분: '1',
-            체결강도구분: '1',
-        });
-        for (const item of result.multi_items) {
-            console.log(item.체결시간, item.현재가, item.체결강도, item.체결강도5분, item.체결강도20분, item.체결강도60분);
-        }
-        let next = result.next;
-
-        while (next) {
-            const result = await cli.kiwoomutil.sendTR(TR_OPT10046, {
-                종목코드: '310210',
-                틱구분: '1',
-                체결강도구분: '1',
-            }, true);
-            for (const item of result.multi_items) {
-                console.log(item.체결시간, item.현재가, item.체결강도, item.체결강도5분, item.체결강도20분, item.체결강도60분);
-            }
-            next = result.next;
-        }
+        await cli.kiwoomutil.buy_program();
     }
 
-    async cmd_test3(cli: CLI) {
-        const result = await cli.kiwoomutil.buy('310210', 1, 100000);
-        console.log(result);
+    async cmd_test2(cli: CLI) {
+        const result = await cli.kiwoomutil.getOrderInfo();
+        console.log(result.multi_items);
     }
-
 }
