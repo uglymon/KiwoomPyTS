@@ -357,7 +357,7 @@ export class KiwoomUtil {
 
         for (const key in input) {
             if (key === 'tr_code') continue;
-            this.kiwoom.SetInputValue(key, input[key] as string);
+            await this.kiwoom.SetInputValue(key, input[key] as string);
         }
         const rqname = input.tr_code + '_req';
         this.kiwoom.CommRqData(rqname, input.tr_code, next === true ? 2 : 0, '0101');
