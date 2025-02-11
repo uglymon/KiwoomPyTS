@@ -38,6 +38,7 @@ export class KiwoomUtil {
             onReceiveTrData: this.on_receive_tr_data,
             onReceiveRealData: this.on_receive_real_data,
             onReceiveChejanData: this.on_receive_chejan_data,
+            onReceiveMsg: this.on_receive_msg,
         };
         this.kiwoom.SetRealRemove('ALL', 'ALL');
         this.kiwoom.setEventHandler(this.event_handler);
@@ -54,7 +55,7 @@ export class KiwoomUtil {
         this.server_type = servertype === '1' ? 'TEST' : 'REAL';
         console.log(`${chalk.green('connected server type')} : ${chalk.yellow(this.server_type)}`);
 
-        await this.getAccountStatus();
+        // await this.getAccountStatus();
 
         oninit();
     }
@@ -180,12 +181,12 @@ export class KiwoomUtil {
             total_current_value += info.current_value;
         }
 
-        const itemlist = this.stockholding_list.map(h => h.code);
-        const infolist = await this.getStockInfo(itemlist);
+        const codelist = this.stockholding_list.map(h => h.code);
+        const infolist = await this.getStockInfo(codelist);
         for (const info of infolist) {
             await this.updateStockList(info);
         }
-        this.kiwoom.SetRealReg('0022', itemlist.join(';'), '10', '0');
+        this.kiwoom.SetRealReg('0022', codelist.join(';'), '10', '1');
 
         console.log('total_buy_value', total_buy_value);
         console.log('total_sell_value', total_sell_value);
@@ -258,6 +259,11 @@ export class KiwoomUtil {
             }
         };
 
+    private on_receive_msg: IKiwoomEventHandler['onReceiveMsg']
+        = async (msg_type, msg) => {
+            console.log('onReceiveMsg', msg_type, msg);
+        };
+
     private async updateStockList(rawitem: StockInfoRawType) {
         const code = rawitem.종목코드;
         if (this.stockinfo_list[code] === undefined) {
@@ -311,7 +317,7 @@ export class KiwoomUtil {
         return new Promise<string[]>(resolve => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             this.waitingevent.onReceiveTrCondition.push(async (scr_no, code_list, condition_name, index, next) => {
-                resolve(code_list.split(';'));
+                resolve(code_list.split(';').filter(code => code !== ''));
             });
         });
     }
@@ -350,7 +356,6 @@ export class KiwoomUtil {
 
     async sendTR<T extends TRBase<ITRInputBase, ITROutputBase>>(
         trinfo: new (input: T['input']) => T, trdata: Omit<T['input'], 'tr_code'>, next = false): Promise<T['output']> {
-
 
         const input = { ...trdata, tr_code: '' } as T['input'];
         const tr = new trinfo(input);
@@ -393,7 +398,57 @@ export class KiwoomUtil {
         });
     }
 
+    makePrice(price: number) {
+        if (price <= 2000) return price;
+        if (price <= 5000) return Math.floor(price / 5) * 5;
+        if (price <= 20000) return Math.floor(price / 10) * 10;
+        if (price <= 50000) return Math.floor(price / 50) * 50;
+        if (price <= 200000) return Math.floor(price / 100) * 100;
+        if (price <= 500000) return Math.floor(price / 500) * 500;
+        return Math.floor(price / 1000) * 1000;
+    }
+
     async buy(code: string, qty: number, price: number) {
         return this.kiwoom.SendOrder('buyorder', '2000', this.account, 1, code, qty, price, '00', '');
+    }
+
+    async buy_program() {
+        const condlist = await this.getConditionList();
+        const codelist = await this.getConditionResult(condlist.find(c => c.name.startsWith('Real_'))!);
+        const infolist = await this.getStockInfo(codelist);
+        for (const info of infolist) {
+            await this.updateStockList(info);
+        }
+        // await this.kiwoom.SetRealReg('0022', codelist.join(';'), '10', '1');
+
+        let count = 0;
+        for (const code of codelist) {
+            const item = this.stockinfo_list[code];
+            const askprice = this.makePrice(Math.abs(item.price) * 0.99);
+            const qty = Math.floor(100000 / askprice);
+            console.log('buy', code, qty, askprice);
+            await this.buy(code, qty, askprice);
+
+            count++;
+            if (count >= 30) break;
+            await new Promise(resolve => setTimeout(resolve, 300));
+        }
+    }
+
+    async getOrderInfo() {
+        const d = new Date();
+        const datestr = `${d.getFullYear()}${(d.getMonth() + 1).toString().padStart(2, '0')}${d.getDate().toString().padStart(2, '0')}`;
+        const result = await this.sendTR(TR_OPW00007, {
+            주문일자: datestr,
+            계좌번호: this.account,
+            비밀번호: '',
+            비밀번호입력매체구분: '00',
+            조회구분: '1',
+            주식채권구분: '1',
+            매도수구분: '0',
+            종목코드: '',
+            시작주문번호: '',
+        });
+        return result;
     }
 }
