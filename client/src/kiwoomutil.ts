@@ -1,7 +1,7 @@
 import { normalize } from 'path';
 import { IKiwoomEventHandler, KiwoomAPI } from './kiwoomapi';
 import { TRBase, ITRInputBase, ITROutputBase, TR_OPW00007, TR_OPW00018, TR_OPW00007MultiItem } from './trinfo';
-import { StockHoldingInfoType, StockInfoRawType, StockInfoType } from './types';
+import { OrderInfoType, StockHoldingInfoType, StockInfoRawType, StockInfoType } from './types';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import chalk from 'chalk';
 
@@ -407,7 +407,8 @@ export class KiwoomUtil {
     }
 
     async buy(code: string, qty: number, price: number): Promise<number> {
-        const result = await this.kiwoom.SendOrder('buyorder', '2000', this.account, 1, code, qty, price, '00', '');
+        const result = await this.kiwoom.SendOrder('buyorder', '2000',
+            this.account, 1, code, qty, price, '00', '');
         if (result !== 0) return 0;
         return new Promise<number>(resolve => {
             this.waitingevent.onReceiveTrData.push({
@@ -420,6 +421,13 @@ export class KiwoomUtil {
                 }
             });
         });
+    }
+    async buy_cancel(code: string, qty: number, orderno: number): Promise<boolean> {
+        const result = await this.kiwoom.SendOrder('buyorder', '2000',
+            this.account, 3, code, qty, 0, '00', orderno.toString().padStart(7, '0'));
+        if (result !== 0) return false;
+
+        return true;
     }
 
     async buy_program() {
@@ -443,11 +451,13 @@ export class KiwoomUtil {
         }
     }
 
-    async getOrderInfo() {
-        const d = new Date();
-        const datestr = `${d.getFullYear()}${(d.getMonth() + 1).toString().padStart(2, '0')}${d.getDate().toString().padStart(2, '0')}`;
+    async getOrderInfo(date_yyyymmdd?: string) {
+        if (date_yyyymmdd === undefined) {
+            const d = new Date();
+            date_yyyymmdd = `${d.getFullYear()}${(d.getMonth() + 1).toString().padStart(2, '0')}${d.getDate().toString().padStart(2, '0')}`;
+        }
         const result = await this.sendTR(TR_OPW00007, {
-            주문일자: datestr,
+            주문일자: date_yyyymmdd,
             계좌번호: this.account,
             비밀번호: '',
             비밀번호입력매체구분: '00',
@@ -457,6 +467,36 @@ export class KiwoomUtil {
             종목코드: '',
             시작주문번호: '',
         });
-        return result;
+        console.log(result.multi_items);
+        const orderlist: OrderInfoType[] = [];
+        for (const item of result.multi_items) {
+            const orderitem: OrderInfoType = {
+                code: item.종목번호.slice(-6),
+                name: item.종목명,
+                type: item.주문구분.includes('매도') ? 'sell' : 'buy',
+                orderno: parseInt(item.주문번호),
+                price: parseInt(item.주문단가),
+                qty: parseInt(item.주문수량),
+                qty_executed: parseInt(item.체결수량),
+            }
+            if (item.정정취소 === '취소') {
+                const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문));
+                if (orgitem !== undefined) {
+                    orgitem.qty -= orderitem.qty;
+                    if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
+                }
+
+            } else if (item.정정취소 === '정정') {
+                const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문));
+                if (orgitem !== undefined) {
+                    orgitem.qty -= orderitem.qty;
+                    if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
+                    orderlist.push(orderitem);
+                }
+            } else {
+                orderlist.push(orderitem);
+            }
+        }
+        return orderlist;
     }
 }

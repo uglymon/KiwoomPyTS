@@ -98,3 +98,13 @@ export type StockHoldingInfoType = {
     trading_value: number;
     trading_value_ratio: number;
 }
+
+export type OrderInfoType = {
+    code: string;
+    name: string;
+    type: 'buy' | 'sell';
+    orderno: number;
+    price: number;
+    qty: number;
+    qty_executed: number;
+}
