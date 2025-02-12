@@ -2,8 +2,6 @@ import { normalize } from 'path';
 import { IKiwoomEventHandler, KiwoomAPI } from './kiwoomapi';
 import { TRBase, ITRInputBase, ITROutputBase, TR_OPW00007, TR_OPW00018, TR_OPW00007MultiItem } from './trinfo';
 import { StockHoldingInfoType, StockInfoRawType, StockInfoType } from './types';
-import { FIDList } from './types_fid';
-import { RealList } from './types_real';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import chalk from 'chalk';
 
@@ -22,13 +20,14 @@ export class KiwoomUtil {
             onReceiveTrData: []
         };
 
+    private fidlist: { [key: string]: string };
     private account = '';
     private server_type: 'TEST' | 'REAL' = 'TEST';
     stockinfo_list: { [key: string]: StockInfoType } = {};
     stockholding_list: StockHoldingInfoType[] = [];
 
     private start_date = '2025-02-01';
-    private data_dir = normalize(__dirname + '/../../data');
+    private data_dir = normalize(__dirname + '/../../data/history');
 
     constructor(kiwoom: KiwoomAPI, oninit: () => void) {
         this.kiwoom = kiwoom;
@@ -40,6 +39,9 @@ export class KiwoomUtil {
             onReceiveChejanData: this.on_receive_chejan_data,
             onReceiveMsg: this.on_receive_msg,
         };
+
+        this.fidlist = JSON.parse(readFileSync(normalize(__dirname + '/../../data/fid.json'), 'utf-8'));
+
         this.kiwoom.SetRealRemove('ALL', 'ALL');
         this.kiwoom.setEventHandler(this.event_handler);
 
@@ -206,56 +208,52 @@ export class KiwoomUtil {
             if (callback) await callback(scr_no, code_list, condition_name, index, next);
         };
     private on_receive_chejan_data: IKiwoomEventHandler['onReceiveChejanData']
-        = async (gubun, item_cnt, fid_list) => {
+        = async (gubun, item_cnt, fid_list, output) => {
             // gubun : 체결구분. 접수와 체결시 '0'값, 국내주식 잔고변경은 '1'값, 파생잔고변경은 '4'
-            const fidlist = fid_list.split(';').map(fid => parseInt(fid));
-            for (const fid of fidlist) {
-                const fidname = FIDList[fid];
-                if (fidname !== undefined) {
-                    const data = (await this.kiwoom.GetChejanData(fid)).trim();
-                    console.log(fidname, data);
-                }
-            }
+            console.log('onReceiveChejanData', gubun, item_cnt, fid_list, output['종목명']);
+            // for (const fid in output) {
+            //     console.log(fid, output[fid]);
+            // }
         };
     private on_receive_tr_data: IKiwoomEventHandler['onReceiveTrData']
-        = async (scr_no, rq_name, tr_code, record_name, prev_next, data_length, error_code, message, splm_msg) => {
+        = async (scr_no, rq_name, tr_code, record_name, prev_next, data_length,
+            error_code, message, splm_msg, output_single, output_multi) => {
             const index = this.waitingevent.onReceiveTrData.findIndex(cb => cb.rqname === rq_name);
             if (index !== -1) {
                 const callback = this.waitingevent.onReceiveTrData[index].callback;
                 this.waitingevent.onReceiveTrData.splice(index, 1);
-                if (callback) await callback(scr_no, rq_name, tr_code, record_name, prev_next, data_length, error_code, message, splm_msg);
+                if (callback) {
+                    await callback(scr_no, rq_name, tr_code, record_name, prev_next,
+                        data_length, error_code, message, splm_msg, output_single, output_multi);
+                }
             }
         };
     private on_receive_real_data: IKiwoomEventHandler['onReceiveRealData']
-        = async (code, real_type) => {
-            const realinfo = RealList[real_type];
-            if (realinfo !== undefined) {
-                if (['주식시세', '주식체결'].includes(real_type)) {
-                    const realitem: StockInfoRawType = {
-                        종목코드: code,
-                        종목명: await this.kiwoom.GetMasterCodeName(code),
-                        현재가: '0',
-                        전일대비: '0',
-                        등락율: '0',
-                        매도호가: '0',
-                        매수호가: '0',
-                        거래량: '0',
-                        시가: '0',
-                        고가: '0',
-                        저가: '0',
-                        체결시간: '',
-                        체결강도: '0',
-                    };
+        = async (code, real_type, real_data, output) => {
+            if (['주식시세', '주식체결'].includes(real_type)) {
+                const realitem: StockInfoRawType = {
+                    종목코드: code,
+                    종목명: await this.kiwoom.GetMasterCodeName(code),
+                    현재가: '0',
+                    전일대비: '0',
+                    등락율: '0',
+                    매도호가: '0',
+                    매수호가: '0',
+                    거래량: '0',
+                    시가: '0',
+                    고가: '0',
+                    저가: '0',
+                    체결시간: '',
+                    체결강도: '0',
+                };
 
-                    for (const fid of realinfo.fids) {
-                        const fidname = FIDList[fid];
-                        if (fidname !== undefined && fidname in realitem) {
-                            const data = await this.kiwoom.GetCommRealData(code, fid);
-                            realitem[fidname as keyof StockInfoRawType] = data.trim() as never;
-                        }
-                    };
-                    await this.updateStockList(realitem);
+                for (const fid in output) {
+                    const key = this.fidlist[fid];
+                    if (key in realitem) {
+                        realitem[key as keyof StockInfoRawType] = output[fid] as never;
+                    }
                 }
+                await this.updateStockList(realitem);
             }
         };
 
@@ -327,24 +325,25 @@ export class KiwoomUtil {
         return new Promise<StockInfoRawType[]>(resolve => {
             this.waitingevent.onReceiveTrData.push({
                 rqname: 'get_items',
-                callback: async (scr_no, rq_name, tr_code) => {
+                callback: async (scr_no, rq_name, tr_code, record_name, prev_next,
+                    data_length, error_code, message, splm_msg, output_single, output_multi) => {
                     const result: StockInfoRawType[] = [];
-                    const count = await this.kiwoom.GetRepeatCnt(tr_code, rq_name);
+                    const count = output_multi.length;
                     for (let i = 0; i < count; i++) {
                         const rawitem: StockInfoRawType = {
-                            종목코드: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '종목코드')).trim(),
-                            종목명: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '종목명')).trim(),
-                            현재가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '현재가')).trim(),
-                            전일대비: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '전일대비')).trim(),
-                            등락율: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '등락율')).trim(),
-                            매도호가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '매도호가')).trim(),
-                            매수호가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '매수호가')).trim(),
-                            거래량: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '거래량')).trim(),
-                            시가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '시가')).trim(),
-                            고가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '고가')).trim(),
-                            저가: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '저가')).trim(),
-                            체결시간: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '체결시간')).trim(),
-                            체결강도: (await this.kiwoom.GetCommData(tr_code, rq_name, i, '체결강도')).trim(),
+                            종목코드: output_multi[i]['종목코드'],
+                            종목명: output_multi[i]['종목명'],
+                            현재가: output_multi[i]['현재가'],
+                            전일대비: output_multi[i]['전일대비'],
+                            등락율: output_multi[i]['등락율'],
+                            매도호가: output_multi[i]['매도호가'],
+                            매수호가: output_multi[i]['매수호가'],
+                            거래량: output_multi[i]['거래량'],
+                            시가: output_multi[i]['시가'],
+                            고가: output_multi[i]['고가'],
+                            저가: output_multi[i]['저가'],
+                            체결시간: output_multi[i]['체결시간'],
+                            체결강도: output_multi[i]['체결강도'],
                         }
                         result.push(rawitem);
                     }
@@ -370,25 +369,24 @@ export class KiwoomUtil {
             this.waitingevent.onReceiveTrData.push({
                 rqname,
                 callback: async (scr_no, rq_name, tr_code, record_name, prev_next,
-                    /*data_length, error_code, message, splm_msg*/) => {
+                    data_length, error_code, message, splm_msg, output_single, output_multi) => {
                     const result = tr.output;
                     if (prev_next === '2') result.next = true;
                     for (const key in result) {
                         if (key === 'multi_items') {
                             if (result.multiT === null || result.multi_items === undefined) continue;
-                            const count = await this.kiwoom.GetRepeatCnt(tr_code, rq_name);
+                            const count = output_multi.length;
                             for (let i = 0; i < count; i++) {
                                 const multi_item = new result.multiT() as T['output'];
                                 for (const multikey in multi_item) {
-                                    const value = await this.kiwoom.GetCommData(tr_code, rq_name, i, multikey);
-                                    multi_item[multikey as keyof typeof multi_item] = value.trim() as never;
+                                    multi_item[multikey as keyof typeof multi_item]
+                                        = output_multi[i][multikey] as never;
                                 }
                                 result.multi_items.push(multi_item);
                             }
 
                         } else if (key !== 'multiT' && key !== 'next') {
-                            const value = await this.kiwoom.GetCommData(tr_code, rq_name, 0, key);
-                            result[key as keyof typeof result] = value.trim() as never;
+                            result[key as keyof typeof result] = output_single[key] as never;
                         }
 
                     }
@@ -408,8 +406,20 @@ export class KiwoomUtil {
         return Math.floor(price / 1000) * 1000;
     }
 
-    async buy(code: string, qty: number, price: number) {
-        return this.kiwoom.SendOrder('buyorder', '2000', this.account, 1, code, qty, price, '00', '');
+    async buy(code: string, qty: number, price: number): Promise<number> {
+        const result = await this.kiwoom.SendOrder('buyorder', '2000', this.account, 1, code, qty, price, '00', '');
+        if (result !== 0) return 0;
+        return new Promise<number>(resolve => {
+            this.waitingevent.onReceiveTrData.push({
+                rqname: 'buyorder',
+                callback: async (scr_no, rq_name, tr_code, record_name, prev_next,
+                    data_length, error_code, message, splm_msg, output_single) => {
+                    const orderno = output_single['주문번호'];
+                    if (orderno === '') resolve(0);
+                    else resolve(parseInt(orderno));
+                }
+            });
+        });
     }
 
     async buy_program() {
@@ -426,12 +436,10 @@ export class KiwoomUtil {
             const item = this.stockinfo_list[code];
             const askprice = this.makePrice(Math.abs(item.price) * 0.99);
             const qty = Math.floor(100000 / askprice);
-            console.log('buy', code, qty, askprice);
-            await this.buy(code, qty, askprice);
+            const orderno = await this.buy(code, qty, askprice);
 
-            count++;
-            if (count >= 30) break;
-            await new Promise(resolve => setTimeout(resolve, 300));
+            if (orderno > 0) count++;
+            if (count >= 8) break;
         }
     }
 

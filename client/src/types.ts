@@ -18,16 +18,20 @@ export type KiwoomEventType = {
     error_code: string;
     message: string;
     splm_msg: string;
+    output_single: { [key: string]: string };
+    output_multi: { [key: string]: string }[];
 } | {
     name: 'on_receive_real_data';
     code: string;
     real_type: string;
     real_data: string;
+    output: { [key: string]: string };
 } | {
     name: 'on_receive_chejan_data';
     gubun: string;
     item_cnt: number;
     fid_list: string;
+    output: { [key: string]: string };
 } | {
     name: 'on_receive_condition_ver';
     ret: number;

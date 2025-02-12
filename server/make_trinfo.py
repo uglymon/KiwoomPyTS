@@ -21,7 +21,7 @@ class APIMetaData:
                             if info.filename.endswith(".dat"):
                                 # read string as euc-kr
                                 data = zip_ref.read(info.filename).decode("euc-kr")
-                                trinfo = self.make_op_metadata(data)
+                                trinfo = self.make_trinfo(data)
                                 tr_code = file.upper().split(".")[0]
                                 trinfo["tr_code"] = tr_code
                                 result[tr_code] = trinfo
@@ -33,7 +33,7 @@ class APIMetaData:
         except FileNotFoundError:
             print(f"cannot find directory [{self.directory}]")
 
-    def make_op_metadata(self, data: str):
+    def make_trinfo(self, data: str):
         trinfo = {}
         lines = data.splitlines()
         index = 0
@@ -137,4 +137,4 @@ class APIMetaData:
 
 if __name__ == "__main__":
     metadata = APIMetaData("C:/KiwoomApi/OpenAPI/data")
-    metadata.load_op_files("op_metadata.json")
+    metadata.load_op_files("data/trinfo.json")

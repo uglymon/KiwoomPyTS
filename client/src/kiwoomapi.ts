@@ -4,9 +4,11 @@ import { KiwoomEventType } from './types';
 export interface IKiwoomEventHandler {
     onEventConnect?: (err_code: number) => Promise<void>;
     onReceiveMsg?: (scr_no: string, rq_name: string, tr_code: string, msg: string) => Promise<void>;
-    onReceiveTrData?: (scr_no: string, rq_name: string, tr_code: string, record_name: string, prev_next: string, data_length: number, error_code: string, message: string, splm_msg: string) => Promise<void>;
-    onReceiveRealData?: (code: string, real_type: string, real_data: string) => Promise<void>;
-    onReceiveChejanData?: (gubun: string, item_cnt: number, fid_list: string) => Promise<void>;
+    onReceiveTrData?: (scr_no: string, rq_name: string, tr_code: string, record_name: string,
+        prev_next: string, data_length: number, error_code: string, message: string,
+        splm_msg: string, output_single: { [key: string]: string }, output_multi: { [key: string]: string }[]) => Promise<void>;
+    onReceiveRealData?: (code: string, real_type: string, real_data: string, output: { [key: string]: string }) => Promise<void>;
+    onReceiveChejanData?: (gubun: string, item_cnt: number, fid_list: string, output: { [key: string]: string }) => Promise<void>;
     onReceiveConditionVer?: (ret: number, msg: string) => Promise<void>;
     onReceiveRealCondition?: (code: string, type: string, condition_name: string, condition_index: string) => Promise<void>;
     onReceiveTrCondition?: (scr_no: string, code_list: string, condition_name: string, index: number, next: number) => Promise<void>;
@@ -85,53 +87,45 @@ export class KiwoomAPI implements IKiwoomAPI {
                         const e = res as KiwoomEventType;
                         if (e.name === 'on_event_connect') {
                             if (this.handler.onEventConnect !== undefined)
-                                await this.handler.onEventConnect(e.err_code);
-                            this.send(JSON.stringify({ name: 'on_event_connect_complete' }));
+                                this.handler.onEventConnect(e.err_code);
 
                         } else if (e.name === 'on_receive_msg') {
                             if (this.handler.onReceiveMsg !== undefined)
-                                await this.handler.onReceiveMsg(
+                                this.handler.onReceiveMsg(
                                     e.scr_no, e.rq_name, e.tr_code, e.msg);
-                            this.send(JSON.stringify({ name: 'on_receive_msg_complete' }));
 
                         } else if (e.name === 'on_receive_tr_data') {
                             if (this.handler.onReceiveTrData !== undefined)
-                                await this.handler.onReceiveTrData(
+                                this.handler.onReceiveTrData(
                                     e.scr_no, e.rq_name, e.tr_code, e.record_name,
                                     e.prev_next, e.data_length, e.error_code,
-                                    e.message, e.splm_msg);
-                            this.send(JSON.stringify({ name: 'on_receive_tr_data_complete' }));
+                                    e.message, e.splm_msg, e.output_single, e.output_multi);
 
                         } else if (e.name === 'on_receive_real_data') {
                             if (this.handler.onReceiveRealData !== undefined)
-                                await this.handler.onReceiveRealData(
-                                    e.code, e.real_type, e.real_data);
-                            this.send(JSON.stringify({ name: 'on_receive_real_data_complete' }));
+                                this.handler.onReceiveRealData(
+                                    e.code, e.real_type, e.real_data, e.output);
 
                         } else if (e.name === 'on_receive_chejan_data') {
                             if (this.handler.onReceiveChejanData !== undefined)
-                                await this.handler.onReceiveChejanData(
-                                    e.gubun, e.item_cnt, e.fid_list);
-                            this.send(JSON.stringify({ name: 'on_receive_chejan_data_complete' }));
+                                this.handler.onReceiveChejanData(
+                                    e.gubun, e.item_cnt, e.fid_list, e.output);
 
                         } else if (e.name === 'on_receive_condition_ver') {
                             if (this.handler.onReceiveConditionVer !== undefined)
-                                await this.handler.onReceiveConditionVer(e.ret, e.msg);
-                            this.send(JSON.stringify({ name: 'on_receive_condition_ver_complete' }));
+                                this.handler.onReceiveConditionVer(e.ret, e.msg);
 
                         } else if (e.name === 'on_receive_real_condition') {
                             if (this.handler.onReceiveRealCondition !== undefined)
-                                await this.handler.onReceiveRealCondition(
+                                this.handler.onReceiveRealCondition(
                                     e.code, e.type, e.condition_name,
                                     e.condition_index);
-                            this.send(JSON.stringify({ name: 'on_receive_real_condition_complete' }));
 
                         } else if (e.name === 'on_receive_tr_condition') {
                             if (this.handler.onReceiveTrCondition !== undefined)
-                                await this.handler.onReceiveTrCondition(
+                                this.handler.onReceiveTrCondition(
                                     e.scr_no, e.code_list, e.condition_name,
                                     e.index, e.next);
-                            this.send(JSON.stringify({ name: 'on_receive_tr_condition_complete' }));
                         }
                     }
 

@@ -4,28 +4,26 @@ import json
 import re
 
 import colorama
-import nest_asyncio
 import pythoncom
 import websockets
 from kiwoomapiwrapper import KiwoomAPIWrapper
-
-nest_asyncio.apply()
 
 # 웹소켓 연결을 전역적으로 관리
 websocket_connection = None
 
 kiwoom: KiwoomAPIWrapper = None
 
-waiting_event_connect_complete = False
-waiting_receive_msg_complete = False
+f = open("data/trinfo.json", "r", encoding="utf-8")
+metadata = json.load(f)
+f.close()
 
-waiting_receive_tr_data_complete = False
-waiting_receive_real_data_complete = False
-waiting_receive_chejan_data_complete = False
+f = open("data/realfid.json", "r", encoding="utf-8")
+realfid = json.load(f)
+f.close()
 
-waiting_receive_condition_ver_complete = False
-waiting_receive_real_condition_complete = False
-waiting_receive_tr_condition_complete = False
+f = open("data/fid.json", "r", encoding="utf-8")
+fid = json.load(f)
+f.close()
 
 
 def print_colored_json(data):
@@ -61,106 +59,9 @@ async def msg_handler(ws: websockets.WebSocketServerProtocol):
     global websocket_connection
     websocket_connection = ws  # 웹소켓 연결 저장
 
-    global waiting_event_connect_complete
-    global waiting_receive_msg_complete
-    global waiting_receive_tr_data_complete
-    global waiting_receive_real_data_complete
-    global waiting_receive_chejan_data_complete
-    global waiting_receive_condition_ver_complete
-    global waiting_receive_real_condition_complete
-    global waiting_receive_tr_condition_complete
-
     async def handle_message(data):
-        global waiting_event_connect_complete
-        global waiting_receive_msg_complete
-        global waiting_receive_tr_data_complete
-        global waiting_receive_real_data_complete
-        global waiting_receive_chejan_data_complete
-        global waiting_receive_condition_ver_complete
-        global waiting_receive_real_condition_complete
-        global waiting_receive_tr_condition_complete
         name = data["name"]
         if name == "close":
-            waiting_event_connect_complete = False
-            waiting_receive_msg_complete = False
-            waiting_receive_tr_data_complete = False
-            waiting_receive_real_data_complete = False
-            waiting_receive_chejan_data_complete = False
-            waiting_receive_condition_ver_complete = False
-            waiting_receive_real_condition_complete = False
-            waiting_receive_tr_condition_complete = False
-            return
-        if name == "on_event_connect_complete":
-            waiting_event_connect_complete = False
-            print(
-                "received",
-                colorama.Fore.MAGENTA,
-                "on_event_connect_complete",
-                colorama.Fore.RESET,
-            )
-            return
-        if name == "on_receive_msg_complete":
-            waiting_receive_msg_complete = False
-            print(
-                "received",
-                colorama.Fore.MAGENTA,
-                "on_receive_msg_complete",
-                colorama.Fore.RESET,
-            )
-            return
-        if name == "on_receive_tr_data_complete":
-            waiting_receive_tr_data_complete = False
-            print(
-                "received",
-                colorama.Fore.MAGENTA,
-                "on_receive_tr_data_complete",
-                colorama.Fore.RESET,
-            )
-            return
-        if name == "on_receive_real_data_complete":
-            waiting_receive_real_data_complete = False
-            print(
-                "received",
-                colorama.Fore.MAGENTA,
-                "on_receive_real_data_complete",
-                colorama.Fore.RESET,
-            )
-            return
-        if name == "on_receive_chejan_data_complete":
-            waiting_receive_chejan_data_complete = False
-            print(
-                "received",
-                colorama.Fore.MAGENTA,
-                "on_receive_chejan_data_complete",
-                colorama.Fore.RESET,
-            )
-            return
-        if name == "on_receive_condition_ver_complete":
-            waiting_receive_condition_ver_complete = False
-            print(
-                "received",
-                colorama.Fore.MAGENTA,
-                "on_receive_condition_ver_complete",
-                colorama.Fore.RESET,
-            )
-            return
-        if name == "on_receive_real_condition_complete":
-            waiting_receive_real_condition_complete = False
-            print(
-                "received",
-                colorama.Fore.MAGENTA,
-                "on_receive_real_condition_complete",
-                colorama.Fore.RESET,
-            )
-            return
-        if name == "on_receive_tr_condition_complete":
-            waiting_receive_tr_condition_complete = False
-            print(
-                "received",
-                colorama.Fore.MAGENTA,
-                "on_receive_tr_condition_complete",
-                colorama.Fore.RESET,
-            )
             return
 
         print(colorama.Fore.BLUE, "received data :", colorama.Fore.RESET)
@@ -260,11 +161,7 @@ def on_event_connect(err_code: int):
             "name": "on_event_connect",
             "err_code": err_code,
         }
-        global waiting_event_connect_complete
-        waiting_event_connect_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
-        while waiting_event_connect_complete:
-            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -284,11 +181,7 @@ def on_receive_msg(scr_no: str, rq_name: str, tr_code: str, msg: str):
             "tr_code": tr_code,
             "msg": msg,
         }
-        global waiting_receive_msg_complete
-        waiting_receive_msg_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
-        while waiting_receive_msg_complete:
-            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -333,12 +226,37 @@ def on_receive_tr_data(
             "error_code": error_code,
             "message": message,
             "splm_msg": splm_msg,
+            "output_single": {},
+            "output_multi": [],
         }
-        global waiting_receive_tr_data_complete
-        waiting_receive_tr_data_complete = True
-        asyncio.create_task(websocket_connection.send(json.dumps(data)))
-        while waiting_receive_tr_data_complete:
-            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+        if tr_code in metadata:
+            info = metadata[tr_code]
+            for singleitem in info["output_single"]:
+                key = singleitem["name"]
+                value = kiwoom.GetCommData(tr_code, rq_name, 0, key).strip()
+                data["output_single"][key] = value
+
+            multicount = kiwoom.GetRepeatCnt(tr_code, rq_name)
+            for i in range(multicount):
+                data["output_multi"].append({})
+                for multiitem in info["output_multi"]:
+                    key = multiitem["name"]
+                    value = kiwoom.GetCommData(tr_code, rq_name, i, key).strip()
+                    data["output_multi"][i][key] = value
+            asyncio.create_task(websocket_connection.send(json.dumps(data)))
+
+        elif rq_name == "buyorder" or rq_name == "sellorder":
+            data["output_single"]["주문번호"] = kiwoom.GetCommData(
+                tr_code, rq_name, 0, "주문번호"
+            ).strip()
+            asyncio.create_task(websocket_connection.send(json.dumps(data)))
+
+        else:
+            print(
+                colorama.Fore.RED,
+                f"tr_code not found in metadata : {tr_code}",
+                colorama.Fore.RESET,
+            )
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -347,7 +265,13 @@ def on_receive_tr_data(
 
 def on_receive_real_data(code: str, real_type: str, real_data: str):
     print(colorama.Fore.MAGENTA, "** on_receive_real_data")
-    print_colored_json({"code": code, "real_type": real_type, "real_data": real_data})
+    print_colored_json(
+        {
+            "code": code,
+            "real_type": real_type,
+            "real_data": real_data[0:10] + "...",
+        }
+    )
     print("")
     if websocket_connection:
         data = {
@@ -355,12 +279,20 @@ def on_receive_real_data(code: str, real_type: str, real_data: str):
             "code": code,
             "real_type": real_type,
             "real_data": real_data,
+            "output": {},
         }
-        global waiting_receive_real_data_complete
-        waiting_receive_real_data_complete = True
-        asyncio.create_task(websocket_connection.send(json.dumps(data)))
-        while waiting_receive_real_data_complete:
-            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
+        if real_type in realfid:
+            info = realfid[real_type]
+            for fid in info["fids"]:
+                data["output"][fid] = kiwoom.GetCommRealData(code, int(fid))
+
+            asyncio.create_task(websocket_connection.send(json.dumps(data)))
+        else:
+            print(
+                colorama.Fore.RED,
+                f"real_type not found in realfid : {real_type}",
+                colorama.Fore.RESET,
+            )
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -369,7 +301,9 @@ def on_receive_real_data(code: str, real_type: str, real_data: str):
 
 def on_receive_chejan_data(gubun: str, item_cnt: int, fid_list: str):
     print(colorama.Fore.MAGENTA, "** on_receive_chejan_data")
-    print_colored_json({"gubun": gubun, "item_cnt": item_cnt, "fid_list": fid_list})
+    print_colored_json(
+        {"gubun": gubun, "item_cnt": item_cnt, "fid_list": fid_list[0:10] + "..."}
+    )
     print("")
     if websocket_connection:
         data = {
@@ -377,12 +311,13 @@ def on_receive_chejan_data(gubun: str, item_cnt: int, fid_list: str):
             "gubun": gubun,
             "item_cnt": item_cnt,
             "fid_list": fid_list,
+            "output": {},
         }
-        global waiting_receive_chejan_data_complete
-        waiting_receive_chejan_data_complete = True
+        fidlist = fid_list.split(";")
+        for fid in fidlist:
+            data["output"][fid] = kiwoom.GetChejanData(int(fid))
+
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
-        while waiting_receive_chejan_data_complete:
-            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -399,11 +334,7 @@ def on_receive_condition_ver(ret: int, msg: str):
             "ret": ret,
             "msg": msg,
         }
-        global waiting_receive_condition_ver_complete
-        waiting_receive_condition_ver_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
-        while waiting_receive_condition_ver_complete:
-            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -431,11 +362,7 @@ def on_receive_real_condition(
             "condition_name": condition_name,
             "condition_index": condition_index,
         }
-        global waiting_receive_real_condition_complete
-        waiting_receive_real_condition_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
-        while waiting_receive_real_condition_complete:
-            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
@@ -465,11 +392,7 @@ def on_receive_tr_condition(
             "index": index,
             "next": next,
         }
-        global waiting_receive_tr_condition_complete
-        waiting_receive_tr_condition_complete = True
         asyncio.create_task(websocket_connection.send(json.dumps(data)))
-        while waiting_receive_tr_condition_complete:
-            asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.05))
     else:
         print(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
