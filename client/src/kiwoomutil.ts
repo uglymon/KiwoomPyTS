@@ -154,8 +154,8 @@ export class KiwoomUtil {
         }
 
         const result = await this.sendTR(TR_OPW00018, {
-            계좌번호: '8093398911',
-            비밀번호: '0000',
+            계좌번호: this.account,
+            비밀번호: '',
             비밀번호입력매체구분: '00',
             조회구분: '2',
         });
@@ -361,6 +361,7 @@ export class KiwoomUtil {
 
         for (const key in input) {
             if (key === 'tr_code') continue;
+            if (key === '계좌번호' && input[key] === '') input[key] = this.account as never;
             await this.kiwoom.SetInputValue(key, input[key] as string);
         }
         const rqname = input.tr_code + '_req';
