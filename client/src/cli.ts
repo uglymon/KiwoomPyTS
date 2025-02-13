@@ -2,15 +2,20 @@ import readline from 'readline';
 import { KiwoomUtil } from './kiwoomutil';
 import { KiwoomAPI } from './kiwoomapi';
 import chalk from 'chalk';
+import { Trader1 } from './trader';
+
 export class CLI {
     private kiwoomapi: KiwoomAPI;
     private kiwoomutil: KiwoomUtil;
     private onexit: () => void;
+    private trader: Trader1;
 
     constructor(kiwoomapi: KiwoomAPI, oninit: () => void, onexit: () => void) {
         this.kiwoomapi = kiwoomapi;
         this.kiwoomutil = new KiwoomUtil(kiwoomapi, oninit);
         this.onexit = onexit;
+
+        this.trader = new Trader1(this.kiwoomutil);
     }
 
     start() {
@@ -48,6 +53,7 @@ export class CLI {
         });
         rl.on('close', async () => {
             await this.kiwoomapi.SetRealRemove('ALL', 'ALL');
+            this.trader.stop();
             this.onexit();
         });
     }
@@ -91,8 +97,15 @@ export class CLI {
                 item.qty.toString().padStart(4),
                 item.qty_executed.toString().padStart(4),
                 (item.price * item.qty_executed).toString().padStart(10)
-
             );
         }
+    }
+
+    async cmd_traderStart(cli: CLI) {
+        await cli.trader.start();
+    }
+
+    async cmd_traderStop(cli: CLI) {
+        await cli.trader.stop();
     }
 }

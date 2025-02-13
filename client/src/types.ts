@@ -107,4 +107,5 @@ export type OrderInfoType = {
     price: number;
     qty: number;
     qty_executed: number;
+    time_executed: string;
 }

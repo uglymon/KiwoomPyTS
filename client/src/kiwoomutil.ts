@@ -1,6 +1,6 @@
 import { normalize } from 'path';
 import { IKiwoomEventHandler, KiwoomAPI } from './kiwoomapi';
-import { TRBase, ITRInputBase, ITROutputBase, TR_OPW00007, TR_OPW00018, TR_OPW00007MultiItem } from './trinfo';
+import { TRBase, ITRInputBase, ITROutputBase, TR_OPW00018, TR_OPW00009, TR_OPW00009MultiItem } from './trinfo';
 import { OrderInfoType, StockHoldingInfoType, StockInfoRawType, StockInfoType } from './types';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import chalk from 'chalk';
@@ -82,16 +82,17 @@ export class KiwoomUtil {
             const date_str = `${year}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`;
             date.setDate(date.getDate() + 1);
 
-            const dateitems: TR_OPW00007MultiItem[] = [];
+            const dateitems: TR_OPW00009MultiItem[] = [];
             if (existsSync(`${this.data_dir}/${date_str}.json`) === false) {
-                const result = await this.sendTR(TR_OPW00007, {
+                const result = await this.sendTR(TR_OPW00009, {
                     주문일자: date_str, // YYYYMMDD
                     계좌번호: this.account, // 10자리
                     비밀번호: '', // 공백
                     비밀번호입력매체구분: '00', // 공백
-                    조회구분: '4', // 1:주문순, 2:역순, 3:미체결, 4:체결내역만
                     주식채권구분: '1', // 0:전체, 1:주식, 2:채권
+                    시장구분: '0',
                     매도수구분: '0', // 0:전체, 1:매도, 2:매수
+                    조회구분: '1',
                     종목코드: '', // 공백일때 전체종목
                     시작주문번호: '', // 공백일때 전체주문
                 });
@@ -103,7 +104,7 @@ export class KiwoomUtil {
 
             } else {
                 const file = readFileSync(`${this.data_dir}/${date_str}.json`, 'utf-8');
-                dateitems.push(...JSON.parse(file) as TR_OPW00007MultiItem[]);
+                dateitems.push(...JSON.parse(file) as TR_OPW00009MultiItem[]);
             }
 
             for (const item of dateitems) {
@@ -127,7 +128,7 @@ export class KiwoomUtil {
                     count: parseInt(item.체결수량),
                     price: parseInt(item.체결단가),
                 };
-                if (item.주문구분.includes('매도')) newitem.count *= -1;
+                if (item.주문유형구분.includes('매도')) newitem.count *= -1;
                 holdingitem.positions.push(newitem);
             }
         }
@@ -226,6 +227,8 @@ export class KiwoomUtil {
                     await callback(scr_no, rq_name, tr_code, record_name, prev_next,
                         data_length, error_code, message, splm_msg, output_single, output_multi);
                 }
+            } else {
+                console.log('cannot find callback for', rq_name);
             }
         };
     private on_receive_real_data: IKiwoomEventHandler['onReceiveRealData']
@@ -262,7 +265,7 @@ export class KiwoomUtil {
             console.log('onReceiveMsg', msg_type, msg);
         };
 
-    private async updateStockList(rawitem: StockInfoRawType) {
+    async updateStockList(rawitem: StockInfoRawType) {
         const code = rawitem.종목코드;
         if (this.stockinfo_list[code] === undefined) {
             this.stockinfo_list[code] = {
@@ -423,12 +426,28 @@ export class KiwoomUtil {
             });
         });
     }
-    async buy_cancel(code: string, qty: number, orderno: number): Promise<boolean> {
-        const result = await this.kiwoom.SendOrder('buyorder', '2000',
-            this.account, 3, code, qty, 0, '00', orderno.toString().padStart(7, '0'));
+    async cancel(code: string, qty: number, orderno: number, type: OrderInfoType['type']): Promise<boolean> {
+        const result = await this.kiwoom.SendOrder('buyorder', type === 'buy' ? '2000' : '2100',
+            this.account, type === 'buy' ? 3 : 4, code, qty, 0, '00', orderno.toString().padStart(7, '0'));
         if (result !== 0) return false;
 
         return true;
+    }
+    async sell(code: string, qty: number, price: number): Promise<number> {
+        const result = await this.kiwoom.SendOrder('sellorder', '2100',
+            this.account, 2, code, qty, price, '00', '');
+        if (result !== 0) return 0;
+        return new Promise<number>(resolve => {
+            this.waitingevent.onReceiveTrData.push({
+                rqname: 'sellorder',
+                callback: async (scr_no, rq_name, tr_code, record_name, prev_next,
+                    data_length, error_code, message, splm_msg, output_single) => {
+                    const orderno = output_single['주문번호'];
+                    if (orderno === '') resolve(0);
+                    else resolve(parseInt(orderno));
+                }
+            });
+        });
     }
 
     async buy_program() {
@@ -443,12 +462,13 @@ export class KiwoomUtil {
         let count = 0;
         for (const code of codelist) {
             const item = this.stockinfo_list[code];
-            const askprice = this.makePrice(Math.abs(item.price) * 0.99);
+            const askprice = this.makePrice(Math.abs(item.price) * 1.01);
             const qty = Math.floor(100000 / askprice);
             const orderno = await this.buy(code, qty, askprice);
+            await new Promise(resolve => setTimeout(resolve, 300));
 
             if (orderno > 0) count++;
-            if (count >= 8) break;
+            if (count >= 30) break;
         }
     }
 
@@ -457,47 +477,56 @@ export class KiwoomUtil {
             const d = new Date();
             date_yyyymmdd = `${d.getFullYear()}${(d.getMonth() + 1).toString().padStart(2, '0')}${d.getDate().toString().padStart(2, '0')}`;
         }
-        const result = await this.sendTR(TR_OPW00007, {
-            주문일자: date_yyyymmdd,
-            계좌번호: this.account,
-            비밀번호: '',
-            비밀번호입력매체구분: '00',
-            조회구분: '1',
-            주식채권구분: '1',
-            매도수구분: '0',
-            종목코드: '',
-            시작주문번호: '',
-        });
-        console.log(result.multi_items);
         const orderlist: OrderInfoType[] = [];
-        for (const item of result.multi_items) {
-            const orderitem: OrderInfoType = {
-                code: item.종목번호.slice(-6),
-                name: item.종목명,
-                type: item.주문구분.includes('매도') ? 'sell' : 'buy',
-                orderno: parseInt(item.주문번호),
-                price: parseInt(item.주문단가),
-                qty: parseInt(item.주문수량),
-                qty_executed: parseInt(item.체결수량),
-            }
-            if (item.정정취소 === '취소') {
-                const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문));
-                if (orgitem !== undefined) {
-                    orgitem.qty -= orderitem.qty;
-                    if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
-                }
 
-            } else if (item.정정취소 === '정정') {
-                const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문));
-                if (orgitem !== undefined) {
-                    orgitem.qty -= orderitem.qty;
-                    if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
+        let next = false;
+        do {
+            const result = await this.sendTR(TR_OPW00009, {
+                주문일자: date_yyyymmdd,
+                계좌번호: this.account, // 10자리
+                비밀번호: '', // 공백
+                비밀번호입력매체구분: '00', // 공백
+                주식채권구분: '1', // 0:전체, 1:주식, 2:채권
+                시장구분: '0',
+                매도수구분: '0', // 0:전체, 1:매도, 2:매수
+                조회구분: '0',  // 0:전체, 1:체결
+                종목코드: '', // 공백일때 전체종목
+                시작주문번호: '', // 공백일때 전체주문
+            }, next);
+            result.multi_items.sort((a, b) => a.주문번호.localeCompare(b.주문번호));
+
+            for (const item of result.multi_items) {
+                const orderitem: OrderInfoType = {
+                    code: item.종목번호.slice(-6),
+                    name: item.종목명,
+                    type: item.주문유형구분.includes('매도') ? 'sell' : 'buy',
+                    orderno: parseInt(item.주문번호),
+                    price: parseInt(item.주문단가),
+                    qty: parseInt(item.주문수량),
+                    qty_executed: parseInt(item.체결수량),
+                    time_executed: item.체결시간,
+                }
+                if (item.정정취소구분 === '취소') {
+                    const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문번호));
+                    if (orgitem !== undefined) {
+                        orgitem.qty -= orderitem.qty;
+                        if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
+                    }
+
+                } else if (item.정정취소구분 === '정정') {
+                    const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문번호));
+                    if (orgitem !== undefined) {
+                        orgitem.qty -= orderitem.qty;
+                        if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
+                        orderlist.push(orderitem);
+                    }
+                } else {
                     orderlist.push(orderitem);
                 }
-            } else {
-                orderlist.push(orderitem);
             }
-        }
+
+            next = result.next as boolean;
+        } while (next);
         return orderlist;
     }
 }
