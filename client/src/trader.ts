@@ -63,8 +63,8 @@ export class Trader1 {
         }
 
         const orderlist_completed = orderlist.filter(o => o.qty === o.qty_executed);
-        const lastprice = orderlist_completed[orderlist_completed.length - 1].price;
-        const baseprice = lastprice === 0 ? stockinfo.price : lastprice;
+        const lastorder = orderlist_completed[orderlist_completed.length - 1];
+        const baseprice = lastorder === undefined ? stockinfo.price : lastorder.price;
 
         // 새로운 주문 생성
         const buyprice = this.kiwoomutil.makePrice(baseprice * (1 - this.gap * 0.5));
