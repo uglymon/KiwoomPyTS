@@ -527,6 +527,7 @@ export class KiwoomUtil {
 
             next = result.next as boolean;
         } while (next);
+        orderlist.sort((a, b) => a.orderno - b.orderno);
         return orderlist;
     }
 }
