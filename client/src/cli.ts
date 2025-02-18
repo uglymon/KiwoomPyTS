@@ -3,6 +3,7 @@ import { KiwoomUtil } from './kiwoomutil';
 import { KiwoomAPI } from './kiwoomapi';
 import chalk from 'chalk';
 import { Trader1 } from './trader';
+import { getHangulCount } from './util';
 
 export class CLI {
     private kiwoomapi: KiwoomAPI;
@@ -91,11 +92,11 @@ export class CLI {
         for (const item of result) {
             console.log(
                 item.orderno.toString().padStart(6),
-                item.code, item.name.padStart(16 - item.name.length),
+                item.code, item.name.padEnd(16 - getHangulCount(item.name)),
                 item.type.toString().padStart(4),
                 item.price.toString().padStart(8),
-                item.qty.toString().padStart(4),
                 item.qty_executed.toString().padStart(4),
+                '/' + item.qty.toString().padStart(3),
                 (item.price * item.qty_executed).toString().padStart(10)
             );
         }
