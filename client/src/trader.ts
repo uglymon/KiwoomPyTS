@@ -40,9 +40,11 @@ export class Trader1 {
         const orderlist = orderlist_all.filter(o => o.code === code)
             .sort((a, b) => a.time_executed.localeCompare(b.time_executed));
 
-        // 하나도 체결되지 않은 것들이 두개 있으면 계속 기다림
+        // 매도와 매수가 하나씩 있으면 계속 기다림
         const orderlist_waiting = orderlist.filter(o => o.qty_executed === 0);
-        if (orderlist_waiting.length === 2) {
+        if (orderlist_waiting.length === 2
+            && orderlist_waiting[0].type !== orderlist_waiting[1].type
+        ) {
             for (const item of orderlist_waiting) {
                 console.log(
                     item.orderno.toString().padStart(6),
@@ -60,6 +62,7 @@ export class Trader1 {
         // 그 외의 경우 모든 주문 취소
         for (const order of orderlist_waiting) {
             await this.kiwoomutil.cancel(code, order.qty, order.orderno, order.type);
+            await new Promise(resolve => setTimeout(resolve, 300));
         }
 
         const orderlist_completed = orderlist.filter(o => o.qty === o.qty_executed);
