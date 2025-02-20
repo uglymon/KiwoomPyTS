@@ -87,8 +87,9 @@ export class CLI {
         await cli.kiwoomutil.buy_program();
     }
 
-    async cmd_test2(cli: CLI) {
-        const result = await cli.kiwoomutil.getOrderInfo();
+    async cmd_test2(cli: CLI, ...args: string[]) {
+        const date_str = args[0];
+        const result = await cli.kiwoomutil.getOrderInfo(date_str);
         for (const item of result) {
             console.log(
                 item.orderno.toString().padStart(6),
