@@ -357,6 +357,25 @@ export class KiwoomUtil {
     }
 
     async sendTR<T extends TRBase<ITRInputBase, ITROutputBase>>(
+        trinfo: new (input: T['input']) => T, trdata: Omit<T['input'], 'tr_code'>): Promise<T['output']> {
+
+        let result: T['output'] | undefined = undefined;
+        let next = false;
+        do {
+            const _result = await this._sendTR(trinfo, trdata, next);
+            if (result === undefined) {
+                result = _result;
+            } else if (result.multi_items !== undefined && _result.multi_items !== undefined) {
+                result.multi_items.push(..._result.multi_items);
+            }
+            next = _result.next as boolean;
+            if (next) await new Promise(resolve => setTimeout(resolve, 300));
+        } while (next);
+
+        return result;
+    }
+
+    private async _sendTR<T extends TRBase<ITRInputBase, ITROutputBase>>(
         trinfo: new (input: T['input']) => T, trdata: Omit<T['input'], 'tr_code'>, next = false): Promise<T['output']> {
 
         const input = { ...trdata, tr_code: '' } as T['input'];
@@ -479,54 +498,50 @@ export class KiwoomUtil {
         }
         const orderlist: OrderInfoType[] = [];
 
-        let next = false;
-        do {
-            const result = await this.sendTR(TR_OPW00009, {
-                주문일자: date_yyyymmdd,
-                계좌번호: this.account, // 10자리
-                비밀번호: '', // 공백
-                비밀번호입력매체구분: '00', // 공백
-                주식채권구분: '1', // 0:전체, 1:주식, 2:채권
-                시장구분: '0',
-                매도수구분: '0', // 0:전체, 1:매도, 2:매수
-                조회구분: '0',  // 0:전체, 1:체결
-                종목코드: '', // 공백일때 전체종목
-                시작주문번호: '', // 공백일때 전체주문
-            }, next);
-            result.multi_items.sort((a, b) => a.주문번호.localeCompare(b.주문번호));
+        const result = await this.sendTR(TR_OPW00009, {
+            주문일자: date_yyyymmdd,
+            계좌번호: this.account, // 10자리
+            비밀번호: '', // 공백
+            비밀번호입력매체구분: '00', // 공백
+            주식채권구분: '1', // 0:전체, 1:주식, 2:채권
+            시장구분: '0',
+            매도수구분: '0', // 0:전체, 1:매도, 2:매수
+            조회구분: '0',  // 0:전체, 1:체결
+            종목코드: '', // 공백일때 전체종목
+            시작주문번호: '', // 공백일때 전체주문
+        });
+        result.multi_items.sort((a, b) => a.주문번호.localeCompare(b.주문번호));
 
-            for (const item of result.multi_items) {
-                const orderitem: OrderInfoType = {
-                    code: item.종목번호.slice(-6),
-                    name: item.종목명,
-                    type: item.주문유형구분.includes('매도') ? 'sell' : 'buy',
-                    orderno: parseInt(item.주문번호),
-                    price: parseInt(item.주문단가),
-                    qty: parseInt(item.주문수량),
-                    qty_executed: parseInt(item.체결수량),
-                    time_executed: item.체결시간,
+        for (const item of result.multi_items) {
+            const orderitem: OrderInfoType = {
+                code: item.종목번호.slice(-6),
+                name: item.종목명,
+                type: item.주문유형구분.includes('매도') ? 'sell' : 'buy',
+                orderno: parseInt(item.주문번호),
+                price: parseInt(item.주문단가),
+                qty: parseInt(item.주문수량),
+                qty_executed: parseInt(item.체결수량),
+                time_executed: item.체결시간,
+            }
+            if (item.정정취소구분 === '취소') {
+                const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문번호));
+                if (orgitem !== undefined) {
+                    orgitem.qty -= orderitem.qty;
+                    if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
                 }
-                if (item.정정취소구분 === '취소') {
-                    const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문번호));
-                    if (orgitem !== undefined) {
-                        orgitem.qty -= orderitem.qty;
-                        if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
-                    }
 
-                } else if (item.정정취소구분 === '정정') {
-                    const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문번호));
-                    if (orgitem !== undefined) {
-                        orgitem.qty -= orderitem.qty;
-                        if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
-                        orderlist.push(orderitem);
-                    }
-                } else {
+            } else if (item.정정취소구분 === '정정') {
+                const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문번호));
+                if (orgitem !== undefined) {
+                    orgitem.qty -= orderitem.qty;
+                    if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
                     orderlist.push(orderitem);
                 }
+            } else {
+                orderlist.push(orderitem);
             }
+        }
 
-            next = result.next as boolean;
-        } while (next);
         orderlist.sort((a, b) => a.orderno - b.orderno);
         return orderlist;
     }
