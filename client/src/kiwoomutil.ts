@@ -28,9 +28,11 @@ export class KiwoomUtil {
 
     private start_date = '2025-02-01';
     private data_dir = normalize(__dirname + '/../../data/history');
+    private ws_log = true;
 
-    constructor(kiwoom: KiwoomAPI, oninit: () => void) {
+    constructor(kiwoom: KiwoomAPI, oninit: () => void, ws_log = true) {
         this.kiwoom = kiwoom;
+        this.ws_log = ws_log;
         this.event_handler = {
             onReceiveConditionVer: this.on_receive_condition_ver,
             onReceiveTrCondition: this.on_receive_tr_condition,
@@ -191,11 +193,21 @@ export class KiwoomUtil {
         }
         this.kiwoom.SetRealReg('0022', codelist.join(';'), '10', '1');
 
-        console.log('total_buy_value', total_buy_value);
-        console.log('total_sell_value', total_sell_value);
-        console.log('total_current_value', total_current_value);
-        console.log('total_trading_value', total_current_value + total_sell_value);
-        console.log('total_trading_value_ratio', (total_current_value + total_sell_value) / total_buy_value);
+        if (this.ws_log) {
+            console.log('total_buy_value', total_buy_value);
+            console.log('total_sell_value', total_sell_value);
+            console.log('total_current_value', total_current_value);
+            console.log('total_trading_value', total_current_value + total_sell_value);
+            console.log('total_trading_value_ratio', (total_current_value + total_sell_value) / total_buy_value);
+        }
+        const total = {
+            buy_value: total_buy_value,
+            sell_value: total_sell_value,
+            current_value: total_current_value,
+            trading_value: total_current_value + total_sell_value,
+            trading_value_ratio: (total_current_value + total_sell_value) / total_buy_value,
+        }
+        return total;
     }
 
     private on_receive_condition_ver: IKiwoomEventHandler['onReceiveConditionVer']
@@ -211,10 +223,12 @@ export class KiwoomUtil {
     private on_receive_chejan_data: IKiwoomEventHandler['onReceiveChejanData']
         = async (gubun, item_cnt, fid_list, output) => {
             // gubun : 체결구분. 접수와 체결시 '0'값, 국내주식 잔고변경은 '1'값, 파생잔고변경은 '4'
-            console.log('onReceiveChejanData', gubun, item_cnt, fid_list, output['종목명']);
-            // for (const fid in output) {
-            //     console.log(fid, output[fid]);
-            // }
+            if (this.ws_log) {
+                console.log('onReceiveChejanData', gubun, item_cnt, fid_list, output['종목명']);
+                // for (const fid in output) {
+                //     console.log(fid, output[fid]);
+                // }
+            }
         };
     private on_receive_tr_data: IKiwoomEventHandler['onReceiveTrData']
         = async (scr_no, rq_name, tr_code, record_name, prev_next, data_length,
@@ -228,7 +242,7 @@ export class KiwoomUtil {
                         data_length, error_code, message, splm_msg, output_single, output_multi);
                 }
             } else {
-                console.log('cannot find callback for', rq_name);
+                if (this.ws_log) console.log('cannot find callback for', rq_name);
             }
         };
     private on_receive_real_data: IKiwoomEventHandler['onReceiveRealData']
@@ -262,7 +276,7 @@ export class KiwoomUtil {
 
     private on_receive_msg: IKiwoomEventHandler['onReceiveMsg']
         = async (msg_type, msg) => {
-            console.log('onReceiveMsg', msg_type, msg);
+            if (this.ws_log) console.log('onReceiveMsg', msg_type, msg);
         };
 
     async updateStockList(rawitem: StockInfoRawType) {
@@ -491,8 +505,8 @@ export class KiwoomUtil {
         }
     }
 
-    async getOrderInfo(date_yyyymmdd?: string) {
-        if (date_yyyymmdd === undefined) {
+    async getOrderInfo(code = '', orderno = 0, date_yyyymmdd = '') {
+        if (date_yyyymmdd === '') {
             const d = new Date();
             date_yyyymmdd = `${d.getFullYear()}${(d.getMonth() + 1).toString().padStart(2, '0')}${d.getDate().toString().padStart(2, '0')}`;
         }
@@ -510,9 +524,12 @@ export class KiwoomUtil {
             종목코드: '', // 공백일때 전체종목
             시작주문번호: '', // 공백일때 전체주문
         });
-        result.multi_items.sort((a, b) => a.주문번호.localeCompare(b.주문번호));
+        const filtered = result.multi_items
+            .filter(item => item.종목번호.endsWith(code))
+            .filter(item => parseInt(item.주문번호) >= orderno)
+            .sort((a, b) => a.주문번호.localeCompare(b.주문번호));
 
-        for (const item of result.multi_items) {
+        for (const item of filtered) {
             const orderitem: OrderInfoType = {
                 code: item.종목번호.slice(-6),
                 name: item.종목명,

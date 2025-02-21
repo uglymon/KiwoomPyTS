@@ -1,4 +1,3 @@
-import readline from 'readline';
 import { KiwoomUtil } from './kiwoomutil';
 import { KiwoomAPI } from './kiwoomapi';
 import chalk from 'chalk';
@@ -14,7 +13,7 @@ export class CLI {
 
     constructor(kiwoomapi: KiwoomAPI, oninit: () => void, onexit: () => void) {
         this.kiwoomapi = kiwoomapi;
-        this.kiwoomutil = new KiwoomUtil(kiwoomapi, oninit);
+        this.kiwoomutil = new KiwoomUtil(kiwoomapi, oninit, false);
         this.trader = new Trader1(this.kiwoomutil);
 
         this.onexit = onexit;
@@ -27,6 +26,16 @@ export class CLI {
 
     start() {
         const vorpal = new Vorpal();
+
+        vorpal.find('exit').remove();
+        vorpal.command('exit', 'Exits application.').alias('quit').alias('q')
+            .action(async () => {
+                await this.kiwoomapi.SetRealRemove('ALL', 'ALL');
+                this.trader.stop();
+                this.onexit();
+                await new Promise(resolve => setTimeout(resolve, 300));
+                process.exit(0);
+            });
 
         vorpal.command('show transactions')
             .option('-s, --stock <stock_code>', '6 digit stock code')
@@ -48,8 +57,10 @@ export class CLI {
                 if (typeof args === 'string') return;
                 if (args['command'] === 'start') {
                     await this.trader.start();
+
                 } else if (args.command === 'stop') {
                     await this.trader.stop();
+
                 } else if (args.command === 'status') {
                     const status = this.trader.isRunning();
                     console.log('AutoTrader Status :', status ? chalk.green('running') : chalk.red('stopped'));
@@ -70,8 +81,45 @@ export class CLI {
             .option('-s, --stock <stock_code>', '6 digit stock code')
             .option('-i, --id <order_id>', 'order id')
             .option('-d, --date <date>', 'date (YYYYMMDD)')
+            .types({ string: ['s', 'stock', 'd', 'date'] })
+            .validate(args => {
+                const stock = args.options.stock;
+                if (stock) {
+                    if (stock.length !== 6 || isNaN(Number(stock))) {
+                        return chalk.red('Invalid stock code :') + chalk.yellow(stock);
+                    }
+                }
+                const id = args.options.id;
+                if (id) {
+                    if (isNaN(Number(id))) {
+                        return chalk.red('Invalid order id :') + chalk.yellow(id);
+                    }
+                }
+                const date = args.options.date;
+                if (date) {
+                    if (date.length !== 8 || isNaN(Number(date))) {
+                        return chalk.red('Invalid date : ') + chalk.yellow(date);
+                    }
+                }
+                return true;
+            })
             .action(async (args) => {
-                console.log(args);
+                if (typeof args === 'string') return;
+                const stock = args.options.stock ?? '';
+                const id = args.options.id ?? 0;
+                const date = args.options.date ?? '';
+                const result = await this.kiwoomutil.getOrderInfo(stock, id, date);
+                for (const item of result) {
+                    console.log(
+                        item.orderno.toString().padStart(6),
+                        item.code, item.name.padEnd(16 - getHangulCount(item.name)),
+                        item.type.toString().padStart(4),
+                        item.price.toString().padStart(8),
+                        item.qty_executed.toString().padStart(4),
+                        '/' + item.qty.toString().padStart(3),
+                        (item.price * item.qty_executed).toString().padStart(10)
+                    );
+                }
             });
 
         vorpal.command('portfolio')
