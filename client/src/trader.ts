@@ -75,9 +75,18 @@ export class Trader1 {
         const sellprice = this.kiwoomutil.makePrice(baseprice * (1 + this.gap * 0.5));
         const sellqty = Math.round(300000 / sellprice);
 
-        await this.kiwoomutil.buy(code, buyqty, buyprice);
-        console.log(`[${chalk.green('Trader1')}] buy ${code} ${buyprice}x${buyqty}`);
-        await this.kiwoomutil.sell(code, sellqty, sellprice);
-        console.log(`[${chalk.red('Trader1')}] sell ${code} ${sellprice}x${sellqty}`);
+        await this.kiwoomutil.getAccountStatus();
+        const holdingitem = this.kiwoomutil.stockholding_list.find(h => h.code === code);
+        if (holdingitem === undefined || holdingitem.current_count < sellqty) {
+            await this.kiwoomutil.buy(code, buyqty * 2, baseprice);
+            console.log(`[${chalk.green('Trader1')}] buy(baseprice) ${code} ${baseprice}x${buyqty}`);
+
+        } else {
+            await this.kiwoomutil.sell(code, sellqty, sellprice);
+            console.log(`[${chalk.red('Trader1')}] sell ${code} ${sellprice}x${sellqty}`);
+
+            await this.kiwoomutil.buy(code, buyqty, buyprice);
+            console.log(`[${chalk.green('Trader1')}] buy ${code} ${buyprice}x${buyqty}`);
+        }
     }
 }
