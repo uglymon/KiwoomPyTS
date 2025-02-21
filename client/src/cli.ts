@@ -4,6 +4,7 @@ import { KiwoomAPI } from './kiwoomapi';
 import chalk from 'chalk';
 import { Trader1 } from './trader';
 import { getHangulCount } from './util';
+import Vorpal from 'vorpal';
 
 export class CLI {
     private kiwoomapi: KiwoomAPI;
@@ -14,49 +15,101 @@ export class CLI {
     constructor(kiwoomapi: KiwoomAPI, oninit: () => void, onexit: () => void) {
         this.kiwoomapi = kiwoomapi;
         this.kiwoomutil = new KiwoomUtil(kiwoomapi, oninit);
-        this.onexit = onexit;
-
         this.trader = new Trader1(this.kiwoomutil);
-    }
 
-    start() {
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-            completer: (line: string) => {
-                const completions = ['exit', 'quit', 'q'];
-                for (const key of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
-                    if (key.startsWith('cmd_') && typeof this[key as keyof CLI] === 'function') {
-                        completions.push(key.replace('cmd_', ''));
-                    }
-                }
-                const result = completions.filter(cmd => cmd.toLowerCase().startsWith(line.toLowerCase()));
-                return [result, line];
-            }
-        });
-        rl.setPrompt(`${chalk.greenBright('>')}${chalk.green('> ')}`);
-        rl.prompt();
-
-
-        rl.on('line', async (line) => {
-            if (['exit', 'quit', 'q'].includes(line.toLowerCase())) {
-                rl.close();
-                return;
-            }
-            const commands = line.split(' ').map(cmd => cmd.trim());
-            const funcname = `cmd_${commands[0]}` as keyof CLI;
-            if (typeof this[funcname] === 'function') {
-                const func = this[funcname] as unknown as (cli: CLI, ...args: string[]) => Promise<void>;
-                await func(this, ...commands.slice(1).map(cmd => cmd.trim()).filter(cmd => cmd !== ''));
-            }
-            rl.prompt();
-
-        });
-        rl.on('close', async () => {
-            await this.kiwoomapi.SetRealRemove('ALL', 'ALL');
+        this.onexit = onexit;
+        process.on('exit', async () => {
+            this.kiwoomapi.SetRealRemove('ALL', 'ALL');
             this.trader.stop();
             this.onexit();
         });
+    }
+
+    start() {
+        const vorpal = new Vorpal();
+
+        vorpal.command('show transactions')
+            .option('-s, --stock <stock_code>', '6 digit stock code')
+            .option('-d, --date <date>', 'date (YYYYMMDD)')
+            .option('--detail', 'show detail')
+            .action(async (args) => {
+                console.log(args);
+            });
+
+        vorpal.command('trade auto <command>', 'command : start | stop | status')
+            .validate(args => {
+                if (['start', 'stop', 'status'].includes(args.command)) {
+                    return true;
+                }
+                return chalk.red('Invalid trade auto command :')
+                    + chalk.yellow(' command must be start | stop | status');
+            })
+            .action(async args => {
+                if (typeof args === 'string') return;
+                if (args['command'] === 'start') {
+                    await this.trader.start();
+                } else if (args.command === 'stop') {
+                    await this.trader.stop();
+                } else if (args.command === 'status') {
+                    const status = this.trader.isRunning();
+                    console.log('AutoTrader Status :', status ? chalk.green('running') : chalk.red('stopped'));
+                }
+            });
+
+        vorpal.command('order create <action> <stock_code> <price> <quantity>', 'action : buy | sell')
+            .action(async (args) => {
+                console.log(args);
+            });
+
+        vorpal.command('order cancel <order_id>', 'order id')
+            .action(async (args) => {
+                console.log(args);
+            });
+
+        vorpal.command('order status')
+            .option('-s, --stock <stock_code>', '6 digit stock code')
+            .option('-i, --id <order_id>', 'order id')
+            .option('-d, --date <date>', 'date (YYYYMMDD)')
+            .action(async (args) => {
+                console.log(args);
+            });
+
+        vorpal.command('portfolio')
+            .action(async (args) => {
+                console.log(args);
+            });
+
+        vorpal.command('portfolio detail')
+            .action(async (args) => {
+                console.log(args);
+            });
+
+        vorpal.command('quote price <stock_code>')
+            .option('-d, --date <date>', 'date (YYYYMMDD)')
+            .action(async (args) => {
+                console.log(args);
+            });
+
+        vorpal.command('getRealStockInfo')
+            .action(async () => {
+                console.log(this.kiwoomutil.stockinfo_list);
+            });
+
+        vorpal.command('getAccountStatus')
+            .action(async () => {
+                console.log(await this.kiwoomutil.getAccountStatus());
+            });
+
+        vorpal.command('test1').action(async () => {
+            await this.cmd_test1(this);
+        });
+
+        vorpal.command('test2').action(async () => {
+            await this.cmd_test2(this);
+        });
+
+        vorpal.delimiter(`${chalk.greenBright('>')}${chalk.green('>')}`);
+        vorpal.show();
     }
 
     async cmd_getRealStockInfo(cli: CLI) {
@@ -101,13 +154,5 @@ export class CLI {
                 (item.price * item.qty_executed).toString().padStart(10)
             );
         }
-    }
-
-    async cmd_traderStart(cli: CLI) {
-        await cli.trader.start();
-    }
-
-    async cmd_traderStop(cli: CLI) {
-        await cli.trader.stop();
     }
 }

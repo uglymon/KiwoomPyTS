@@ -26,6 +26,9 @@ export class Trader1 {
         clearInterval(this.timer);
         this.timer = null;
     }
+    isRunning() {
+        return this.timer !== null;
+    }
 
     async check(code = this.code_default) {
         const stockinfo = this.kiwoomutil.stockinfo_list[code];
