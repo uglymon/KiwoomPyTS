@@ -50,7 +50,7 @@ export class CLI {
                 if (['start', 'stop', 'status'].includes(args.command)) {
                     return true;
                 }
-                return chalk.red('Invalid trade auto command :')
+                return chalk.red('Invalid trade auto command : ')
                     + chalk.yellow(' command must be start | stop | status');
             })
             .action(async args => {
@@ -63,18 +63,73 @@ export class CLI {
 
                 } else if (args.command === 'status') {
                     const status = this.trader.isRunning();
-                    console.log('AutoTrader Status :', status ? chalk.green('running') : chalk.red('stopped'));
+                    console.log('AutoTrader Status : ', status ? chalk.green('running') : chalk.red('stopped'));
                 }
             });
 
         vorpal.command('order create <action> <stock_code> <price> <quantity>', 'action : buy | sell')
+            .validate(args => {
+                if (args.action !== 'buy' && args.action !== 'sell') {
+                    return chalk.red('Invalid action : ') + chalk.yellow(args.action);
+                }
+                const stockcode = Number(args.stock_code);
+                if (isNaN(stockcode) || stockcode > 999999) {
+                    return chalk.red('Invalid stock code : ') + chalk.yellow(args.stock_code);
+                }
+                const price = Number(args.price);
+                if (isNaN(price) || price <= 0) {
+                    return chalk.red('Invalid price : ') + chalk.yellow(args.price);
+                }
+                if (this.kiwoomutil.makePrice(price) !== price) {
+                    return chalk.red('Invalid price unit : ') + chalk.yellow(args.price)
+                        + chalk.yellow(' (' + this.kiwoomutil.makePrice(price) + ')');
+                }
+                if (isNaN(Number(args.quantity)) || Number(args.quantity) <= 0) {
+                    return chalk.red('Invalid quantity : ') + chalk.yellow(args.quantity);
+                }
+                return true;
+            })
             .action(async (args) => {
-                console.log(args);
+                if (typeof args === 'string') return;
+                const stockcode = args.stock_code.toString().padStart(6, '0');
+                const stockname = await this.kiwoomapi.GetMasterCodeName(stockcode.toString().padStart(6, '0'));
+                if (stockname === '') {
+                    console.log(chalk.red('Invalid stock code : ') + chalk.yellow(stockcode));
+                    return;
+                }
+                const price = Number(args.price);
+                const quantity = Number(args.quantity);
+                const orderno = await this.kiwoomutil.buy(stockcode, quantity, price);
+                if (orderno === 0) {
+                    console.log(chalk.red('Failed to order : ') + chalk.yellow(stockcode));
+                } else {
+                    console.log(chalk.green('Order created : ') + chalk.yellow(stockcode));
+                }
             });
 
         vorpal.command('order cancel <order_id>', 'order id')
+            .validate(args => {
+                const orderno = Number(args.order_id);
+                if (isNaN(orderno) || orderno <= 0) {
+                    return chalk.red('Invalid order id : ') + chalk.yellow(args.order_id);
+                }
+                return true;
+            })
             .action(async (args) => {
-                console.log(args);
+                if (typeof args === 'string') return;
+                const orderno = Number(args.order_id);
+                const orderinfo = await this.kiwoomutil.getOrderInfo('', orderno, '');
+                if (orderinfo.length === 0) {
+                    console.log(chalk.red('Invalid order id : ') + chalk.yellow(orderno));
+                    return;
+                }
+                const result = await this.kiwoomutil.cancel(
+                    orderinfo[0].code, orderinfo[0].qty, orderno, orderinfo[0].type);
+                if (result) {
+                    console.log(chalk.green('Order canceled : ') + chalk.yellow(orderno));
+                } else {
+                    console.log(chalk.red('Failed to cancel : ') + chalk.yellow(orderno));
+                }
             });
 
         vorpal.command('order status')
@@ -86,13 +141,13 @@ export class CLI {
                 const stock = args.options.stock;
                 if (stock) {
                     if (stock.length !== 6 || isNaN(Number(stock))) {
-                        return chalk.red('Invalid stock code :') + chalk.yellow(stock);
+                        return chalk.red('Invalid stock code : ') + chalk.yellow(stock);
                     }
                 }
                 const id = args.options.id;
                 if (id) {
                     if (isNaN(Number(id))) {
-                        return chalk.red('Invalid order id :') + chalk.yellow(id);
+                        return chalk.red('Invalid order id : ') + chalk.yellow(id);
                     }
                 }
                 const date = args.options.date;
@@ -166,22 +221,6 @@ export class CLI {
 
     async cmd_getAccountStatus(cli: CLI) {
         await cli.kiwoomutil.getAccountStatus();
-    }
-
-    async cmd_help(cli: CLI, ...args: string[]) {
-        console.log('help', args);
-        if (args[0] !== undefined) {
-            const arg = args[0].toUpperCase();
-            if (arg.length === 8) {
-                const inputT = eval(`require('./trinfo').TR_${arg}Input`) as new () => unknown;
-                if (inputT === undefined) {
-                    console.log(`${chalk.red('Error:')} TR ${chalk.yellow(arg)} is not found`);
-                    return;
-                }
-                const input = new inputT();
-                console.log(input);
-            }
-        }
     }
 
     async cmd_test1(cli: CLI) {

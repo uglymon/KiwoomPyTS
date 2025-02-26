@@ -65,49 +65,9 @@ export class KiwoomUtil {
     }
 
     async getAccountStatus() {
-        if (existsSync(this.data_dir) === false) {
-            mkdirSync(this.data_dir, { recursive: true });
-        }
-        this.stockholding_list.length = 0;
+        const transactions = await this.getAllTransactions();
 
-        const startdate = new Date(this.start_date);
-        const enddate = new Date();
-        const enddate_str = `${enddate.getFullYear()}${(enddate.getMonth() + 1).toString().padStart(2, '0')}`
-            + `${enddate.getDate().toString().padStart(2, '0')}`;
-        // enddate.setHours(0, 0, 0, 0);
-        const date = new Date(startdate);
-
-        while (date < enddate) {
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            const date_str = `${year}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`;
-            date.setDate(date.getDate() + 1);
-
-            const dateitems: TR_OPW00009MultiItem[] = [];
-            if (existsSync(`${this.data_dir}/${date_str}.json`) === false) {
-                const result = await this.sendTR(TR_OPW00009, {
-                    주문일자: date_str, // YYYYMMDD
-                    계좌번호: this.account, // 10자리
-                    비밀번호: '', // 공백
-                    비밀번호입력매체구분: '00', // 공백
-                    주식채권구분: '1', // 0:전체, 1:주식, 2:채권
-                    시장구분: '0',
-                    매도수구분: '0', // 0:전체, 1:매도, 2:매수
-                    조회구분: '1',
-                    종목코드: '', // 공백일때 전체종목
-                    시작주문번호: '', // 공백일때 전체주문
-                });
-                if (date_str !== enddate_str) {
-                    writeFileSync(`${this.data_dir}/${date_str}.json`, JSON.stringify(result.multi_items));
-                }
-                dateitems.push(...result.multi_items);
-                await new Promise(resolve => setTimeout(resolve, 300));
-
-            } else {
-                const file = readFileSync(`${this.data_dir}/${date_str}.json`, 'utf-8');
-                dateitems.push(...JSON.parse(file) as TR_OPW00009MultiItem[]);
-            }
+        for (const [, dateitems] of Object.entries(transactions)) {
 
             for (const item of dateitems) {
                 const index = this.stockholding_list.findIndex(h => h.name === item.종목명);
@@ -483,6 +443,56 @@ export class KiwoomUtil {
                 }
             });
         });
+    }
+
+    async getAllTransactions() {
+        if (existsSync(this.data_dir) === false) {
+            mkdirSync(this.data_dir, { recursive: true });
+        }
+        this.stockholding_list.length = 0;
+
+        const startdate = new Date(this.start_date);
+        const enddate = new Date();
+        const enddate_str = `${enddate.getFullYear()}${(enddate.getMonth() + 1).toString().padStart(2, '0')}`
+            + `${enddate.getDate().toString().padStart(2, '0')}`;
+        // enddate.setHours(0, 0, 0, 0);
+        const date = new Date(startdate);
+
+        const transactions: { [key: string]: TR_OPW00009MultiItem[] } = {};
+        while (date < enddate) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const date_str = `${year}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`;
+            date.setDate(date.getDate() + 1);
+
+            const dateitems: TR_OPW00009MultiItem[] = [];
+            if (existsSync(`${this.data_dir}/${date_str}.json`) === false) {
+                const result = await this.sendTR(TR_OPW00009, {
+                    주문일자: date_str, // YYYYMMDD
+                    계좌번호: this.account, // 10자리
+                    비밀번호: '', // 공백
+                    비밀번호입력매체구분: '00', // 공백
+                    주식채권구분: '1', // 0:전체, 1:주식, 2:채권
+                    시장구분: '0',
+                    매도수구분: '0', // 0:전체, 1:매도, 2:매수
+                    조회구분: '1',
+                    종목코드: '', // 공백일때 전체종목
+                    시작주문번호: '', // 공백일때 전체주문
+                });
+                if (date_str !== enddate_str) {
+                    writeFileSync(`${this.data_dir}/${date_str}.json`, JSON.stringify(result.multi_items));
+                }
+                dateitems.push(...result.multi_items);
+                await new Promise(resolve => setTimeout(resolve, 300));
+
+            } else {
+                const file = readFileSync(`${this.data_dir}/${date_str}.json`, 'utf-8');
+                dateitems.push(...JSON.parse(file) as TR_OPW00009MultiItem[]);
+            }
+            transactions[date_str] = dateitems;
+        }
+        return transactions;
     }
 
     async buy_program() {
