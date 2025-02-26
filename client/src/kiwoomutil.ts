@@ -233,6 +233,7 @@ export class KiwoomUtil {
     private on_receive_tr_data: IKiwoomEventHandler['onReceiveTrData']
         = async (scr_no, rq_name, tr_code, record_name, prev_next, data_length,
             error_code, message, splm_msg, output_single, output_multi) => {
+            console.log(chalk.yellow('TEST'), 'onReceiveTrData', scr_no, rq_name, tr_code, record_name, prev_next);
             const index = this.waitingevent.onReceiveTrData.findIndex(cb => cb.rqname === rq_name);
             if (index !== -1) {
                 const callback = this.waitingevent.onReceiveTrData[index].callback;
@@ -275,8 +276,9 @@ export class KiwoomUtil {
         };
 
     private on_receive_msg: IKiwoomEventHandler['onReceiveMsg']
-        = async (msg_type, msg) => {
-            if (this.ws_log) console.log('onReceiveMsg', msg_type, msg);
+        = async (scr_no, rq_name, tr_code, msg) => {
+            console.log(chalk.yellow('TEST'), 'onReceiveMsg', scr_no, rq_name, tr_code, msg);
+            if (this.ws_log) console.log('onReceiveMsg', scr_no, rq_name, tr_code, msg);
         };
 
     async updateStockList(rawitem: StockInfoRawType) {
