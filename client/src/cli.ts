@@ -37,11 +37,83 @@ export class CLI {
                 process.exit(0);
             });
 
-        vorpal.command('show transactions')
-            .option('-s, --stock <stock_code>', '6 digit stock code')
-            .option('-d, --date <date>', 'date (YYYYMMDD)')
-            .option('--detail', 'show detail')
+        vorpal.command('show transactions by date')
+            .action(async () => {
+                const transactions = await this.kiwoomutil.getAllTransactions();
+                for (const [date, dateitems] of Object.entries(transactions)) {
+                    let total_buy = 0;
+                    let total_buy_current = 0;
+                    let total_sell = 0;
+                    const codelist = dateitems.map(i => i.종목번호.slice(-6));
+                    const stockinfolist = await this.kiwoomutil.getStockInfo(codelist);
+                    for (const item of dateitems) {
+                        const stockinfo = stockinfolist.find(
+                            i => i.종목코드.slice(-6) === item.종목번호.slice(-6));
+                        const currentprice = Math.abs(parseInt(stockinfo?.현재가 ?? '0'));
+                        if (stockinfo?.종목코드.endsWith(this.trader.code_default)) continue;
+
+                        if (item.주문유형구분.includes('매도')) {
+                            total_sell += parseInt(item.체결수량) * parseInt(item.체결단가);
+                        } else {
+                            total_buy += parseInt(item.체결수량) * parseInt(item.체결단가);
+                            total_buy_current += parseInt(item.체결수량) * currentprice;
+                        }
+                    }
+                    const total_buy_ratio = total_buy_current / total_buy;
+                    console.log(date,
+                        chalk.blue(total_buy.toString().padStart(10)),
+                        chalk.blueBright(total_buy_current.toString().padStart(10)),
+                        chalk.magenta(total_buy_ratio.toFixed(6).padStart(10)),
+                        chalk.red(total_sell.toString().padStart(10)),
+                    );
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                }
+            });
+
+        vorpal.command('show transaction by code <code>')
+            .validate(args => {
+                const code = Number(args.code);
+                if (isNaN(code) || code > 999999) {
+                    return chalk.red('Invalid code : ') + chalk.yellow(args.code);
+                }
+                return true;
+            })
             .action(async (args) => {
+                if (typeof args === 'string') return;
+                const code = Number(args.code).toString().padStart(6, '0');
+                const name = await this.kiwoomapi.GetMasterCodeName(code);
+                if (name === '') {
+                    console.log(chalk.red('Invalid code : ') + chalk.yellow(code));
+                    return;
+                }
+                const transactions = await this.kiwoomutil.getAllTransactions();
+                let total_buy_count = 0;
+                let total_buy_value = 0;
+                let total_sell_count = 0;
+                let total_sell_value = 0;
+                for (const [, dateitems] of Object.entries(transactions)) {
+                    for (const item of dateitems) {
+                        if (item.종목번호.slice(-6) !== code) continue;
+                        if (item.주문유형구분.includes('매도')) {
+                            total_sell_count += parseInt(item.체결수량);
+                            total_sell_value += parseInt(item.체결수량) * parseInt(item.체결단가);
+                        } else {
+                            total_buy_count += parseInt(item.체결수량);
+                            total_buy_value += parseInt(item.체결수량) * parseInt(item.체결단가);
+                        }
+                    }
+                }
+                const avg_buy_price = total_buy_value / total_buy_count;
+                const avg_sell_price = total_sell_value / total_sell_count;
+                console.log(name,
+                    chalk.blue(total_buy_count.toString().padStart(10)),
+                    chalk.blueBright(total_buy_value.toString().padStart(10)),
+                    chalk.magenta(avg_buy_price.toFixed(2).padStart(10)),
+                    chalk.red(total_sell_count.toString().padStart(10)),
+                    chalk.redBright(total_sell_value.toString().padStart(10)),
+                    chalk.magenta(avg_sell_price.toFixed(2).padStart(10)),
+                );
+
                 console.log(args);
             });
 
@@ -211,7 +283,11 @@ export class CLI {
             await this.cmd_test2(this);
         });
 
-        vorpal.delimiter(`${chalk.greenBright('>')}${chalk.green('>')}`);
+        if (this.kiwoomutil.server_type === 'TEST') {
+            vorpal.delimiter(`${chalk.yellow('TEST')}${chalk.greenBright('>')}${chalk.green('>')}`);
+        } else {
+            vorpal.delimiter(`${chalk.red('REAL')}${chalk.magentaBright('>')}${chalk.magenta('>')}`);
+        }
         vorpal.show();
     }
 

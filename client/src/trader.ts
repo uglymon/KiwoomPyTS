@@ -3,9 +3,11 @@ import { KiwoomUtil } from './kiwoomutil';
 
 export class Trader1 {
     private kiwoomutil: KiwoomUtil;
-    private code_default = '033160';
-    private gap = 0.02;
     private timer: NodeJS.Timeout | null = null;
+
+    readonly code_default = '033160';
+    private gap = 0.02;
+    private trade_unit = 300000;
 
     constructor(kiwoomutil: KiwoomUtil) {
         this.kiwoomutil = kiwoomutil;
@@ -74,14 +76,14 @@ export class Trader1 {
 
         // 새로운 주문 생성
         const buyprice = this.kiwoomutil.makePrice(baseprice * (1 - this.gap * 0.5));
-        const buyqty = Math.round(300000 / buyprice);
+        const buyqty = Math.round(this.trade_unit / buyprice);
         const sellprice = this.kiwoomutil.makePrice(baseprice * (1 + this.gap * 0.5));
-        const sellqty = Math.round(300000 / sellprice);
+        const sellqty = Math.round(this.trade_unit / sellprice);
 
         await this.kiwoomutil.getAccountStatus();
         const holdingitem = this.kiwoomutil.stockholding_list.find(h => h.code === code);
         if (holdingitem === undefined || holdingitem.current_count < sellqty) {
-            await this.kiwoomutil.buy(code, buyqty * 2, baseprice);
+            await this.kiwoomutil.buy(code, buyqty * 3, baseprice);
             console.log(`[${chalk.green('Trader1')}] buy(baseprice) ${code} ${baseprice}x${buyqty}`);
 
         } else {

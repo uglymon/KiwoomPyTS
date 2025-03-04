@@ -22,12 +22,12 @@ export class KiwoomUtil {
 
     private fidlist: { [key: string]: string };
     private account = '';
-    private server_type: 'TEST' | 'REAL' = 'TEST';
+    server_type: 'TEST' | 'REAL' = 'TEST';
     stockinfo_list: { [key: string]: StockInfoType } = {};
     stockholding_list: StockHoldingInfoType[] = [];
 
     private start_date = '2025-02-01';
-    private data_dir = normalize(__dirname + '/../../data/history');
+    private data_dir = '';
     private ws_log = true;
 
     constructor(kiwoom: KiwoomAPI, oninit: () => void, ws_log = true) {
@@ -58,6 +58,8 @@ export class KiwoomUtil {
         const servertype = await this.kiwoom.GetLoginInfo('GetServerGubun');
         this.server_type = servertype === '1' ? 'TEST' : 'REAL';
         console.log(`${chalk.green('connected server type')} : ${chalk.yellow(this.server_type)}`);
+        this.data_dir = normalize(__dirname + '/../../data/history/'
+            + this.server_type.toLowerCase());
 
         // await this.getAccountStatus();
 
@@ -68,7 +70,6 @@ export class KiwoomUtil {
         const transactions = await this.getAllTransactions();
 
         for (const [, dateitems] of Object.entries(transactions)) {
-
             for (const item of dateitems) {
                 const index = this.stockholding_list.findIndex(h => h.name === item.종목명);
                 const holdingitem: StockHoldingInfoType = index > -1 ? this.stockholding_list[index] : {
@@ -126,6 +127,7 @@ export class KiwoomUtil {
         let total_sell_value = 0;
         let total_current_value = 0;
         for (const item of result.multi_items.sort((a, b) => a.종목명.localeCompare(b.종목명))) {
+            if (parseInt(item.현재가) === 0) continue;  // 상장폐지
             const info = this.stockholding_list.find(h => h.name === item.종목명);
             if (info === undefined) {
                 console.error(`cannot find '${item.종목명}' from history!`);
@@ -193,7 +195,6 @@ export class KiwoomUtil {
     private on_receive_tr_data: IKiwoomEventHandler['onReceiveTrData']
         = async (scr_no, rq_name, tr_code, record_name, prev_next, data_length,
             error_code, message, splm_msg, output_single, output_multi) => {
-            console.log(chalk.yellow('TEST'), 'onReceiveTrData', scr_no, rq_name, tr_code, record_name, prev_next);
             const index = this.waitingevent.onReceiveTrData.findIndex(cb => cb.rqname === rq_name);
             if (index !== -1) {
                 const callback = this.waitingevent.onReceiveTrData[index].callback;
