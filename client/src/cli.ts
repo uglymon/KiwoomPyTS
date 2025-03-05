@@ -44,7 +44,9 @@ export class CLI {
                     let total_buy = 0;
                     let total_buy_current = 0;
                     let total_sell = 0;
-                    const codelist = dateitems.map(i => i.종목번호.slice(-6));
+                    const codelist = dateitems.map(i => i.종목번호.slice(-6))
+                        .filter(code => code !== '');
+                    console.log('cli', codelist);
                     const stockinfolist = await this.kiwoomutil.getStockInfo(codelist);
                     for (const item of dateitems) {
                         const stockinfo = stockinfolist.find(
