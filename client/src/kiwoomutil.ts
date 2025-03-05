@@ -148,7 +148,8 @@ export class KiwoomUtil {
             total_current_value += info.current_value;
         }
 
-        const codelist = this.stockholding_list.map(h => h.code);
+        const codelist = this.stockholding_list.map(h => h.code)
+            .filter(code => code !== '');
         const infolist = await this.getStockInfo(codelist);
         for (const info of infolist) {
             await this.updateStockList(info);
@@ -553,14 +554,14 @@ export class KiwoomUtil {
                 qty_executed: parseInt(item.체결수량),
                 time_executed: item.체결시간,
             }
-            if (item.정정취소구분 === '취소') {
+            if (item.정정취소구분.includes('취소')) {
                 const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문번호));
                 if (orgitem !== undefined) {
                     orgitem.qty -= orderitem.qty;
                     if (orgitem.qty <= 0) orderlist.splice(orderlist.indexOf(orgitem), 1);
                 }
 
-            } else if (item.정정취소구분 === '정정') {
+            } else if (item.정정취소구분.includes('정정')) {
                 const orgitem = orderlist.find(o => o.orderno === parseInt(item.원주문번호));
                 if (orgitem !== undefined) {
                     orgitem.qty -= orderitem.qty;
