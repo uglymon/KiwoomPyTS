@@ -14,6 +14,7 @@ export class Trader1 {
     }
 
     async start() {
+        if (this.timer !== null) return;
         const infolist = await this.kiwoomutil.getStockInfo([this.code_default]);
         for (const info of infolist) {
             await this.kiwoomutil.updateStockList(info);
