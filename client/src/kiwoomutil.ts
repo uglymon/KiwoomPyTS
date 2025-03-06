@@ -122,6 +122,7 @@ export class KiwoomUtil {
             비밀번호: '',
             비밀번호입력매체구분: '00',
             조회구분: '2',
+            거래소구분: '', // KRX | NXT, 공백시 KRX
         });
         let total_buy_value = 0;
         let total_sell_value = 0;
@@ -481,6 +482,7 @@ export class KiwoomUtil {
                     조회구분: '1',
                     종목코드: '', // 공백일때 전체종목
                     시작주문번호: '', // 공백일때 전체주문
+                    거래소구분: '', // KRX | NXT, 공백시 KRX
                 });
                 if (date_str !== enddate_str) {
                     writeFileSync(`${this.data_dir}/${date_str}.json`, JSON.stringify(result.multi_items));
@@ -537,6 +539,7 @@ export class KiwoomUtil {
             조회구분: '0',  // 0:전체, 1:체결
             종목코드: '', // 공백일때 전체종목
             시작주문번호: '', // 공백일때 전체주문
+            거래소구분: '', // KRX | NXT, 공백시 KRX
         });
         const filtered = result.multi_items
             .filter(item => item.종목번호.endsWith(code))
