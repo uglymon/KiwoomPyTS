@@ -615,6 +615,12 @@
                 "offset": 200,
                 "length": 20,
                 "fid": 228
+            },
+            {
+                "name": "거래소구분",
+                "offset": 220,
+                "length": 20,
+                "fid": 9081
             }
         ],
         "output_multi_info": {
@@ -1051,6 +1057,330 @@
                 "offset": 1360,
                 "length": 20,
                 "fid": 136
+            },
+            {
+                "name": "KRX 매도호가잔량 1",
+                "offset": 1380,
+                "length": 20,
+                "fid": 6044
+            },
+            {
+                "name": "KRX 매도호가잔량 2",
+                "offset": 1400,
+                "length": 20,
+                "fid": 6045
+            },
+            {
+                "name": "KRX 매도호가잔량 3",
+                "offset": 1420,
+                "length": 20,
+                "fid": 6046
+            },
+            {
+                "name": "KRX 매도호가잔량 4",
+                "offset": 1440,
+                "length": 20,
+                "fid": 6047
+            },
+            {
+                "name": "KRX 매도호가잔량 5",
+                "offset": 1460,
+                "length": 20,
+                "fid": 6048
+            },
+            {
+                "name": "KRX 매도호가잔량 6",
+                "offset": 1480,
+                "length": 20,
+                "fid": 6049
+            },
+            {
+                "name": "KRX 매도호가잔량 7",
+                "offset": 1500,
+                "length": 20,
+                "fid": 6050
+            },
+            {
+                "name": "KRX 매도호가잔량 8",
+                "offset": 1520,
+                "length": 20,
+                "fid": 6051
+            },
+            {
+                "name": "KRX 매도호가잔량 9",
+                "offset": 1540,
+                "length": 20,
+                "fid": 6052
+            },
+            {
+                "name": "KRX 매도호가잔량 10",
+                "offset": 1560,
+                "length": 20,
+                "fid": 6053
+            },
+            {
+                "name": "KRX 매수호가잔량 1",
+                "offset": 1580,
+                "length": 20,
+                "fid": 6054
+            },
+            {
+                "name": "KRX 매수호가잔량 2",
+                "offset": 1600,
+                "length": 20,
+                "fid": 6055
+            },
+            {
+                "name": "KRX 매수호가잔량 3",
+                "offset": 1620,
+                "length": 20,
+                "fid": 6056
+            },
+            {
+                "name": "KRX 매수호가잔량 4",
+                "offset": 1640,
+                "length": 20,
+                "fid": 6057
+            },
+            {
+                "name": "KRX 매수호가잔량 5",
+                "offset": 1660,
+                "length": 20,
+                "fid": 6058
+            },
+            {
+                "name": "KRX 매수호가잔량 6",
+                "offset": 1680,
+                "length": 20,
+                "fid": 6059
+            },
+            {
+                "name": "KRX 매수호가잔량 7",
+                "offset": 1700,
+                "length": 20,
+                "fid": 6060
+            },
+            {
+                "name": "KRX 매수호가잔량 8",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6061
+            },
+            {
+                "name": "KRX 매수호가잔량 9",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6062
+            },
+            {
+                "name": "KRX 매수호가잔량 10",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6063
+            },
+            {
+                "name": "KRX 매도호가총잔량",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6064
+            },
+            {
+                "name": "KRX 매수호가총잔량",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6065
+            },
+            {
+                "name": "NXT 매도호가잔량 1",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6066
+            },
+            {
+                "name": "NXT 매도호가잔량 2",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6067
+            },
+            {
+                "name": "NXT 매도호가잔량 3",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6068
+            },
+            {
+                "name": "NXT 매도호가잔량 4",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6069
+            },
+            {
+                "name": "NXT 매도호가잔량 5",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6070
+            },
+            {
+                "name": "NXT 매도호가잔량 6",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6071
+            },
+            {
+                "name": "NXT 매도호가잔량 7",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6072
+            },
+            {
+                "name": "NXT 매도호가잔량 8",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6073
+            },
+            {
+                "name": "NXT 매도호가잔량 9",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6074
+            },
+            {
+                "name": "NXT 매도호가잔량 10",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6075
+            },
+            {
+                "name": "NXT 매수호가잔량 1",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6076
+            },
+            {
+                "name": "NXT 매수호가잔량 2",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6077
+            },
+            {
+                "name": "NXT 매수호가잔량 3",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6078
+            },
+            {
+                "name": "NXT 매수호가잔량 4",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6079
+            },
+            {
+                "name": "NXT 매수호가잔량 5",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6080
+            },
+            {
+                "name": "NXT 매수호가잔량 6",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6081
+            },
+            {
+                "name": "NXT 매수호가잔량 7",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6082
+            },
+            {
+                "name": "NXT 매수호가잔량 8",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6083
+            },
+            {
+                "name": "NXT 매수호가잔량 9",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6084
+            },
+            {
+                "name": "NXT 매수호가잔량 10",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6085
+            },
+            {
+                "name": "NXT 매도호가총잔량",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6086
+            },
+            {
+                "name": "NXT 매수호가총잔량",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6087
+            },
+            {
+                "name": "KRX 중간가 매도 총잔량 증감",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6100
+            },
+            {
+                "name": "KRX 중간가 매도 총잔량",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6101
+            },
+            {
+                "name": "KRX 중간가",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6102
+            },
+            {
+                "name": "KRX 중간가 매수 총잔량",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6103
+            },
+            {
+                "name": "KRX 중간가 매수 총잔량 증감",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6104
+            },
+            {
+                "name": "NXT 중간가 매도 총잔량 증감",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6105
+            },
+            {
+                "name": "NXT 중간가 매도 총잔량",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6106
+            },
+            {
+                "name": "NXT 중간가",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6107
+            },
+            {
+                "name": "NXT 중간가 매수 총잔량",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6108
+            },
+            {
+                "name": "NXT 중간가 매수 총잔량 증감",
+                "offset": 1360,
+                "length": 20,
+                "fid": 6109
             }
         ],
         "output_multi_info": {
@@ -3262,6 +3592,12 @@
                 "offset": 14,
                 "length": 3,
                 "fid": 9012
+            },
+            {
+                "name": "거래소구분",
+                "offset": 17,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "신고저가요청",
@@ -3393,6 +3729,12 @@
                 "offset": 12,
                 "length": 1,
                 "fid": 9077
+            },
+            {
+                "name": "거래소구분",
+                "offset": 13,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "상하한가요청",
@@ -3530,6 +3872,12 @@
                 "offset": 12,
                 "length": 1,
                 "fid": 9062
+            },
+            {
+                "name": "거래소구분",
+                "offset": 13,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "고저가근접요청",
@@ -3667,6 +4015,12 @@
                 "offset": 14,
                 "length": 1,
                 "fid": 9076
+            },
+            {
+                "name": "거래소구분",
+                "offset": 15,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "가격급등락요청",
@@ -3780,6 +4134,12 @@
                 "offset": 9,
                 "length": 1,
                 "fid": 9062
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "호가잔량상위요청",
@@ -3893,6 +4253,12 @@
                 "offset": 8,
                 "length": 1,
                 "fid": 9060
+            },
+            {
+                "name": "거래소구분",
+                "offset": 9,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "호가잔량급증요청",
@@ -4000,6 +4366,12 @@
                 "offset": 7,
                 "length": 1,
                 "fid": 9060
+            },
+            {
+                "name": "거래소구분",
+                "offset": 8,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "잔량율급증요청",
@@ -4119,6 +4491,12 @@
                 "offset": 9,
                 "length": 1,
                 "fid": 9077
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "거래량급증요청",
@@ -4214,6 +4592,12 @@
                 "offset": 4,
                 "length": 1,
                 "fid": 9022
+            },
+            {
+                "name": "거래소구분",
+                "offset": 5,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "거래량갱신요청",
@@ -4321,6 +4705,12 @@
                 "offset": 7,
                 "length": 3,
                 "fid": 9012
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "매물대집중요청",
@@ -4413,9 +4803,15 @@
             },
             {
                 "name": "PER구분",
-                "offset": 1,
+                "offset": 0,
                 "length": 1,
                 "fid": 9047
+            },
+            {
+                "name": "거래소구분",
+                "offset": 17,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "고저PER요청",
@@ -4503,38 +4899,44 @@
             {
                 "name": "거래량조건",
                 "offset": 4,
-                "length": 5,
+                "length": 4,
                 "fid": 9022
             },
             {
                 "name": "종목조건",
-                "offset": 9,
-                "length": 2,
+                "offset": 8,
+                "length": 1,
                 "fid": 9060
             },
             {
                 "name": "신용조건",
-                "offset": 11,
+                "offset": 9,
                 "length": 1,
                 "fid": 9062
             },
             {
                 "name": "상하한포함",
-                "offset": 12,
-                "length": 2,
+                "offset": 10,
+                "length": 1,
                 "fid": 9076
             },
             {
                 "name": "가격조건",
-                "offset": 14,
-                "length": 2,
+                "offset": 11,
+                "length": 1,
                 "fid": 9077
             },
             {
                 "name": "거래대금조건",
-                "offset": 16,
+                "offset": 12,
                 "length": 4,
                 "fid": 9080
+            },
+            {
+                "name": "거래소구분",
+                "offset": 16,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "전일대비등락률상위요청",
@@ -4555,60 +4957,60 @@
             {
                 "name": "종목명",
                 "offset": 40,
-                "length": 140,
+                "length": 100,
                 "fid": 302
             },
             {
                 "name": "현재가",
-                "offset": 180,
+                "offset": 140,
                 "length": 20,
                 "fid": 10
             },
             {
                 "name": "전일대비기호",
-                "offset": 200,
+                "offset": 160,
                 "length": 20,
                 "fid": 25
             },
             {
                 "name": "전일대비",
-                "offset": 220,
+                "offset": 180,
                 "length": 20,
                 "fid": 11
             },
             {
                 "name": "등락률",
-                "offset": 240,
+                "offset": 200,
                 "length": 20,
                 "fid": 12
             },
             {
                 "name": "매도잔량",
-                "offset": 260,
+                "offset": 220,
                 "length": 20,
                 "fid": 121
             },
             {
                 "name": "매수잔량",
-                "offset": 280,
+                "offset": 240,
                 "length": 20,
                 "fid": 125
             },
             {
                 "name": "현재거래량",
-                "offset": 300,
+                "offset": 260,
                 "length": 20,
                 "fid": 13
             },
             {
                 "name": "체결강도",
-                "offset": 320,
+                "offset": 280,
                 "length": 20,
                 "fid": 228
             },
             {
                 "name": "횟수",
-                "offset": 340,
+                "offset": 300,
                 "length": 20,
                 "fid": 333
             }
@@ -4652,26 +5054,32 @@
             {
                 "name": "종목조건",
                 "offset": 9,
-                "length": 2,
+                "length": 1,
                 "fid": 9060
             },
             {
                 "name": "신용조건",
-                "offset": 11,
+                "offset": 10,
                 "length": 1,
                 "fid": 9062
             },
             {
                 "name": "거래대금조건",
                 "offset": 11,
-                "length": 4,
+                "length": 1,
                 "fid": 9080
             },
             {
                 "name": "등락조건",
-                "offset": 15,
+                "offset": 12,
                 "length": 1,
                 "fid": 9017
+            },
+            {
+                "name": "거래소구분",
+                "offset": 13,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "시가대비등락률요청",
@@ -4686,66 +5094,66 @@
             {
                 "name": "종목명",
                 "offset": 20,
-                "length": 140,
+                "length": 100,
                 "fid": 302
             },
             {
                 "name": "현재가",
-                "offset": 160,
+                "offset": 120,
                 "length": 20,
                 "fid": 10
             },
             {
                 "name": "전일대비기호",
-                "offset": 180,
+                "offset": 140,
                 "length": 20,
                 "fid": 25
             },
             {
                 "name": "전일대비",
-                "offset": 200,
+                "offset": 160,
                 "length": 20,
                 "fid": 11
             },
             {
                 "name": "등락률",
-                "offset": 220,
+                "offset": 180,
                 "length": 20,
                 "fid": 12
             },
             {
                 "name": "시가",
-                "offset": 240,
+                "offset": 200,
                 "length": 20,
                 "fid": 16
             },
             {
                 "name": "고가",
-                "offset": 260,
+                "offset": 220,
                 "length": 20,
                 "fid": 17
             },
             {
                 "name": "저가",
-                "offset": 280,
+                "offset": 240,
                 "length": 20,
                 "fid": 18
             },
             {
                 "name": "시가대비",
-                "offset": 300,
+                "offset": 260,
                 "length": 20,
                 "fid": 1040
             },
             {
                 "name": "현재거래량",
-                "offset": 320,
+                "offset": 280,
                 "length": 20,
                 "fid": 13
             },
             {
                 "name": "체결강도",
-                "offset": 340,
+                "offset": 300,
                 "length": 20,
                 "fid": 228
             }
@@ -4777,26 +5185,32 @@
             {
                 "name": "거래량조건",
                 "offset": 4,
-                "length": 5,
+                "length": 1,
                 "fid": 9022
             },
             {
                 "name": "종목조건",
-                "offset": 9,
-                "length": 2,
+                "offset": 5,
+                "length": 1,
                 "fid": 9060
             },
             {
                 "name": "신용조건",
-                "offset": 11,
+                "offset": 6,
                 "length": 1,
                 "fid": 9062
             },
             {
                 "name": "가격조건",
-                "offset": 12,
-                "length": 2,
+                "offset": 7,
+                "length": 1,
                 "fid": 9077
+            },
+            {
+                "name": "거래소구분",
+                "offset": 8,
+                "length": 1,
+                "fid": 9081
             }
         ],
         "tr_desc": "예상체결등락률상위요청",
@@ -4811,66 +5225,66 @@
             {
                 "name": "종목명",
                 "offset": 20,
-                "length": 140,
+                "length": 100,
                 "fid": 302
             },
             {
                 "name": "예상체결가",
-                "offset": 160,
+                "offset": 120,
                 "length": 20,
                 "fid": 23
             },
             {
                 "name": "기준가",
-                "offset": 180,
+                "offset": 140,
                 "length": 20,
                 "fid": 346
             },
             {
                 "name": "전일대비기호",
-                "offset": 200,
+                "offset": 160,
                 "length": 20,
                 "fid": 1067
             },
             {
                 "name": "전일대비",
-                "offset": 220,
+                "offset": 180,
                 "length": 20,
                 "fid": 1055
             },
             {
                 "name": "등락률",
-                "offset": 240,
+                "offset": 200,
                 "length": 20,
                 "fid": 1056
             },
             {
                 "name": "예상체결량",
-                "offset": 260,
+                "offset": 220,
                 "length": 20,
                 "fid": 24
             },
             {
                 "name": "매도잔량",
-                "offset": 280,
+                "offset": 240,
                 "length": 20,
                 "fid": 61
             },
             {
                 "name": "매도호가",
-                "offset": 300,
+                "offset": 260,
                 "length": 20,
                 "fid": 27
             },
             {
                 "name": "매수호가",
-                "offset": 320,
+                "offset": 280,
                 "length": 20,
                 "fid": 28
             },
             {
                 "name": "매수잔량",
-                "offset": 340,
+                "offset": 300,
                 "length": 20,
                 "fid": 71
             }
@@ -4907,33 +5321,39 @@
             },
             {
                 "name": "신용구분",
-                "offset": 4,
+                "offset": 5,
                 "length": 1,
                 "fid": 9062
             },
             {
                 "name": "거래량구분",
-                "offset": 4,
+                "offset": 6,
                 "length": 1,
                 "fid": 9022
             },
             {
                 "name": "가격구분",
-                "offset": 4,
+                "offset": 7,
                 "length": 1,
                 "fid": 9077
             },
             {
                 "name": "거래대금구분",
-                "offset": 4,
+                "offset": 8,
                 "length": 1,
                 "fid": 9080
             },
             {
                 "name": "장운영구분",
-                "offset": 4,
+                "offset": 9,
                 "length": 1,
                 "fid": 9114
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 1,
+                "fid": 9081
             }
         ],
         "tr_desc": "당일거래량상위요청",
@@ -5107,6 +5527,12 @@
                 "offset": 6,
                 "length": 2,
                 "fid": 9028
+            },
+            {
+                "name": "거래소구분",
+                "offset": 8,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "전일거래량상위요청",
@@ -5172,6 +5598,12 @@
                 "offset": 3,
                 "length": 1,
                 "fid": 9010
+            },
+            {
+                "name": "거래소구분",
+                "offset": 4,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "거래대금상위요청",
@@ -5297,6 +5729,12 @@
                 "offset": 8,
                 "length": 1,
                 "fid": 9062
+            },
+            {
+                "name": "거래소구분",
+                "offset": 9,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "신용비율상위요청",
@@ -5398,6 +5836,12 @@
                 "offset": 4,
                 "length": 2,
                 "fid": 9012
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 1,
+                "fid": 9081
             }
         ],
         "tr_desc": "외인기간별매매상위요청",
@@ -5468,6 +5912,12 @@
                 "offset": 280,
                 "length": 20,
                 "fid": 344
+            },
+            {
+                "name": "종목코드",
+                "offset": 300,
+                "length": 20,
+                "fid": 9001
             }
         ],
         "output_multi_info": {
@@ -5499,6 +5949,12 @@
                 "offset": 4,
                 "length": 1,
                 "fid": 9049
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 1,
+                "fid": 9081
             }
         ],
         "tr_desc": "외인연속순매매상위요청",
@@ -5581,6 +6037,12 @@
                 "offset": 320,
                 "length": 20,
                 "fid": 1043
+            },
+            {
+                "name": "종목코드",
+                "offset": 340,
+                "length": 20,
+                "fid": 9001
             }
         ],
         "output_multi_info": {
@@ -5606,6 +6068,12 @@
                 "offset": 3,
                 "length": 2,
                 "fid": 9012
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 1,
+                "fid": 9081
             }
         ],
         "tr_desc": "외인한도소진율증가상위",
@@ -5682,6 +6150,12 @@
                 "offset": 300,
                 "length": 20,
                 "fid": 360
+            },
+            {
+                "name": "종목코드",
+                "offset": 320,
+                "length": 20,
+                "fid": 9001
             }
         ],
         "output_multi_info": {
@@ -5725,6 +6199,12 @@
                 "offset": 7,
                 "length": 1,
                 "fid": 9077
+            },
+            {
+                "name": "거래소구분",
+                "offset": 8,
+                "length": 1,
+                "fid": 9081
             }
         ],
         "tr_desc": "외국계창구매매상위요청",
@@ -5807,6 +6287,12 @@
                 "offset": 320,
                 "length": 20,
                 "fid": 14
+            },
+            {
+                "name": "종목코드",
+                "offset": 340,
+                "length": 20,
+                "fid": 9001
             }
         ],
         "output_multi_info": {
@@ -5957,6 +6443,12 @@
                 "offset": 11,
                 "length": 1,
                 "fid": 9036
+            },
+            {
+                "name": "거래소구분",
+                "offset": 11,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "증권사별매매상위요청",
@@ -6948,6 +7440,12 @@
                 "offset": 200,
                 "length": 10,
                 "fid": 1371
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 10,
+                "fid": 9081
             }
         ],
         "output_multi_info": {
@@ -7335,6 +7833,12 @@
                 "offset": 40,
                 "length": 20,
                 "fid": 9048
+            },
+            {
+                "name": "거래소구분",
+                "offset": 100,
+                "length": 20,
+                "fid": 9081
             }
         ],
         "tr_desc": "업종별투자자순매수요청",
@@ -7499,9 +8003,15 @@
             },
             {
                 "name": "가격구분",
-                "offset": 140,
+                "offset": 160,
                 "length": 20,
                 "fid": 9077
+            },
+            {
+                "name": "거래소구분",
+                "offset": 180,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "거래원순간거래량요청",
@@ -7568,7 +8078,7 @@
                 "fid": 11
             },
             {
-                "name": "전일대비",
+                "name": "등락율",
                 "offset": 320,
                 "length": 20,
                 "fid": 12
@@ -7728,6 +8238,12 @@
                 "offset": 14,
                 "length": 1,
                 "fid": 9069
+            },
+            {
+                "name": "거래소구분",
+                "offset": 17,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "변동성완화장치발동종목요청",
@@ -7810,6 +8326,12 @@
                 "offset": 20,
                 "length": 10,
                 "fid": 1490
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 10,
+                "fid": 9081
             }
         ],
         "output_multi_info": {
@@ -7930,6 +8452,12 @@
                 "offset": 100,
                 "length": 20,
                 "fid": 9073
+            },
+            {
+                "name": "거래소구분",
+                "offset": 120,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "투자자별일별매매종목요청",
@@ -8496,6 +9024,12 @@
                 "offset": 100,
                 "length": 20,
                 "fid": 9207
+            },
+            {
+                "name": "거래소구분",
+                "offset": 120,
+                "length": 20,
+                "fid": 9081
             }
         ],
         "tr_desc": "동일순매매순위요청",
@@ -8613,18 +9147,18 @@
             {
                 "name": "시장구분",
                 "offset": 0,
-                "length": 3,
+                "length": 20,
                 "fid": 9008
             },
             {
                 "name": "금액수량구분",
-                "offset": 3,
-                "length": 1,
+                "offset": 20,
+                "length": 20,
                 "fid": 9036
             },
             {
                 "name": "투자자별",
-                "offset": 4,
+                "offset": 40,
                 "length": 20,
                 "fid": 9073
             },
@@ -8639,6 +9173,12 @@
                 "offset": 25,
                 "length": 1,
                 "fid": 9177
+            },
+            {
+                "name": "거래소구분",
+                "offset": 100,
+                "length": 20,
+                "fid": 9081
             }
         ],
         "tr_desc": "장중투자자별매매요청",
@@ -8652,37 +9192,37 @@
             },
             {
                 "name": "종목명",
-                "offset": 12,
+                "offset": 20,
                 "length": 100,
                 "fid": 302
             },
             {
                 "name": "현재가",
-                "offset": 112,
+                "offset": 120,
                 "length": 20,
                 "fid": 10
             },
             {
                 "name": "대비기호",
-                "offset": 132,
+                "offset": 140,
                 "length": 20,
                 "fid": 25
             },
             {
                 "name": "전일대비",
-                "offset": 152,
+                "offset": 160,
                 "length": 20,
                 "fid": 11
             },
             {
                 "name": "등락율",
-                "offset": 172,
+                "offset": 180,
                 "length": 20,
                 "fid": 12
             },
             {
                 "name": "누적거래량",
-                "offset": 192,
+                "offset": 200,
                 "length": 20,
                 "fid": 13
             },
@@ -8730,43 +9270,43 @@
             },
             {
                 "name": "순매수수량",
-                "offset": 352,
+                "offset": 220,
                 "length": 20,
                 "fid": 210
             },
             {
                 "name": "이점시전순매수수량",
-                "offset": 372,
+                "offset": 240,
                 "length": 20,
                 "fid": 217
             },
             {
                 "name": "순매수증감",
-                "offset": 392,
+                "offset": 260,
                 "length": 20,
                 "fid": 218
             },
             {
                 "name": "매수수량",
-                "offset": 412,
+                "offset": 280,
                 "length": 20,
                 "fid": 206
             },
             {
                 "name": "매수수량증감",
-                "offset": 432,
+                "offset": 300,
                 "length": 20,
                 "fid": 207
             },
             {
                 "name": "매도수량",
-                "offset": 452,
+                "offset": 320,
                 "length": 20,
                 "fid": 202
             },
             {
                 "name": "매도수량증감",
-                "offset": 472,
+                "offset": 340,
                 "length": 20,
                 "fid": 203
             }
@@ -8966,6 +9506,12 @@
                 "offset": 60,
                 "length": 20,
                 "fid": 9001
+            },
+            {
+                "name": "거래소구분",
+                "offset": 40,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "장중투자자별매매차트요청",
@@ -10127,6 +10673,12 @@
                 "offset": 180,
                 "length": 20,
                 "fid": 9206
+            },
+            {
+                "name": "거래소구분",
+                "offset": 200,
+                "length": 20,
+                "fid": 2134
             }
         ],
         "tr_desc": "미체결요청",
@@ -10287,6 +10839,30 @@
                 "offset": 600,
                 "length": 20,
                 "fid": 8000
+            },
+            {
+                "name": "거래소구분",
+                "offset": 620,
+                "length": 20,
+                "fid": 2134
+            },
+            {
+                "name": "거래소구분명",
+                "offset": 640,
+                "length": 20,
+                "fid": 2135
+            },
+            {
+                "name": "SOR구분",
+                "offset": 660,
+                "length": 20,
+                "fid": 2136
+            },
+            {
+                "name": "스톱가",
+                "offset": 680,
+                "length": 20,
+                "fid": 2137
             }
         ],
         "output_multi_info": {
@@ -10339,9 +10915,15 @@
             },
             {
                 "name": "체결구분",
-                "offset": 180,
+                "offset": 200,
                 "length": 20,
                 "fid": 9206
+            },
+            {
+                "name": "거래소구분",
+                "offset": 220,
+                "length": 20,
+                "fid": 2134
             }
         ],
         "tr_desc": "체결요청",
@@ -10436,6 +11018,30 @@
                 "offset": 360,
                 "length": 20,
                 "fid": 9001
+            },
+            {
+                "name": "거래소구분",
+                "offset": 380,
+                "length": 20,
+                "fid": 2134
+            },
+            {
+                "name": "거래소구분명",
+                "offset": 400,
+                "length": 20,
+                "fid": 2135
+            },
+            {
+                "name": "SOR구분",
+                "offset": 420,
+                "length": 20,
+                "fid": 2136
+            },
+            {
+                "name": "스톱가",
+                "offset": 440,
+                "length": 20,
+                "fid": 2137
             }
         ],
         "output_multi_info": {
@@ -11406,6 +12012,12 @@
                 "offset": 200,
                 "length": 20,
                 "fid": 228
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 10,
+                "fid": 9081
             }
         ],
         "output_multi_info": {
@@ -11425,6 +12037,12 @@
                 "offset": 0,
                 "length": 20,
                 "fid": 9201
+            },
+            {
+                "name": "거래소구분",
+                "offset": 0,
+                "length": 20,
+                "fid": 2134
             }
         ],
         "tr_desc": "계좌수익률요청",
@@ -12005,6 +12623,125 @@
         },
         "tr_code": "OPT10087"
     },
+    "OPT10088": {
+        "tr_name": "SRJANGO",
+        "tr_type": "1",
+        "gfid": "8528",
+        "input": [
+            {
+                "name": "계좌번호",
+                "offset": 0,
+                "length": 20,
+                "fid": 9201
+            },
+            {
+                "name": "주문번호",
+                "offset": 80,
+                "length": 20,
+                "fid": 9203
+            }
+        ],
+        "tr_desc": "미체결분할주문상세",
+        "output_single": [],
+        "output_multi": [
+            {
+                "name": "종목코드",
+                "offset": 0,
+                "length": 20,
+                "fid": 9001
+            },
+            {
+                "name": "계좌번호",
+                "offset": 20,
+                "length": 20,
+                "fid": 9201
+            },
+            {
+                "name": "종목명",
+                "offset": 40,
+                "length": 100,
+                "fid": 302
+            },
+            {
+                "name": "주문번호",
+                "offset": 140,
+                "length": 20,
+                "fid": 9203
+            },
+            {
+                "name": "주문수량",
+                "offset": 160,
+                "length": 20,
+                "fid": 900
+            },
+            {
+                "name": "주문가격",
+                "offset": 180,
+                "length": 20,
+                "fid": 901
+            },
+            {
+                "name": "미체결수량",
+                "offset": 200,
+                "length": 20,
+                "fid": 902
+            },
+            {
+                "name": "매매구분",
+                "offset": 220,
+                "length": 20,
+                "fid": 906
+            },
+            {
+                "name": "매도수구분",
+                "offset": 240,
+                "length": 20,
+                "fid": 907
+            },
+            {
+                "name": "체결량",
+                "offset": 260,
+                "length": 20,
+                "fid": 911
+            },
+            {
+                "name": "주문상태",
+                "offset": 280,
+                "length": 20,
+                "fid": 913
+            },
+            {
+                "name": "현재가",
+                "offset": 300,
+                "length": 20,
+                "fid": 10
+            },
+            {
+                "name": "거래소구분",
+                "offset": 340,
+                "length": 20,
+                "fid": 2134
+            },
+            {
+                "name": "거래소구분명",
+                "offset": 320,
+                "length": 20,
+                "fid": 2135
+            },
+            {
+                "name": "주문구분",
+                "offset": 340,
+                "length": 20,
+                "fid": 905
+            }
+        ],
+        "output_multi_info": {
+            "tr_desc": "미체결분할",
+            "max_count": 10,
+            "max_count_desc": "*"
+        },
+        "tr_code": "OPT10088"
+    },
     "OPT10094": {
         "tr_name": "SCHART",
         "tr_type": "1",
@@ -12319,6 +13056,12 @@
                 "offset": 24,
                 "length": 1,
                 "fid": 9036
+            },
+            {
+                "name": "거래소구분",
+                "offset": 25,
+                "length": 20,
+                "fid": 9081
             }
         ],
         "tr_desc": "기관외국인연속매매현황요청",
@@ -16340,6 +17083,12 @@
                 "offset": 80,
                 "length": 20,
                 "fid": 9130
+            },
+            {
+                "name": "거래소구분",
+                "offset": 100,
+                "length": 20,
+                "fid": 9081
             }
         ],
         "tr_desc": "ETF전체시세요청",
@@ -18426,6 +19175,12 @@
                 "offset": 20,
                 "length": 20,
                 "fid": 9038
+            },
+            {
+                "name": "거래소구분",
+                "offset": 40,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "프로그램매매추이차트요청",
@@ -23707,6 +24462,12 @@
                 "offset": 260,
                 "length": 20,
                 "fid": 9013
+            },
+            {
+                "name": "거래소구분",
+                "offset": 280,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "테마그룹별요청",
@@ -23790,6 +24551,12 @@
                 "offset": 20,
                 "length": 20,
                 "fid": 9001
+            },
+            {
+                "name": "거래소구분",
+                "offset": 40,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "테마구성종목요청",
@@ -23915,6 +24682,12 @@
                 "offset": 40,
                 "length": 20,
                 "fid": 9001
+            },
+            {
+                "name": "거래소구분",
+                "offset": 17,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "프로그램순매수상위50요청",
@@ -24010,6 +24783,12 @@
                 "offset": 40,
                 "length": 20,
                 "fid": 9001
+            },
+            {
+                "name": "거래소구분",
+                "offset": 60,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "종목별프로그램매매현황요청",
@@ -24165,6 +24944,12 @@
                 "offset": 80,
                 "length": 20,
                 "fid": 9007
+            },
+            {
+                "name": "거래소구분",
+                "offset": 100,
+                "length": 4,
+                "fid": 9081
             }
         ],
         "tr_desc": "프로그램매매추이요청",
@@ -24175,6 +24960,12 @@
                 "offset": 0,
                 "length": 20,
                 "fid": 20
+            },
+            {
+                "name": "일자",
+                "offset": 0,
+                "length": 20,
+                "fid": 22
             },
             {
                 "name": "차익거래매도",
@@ -24296,6 +25087,12 @@
                 "offset": 0,
                 "length": 20,
                 "fid": 9004
+            },
+            {
+                "name": "거래소구분",
+                "offset": 100,
+                "length": 20,
+                "fid": 9081
             }
         ],
         "tr_desc": "프로그램매매차익잔고추이요청",
@@ -24373,6 +25170,12 @@
                 "offset": 40,
                 "length": 20,
                 "fid": 9001
+            },
+            {
+                "name": "거래소구분",
+                "offset": 100,
+                "length": 20,
+                "fid": 9081
             }
         ],
         "tr_desc": "프로그램매매누적추이요청",
@@ -24574,6 +25377,12 @@
                 "offset": 220,
                 "length": 20,
                 "fid": 1043
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 10,
+                "fid": 9081
             }
         ],
         "output_multi_info": {
@@ -24611,6 +25420,12 @@
                 "offset": 60,
                 "length": 20,
                 "fid": 9004
+            },
+            {
+                "name": "거래소구분",
+                "offset": 100,
+                "length": 20,
+                "fid": 9081
             }
         ],
         "tr_desc": "외국인기관매매상위요청",
@@ -25607,6 +26422,12 @@
                 "offset": 220,
                 "length": 20,
                 "fid": 1043
+            },
+            {
+                "name": "거래소구분",
+                "offset": 10,
+                "length": 10,
+                "fid": 9081
             }
         ],
         "output_multi_info": {
@@ -27177,7 +27998,7 @@
         "tr_code": "OPW00003"
     },
     "OPW00004": {
-        "tr_name": "TME2002_Q01",
+        "tr_name": "TME2002_Q11",
         "tr_type": "2",
         "input": [
             {
@@ -27202,6 +28023,12 @@
                 "name": "비밀번호입력매체구분",
                 "offset": 75,
                 "length": 2,
+                "fid": -1
+            },
+            {
+                "name": "거래소구분",
+                "offset": 77,
+                "length": 6,
                 "fid": -1
             }
         ],
@@ -27427,7 +28254,7 @@
         "tr_code": "OPW00004"
     },
     "OPW00005": {
-        "tr_name": "TDA2601_Q01",
+        "tr_name": "TDA2601_Q11",
         "tr_type": "2",
         "input": [
             {
@@ -27446,6 +28273,12 @@
                 "name": "비밀번호입력매체구분",
                 "offset": 74,
                 "length": 2,
+                "fid": -1
+            },
+            {
+                "name": "거래소구분",
+                "offset": 76,
+                "length": 6,
                 "fid": -1
             }
         ],
@@ -27879,7 +28712,7 @@
         "tr_code": "OPW00006"
     },
     "OPW00007": {
-        "tr_name": "TDA2931_Q01",
+        "tr_name": "TDA2931_Q11",
         "tr_type": "2",
         "input": [
             {
@@ -27934,6 +28767,12 @@
                 "name": "시작주문번호",
                 "offset": 99,
                 "length": 7,
+                "fid": -1
+            },
+            {
+                "name": "거래소구분",
+                "offset": 106,
+                "length": 6,
                 "fid": -1
             }
         ],
@@ -28065,6 +28904,18 @@
                 "name": "확인시간",
                 "offset": 282,
                 "length": 8,
+                "fid": -1
+            },
+            {
+                "name": "거래소구분",
+                "offset": 290,
+                "length": 6,
+                "fid": -1
+            },
+            {
+                "name": "스톱가",
+                "offset": 296,
+                "length": 10,
                 "fid": -1
             }
         ],
@@ -28247,7 +29098,7 @@
         "tr_code": "OPW00008"
     },
     "OPW00009": {
-        "tr_name": "TDA2917_Q01",
+        "tr_name": "TDA2917_Q11",
         "tr_type": "2",
         "input": [
             {
@@ -28308,6 +29159,12 @@
                 "name": "시작주문번호",
                 "offset": 100,
                 "length": 7,
+                "fid": -1
+            },
+            {
+                "name": "거래소구분",
+                "offset": 107,
+                "length": 6,
                 "fid": -1
             }
         ],
@@ -28457,6 +29314,18 @@
                 "name": "체결시간",
                 "offset": 199,
                 "length": 8,
+                "fid": -1
+            },
+            {
+                "name": "거래소구분",
+                "offset": 207,
+                "length": 6,
+                "fid": -1
+            },
+            {
+                "name": "스톱가",
+                "offset": 213,
+                "length": 10,
                 "fid": -1
             }
         ],
@@ -29617,6 +30486,12 @@
                 "offset": 112,
                 "length": 10,
                 "fid": -1
+            },
+            {
+                "name": "거래소구분",
+                "offset": 122,
+                "length": 6,
+                "fid": -1
             }
         ],
         "tr_desc": "위탁종합거래내역요청",
@@ -30419,7 +31294,7 @@
         "tr_code": "OPW00017"
     },
     "OPW00018": {
-        "tr_name": "TDA2602_Q01",
+        "tr_name": "TDA2602_Q11",
         "tr_type": "2",
         "input": [
             {
@@ -30444,6 +31319,12 @@
                 "name": "조회구분",
                 "offset": 76,
                 "length": 1,
+                "fid": -1
+            },
+            {
+                "name": "거래소구분",
+                "offset": 77,
+                "length": 6,
                 "fid": -1
             }
         ],

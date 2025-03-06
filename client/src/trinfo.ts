@@ -161,6 +161,7 @@ export class TR_OPT10003MultiItem {
     '누적거래량': string = '';
     '누적거래대금': string = '';
     '체결강도': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10003Output implements ITROutputBase {
     multiT: new () => TR_OPT10003MultiItem;
@@ -252,6 +253,60 @@ export class TR_OPT10004MultiItem {
     '시간외매도잔량': string = '';
     '시간외매수잔량': string = '';
     '시간외매수잔량대비': string = '';
+    'KRX 매도호가잔량 1': string = '';
+    'KRX 매도호가잔량 2': string = '';
+    'KRX 매도호가잔량 3': string = '';
+    'KRX 매도호가잔량 4': string = '';
+    'KRX 매도호가잔량 5': string = '';
+    'KRX 매도호가잔량 6': string = '';
+    'KRX 매도호가잔량 7': string = '';
+    'KRX 매도호가잔량 8': string = '';
+    'KRX 매도호가잔량 9': string = '';
+    'KRX 매도호가잔량 10': string = '';
+    'KRX 매수호가잔량 1': string = '';
+    'KRX 매수호가잔량 2': string = '';
+    'KRX 매수호가잔량 3': string = '';
+    'KRX 매수호가잔량 4': string = '';
+    'KRX 매수호가잔량 5': string = '';
+    'KRX 매수호가잔량 6': string = '';
+    'KRX 매수호가잔량 7': string = '';
+    'KRX 매수호가잔량 8': string = '';
+    'KRX 매수호가잔량 9': string = '';
+    'KRX 매수호가잔량 10': string = '';
+    'KRX 매도호가총잔량': string = '';
+    'KRX 매수호가총잔량': string = '';
+    'NXT 매도호가잔량 1': string = '';
+    'NXT 매도호가잔량 2': string = '';
+    'NXT 매도호가잔량 3': string = '';
+    'NXT 매도호가잔량 4': string = '';
+    'NXT 매도호가잔량 5': string = '';
+    'NXT 매도호가잔량 6': string = '';
+    'NXT 매도호가잔량 7': string = '';
+    'NXT 매도호가잔량 8': string = '';
+    'NXT 매도호가잔량 9': string = '';
+    'NXT 매도호가잔량 10': string = '';
+    'NXT 매수호가잔량 1': string = '';
+    'NXT 매수호가잔량 2': string = '';
+    'NXT 매수호가잔량 3': string = '';
+    'NXT 매수호가잔량 4': string = '';
+    'NXT 매수호가잔량 5': string = '';
+    'NXT 매수호가잔량 6': string = '';
+    'NXT 매수호가잔량 7': string = '';
+    'NXT 매수호가잔량 8': string = '';
+    'NXT 매수호가잔량 9': string = '';
+    'NXT 매수호가잔량 10': string = '';
+    'NXT 매도호가총잔량': string = '';
+    'NXT 매수호가총잔량': string = '';
+    'KRX 중간가 매도 총잔량 증감': string = '';
+    'KRX 중간가 매도 총잔량': string = '';
+    'KRX 중간가': string = '';
+    'KRX 중간가 매수 총잔량': string = '';
+    'KRX 중간가 매수 총잔량 증감': string = '';
+    'NXT 중간가 매도 총잔량 증감': string = '';
+    'NXT 중간가 매도 총잔량': string = '';
+    'NXT 중간가': string = '';
+    'NXT 중간가 매수 총잔량': string = '';
+    'NXT 중간가 매수 총잔량 증감': string = '';
 };
 export class TR_OPT10004Output implements ITROutputBase {
     multiT: new () => TR_OPT10004MultiItem;
@@ -838,6 +893,7 @@ export class TR_OPT10016Input implements ITRInputBase {
     '신용조건': string = '';
     '상하한포함': string = '';
     '기간': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10016MultiItem {
     '종목코드': string = '';
@@ -878,6 +934,7 @@ export class TR_OPT10017Input implements ITRInputBase {
     '거래량구분': string = '';
     '신용조건': string = '';
     '매매금구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10017MultiItem {
     '종목코드': string = '';
@@ -919,6 +976,7 @@ export class TR_OPT10018Input implements ITRInputBase {
     '거래량구분': string = '';
     '종목조건': string = '';
     '신용조건': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10018MultiItem {
     '종목코드': string = '';
@@ -960,6 +1018,7 @@ export class TR_OPT10019Input implements ITRInputBase {
     '신용조건': string = '';
     '가격조건': string = '';
     '상하한포함': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10019MultiItem {
     '종목코드': string = '';
@@ -997,6 +1056,7 @@ export class TR_OPT10020Input implements ITRInputBase {
     '거래량구분': string = '';
     '종목조건': string = '';
     '신용조건': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10020MultiItem {
     '종목코드': string = '';
@@ -1034,6 +1094,7 @@ export class TR_OPT10021Input implements ITRInputBase {
     '시간구분': string = '';
     '거래량구분': string = '';
     '종목조건': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10021MultiItem {
     '종목코드': string = '';
@@ -1070,6 +1131,7 @@ export class TR_OPT10022Input implements ITRInputBase {
     '시간구분': string = '';
     '거래량구분': string = '';
     '종목조건': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10022MultiItem {
     '종목코드': string = '';
@@ -1108,6 +1170,7 @@ export class TR_OPT10023Input implements ITRInputBase {
     '시간': string = '';
     '종목조건': string = '';
     '가격구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10023MultiItem {
     '종목코드': string = '';
@@ -1142,6 +1205,7 @@ export class TR_OPT10024Input implements ITRInputBase {
     '시장구분': string = '';
     '주기구분': string = '';
     '거래량구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10024MultiItem {
     '종목코드': string = '';
@@ -1178,6 +1242,7 @@ export class TR_OPT10025Input implements ITRInputBase {
     '현재가진입': string = '';
     '매물대수': string = '';
     '주기구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10025MultiItem {
     '종목코드': string = '';
@@ -1212,6 +1277,7 @@ export class TR_OPT10026Input implements ITRInputBase {
     tr_code: string = 'OPT10026';
     '시장구분': string = '';
     'PER구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10026MultiItem {
     '종목코드': string = '';
@@ -1250,6 +1316,7 @@ export class TR_OPT10027Input implements ITRInputBase {
     '상하한포함': string = '';
     '가격조건': string = '';
     '거래대금조건': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10027MultiItem {
     '종목분류': string = '';
@@ -1291,6 +1358,7 @@ export class TR_OPT10028Input implements ITRInputBase {
     '신용조건': string = '';
     '거래대금조건': string = '';
     '등락조건': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10028MultiItem {
     '종목코드': string = '';
@@ -1330,6 +1398,7 @@ export class TR_OPT10029Input implements ITRInputBase {
     '종목조건': string = '';
     '신용조건': string = '';
     '가격조건': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10029MultiItem {
     '종목코드': string = '';
@@ -1371,6 +1440,7 @@ export class TR_OPT10030Input implements ITRInputBase {
     '가격구분': string = '';
     '거래대금구분': string = '';
     '장운영구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10030MultiItem {
     '종목코드': string = '';
@@ -1418,6 +1488,7 @@ export class TR_OPT10031Input implements ITRInputBase {
     '조회구분': string = '';
     '순위시작': string = '';
     '순위끝': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10031MultiItem {
     '종목코드': string = '';
@@ -1447,6 +1518,7 @@ export class TR_OPT10032Input implements ITRInputBase {
     tr_code: string = 'OPT10032';
     '시장구분': string = '';
     '관리종목포함': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10032MultiItem {
     '종목코드': string = '';
@@ -1486,6 +1558,7 @@ export class TR_OPT10033Input implements ITRInputBase {
     '종목조건': string = '';
     '상하한포함': string = '';
     '신용조건': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10033MultiItem {
     '종목정보': string = '';
@@ -1521,6 +1594,7 @@ export class TR_OPT10034Input implements ITRInputBase {
     '시장구분': string = '';
     '매매구분': string = '';
     '기간': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10034MultiItem {
     '순위': string = '';
@@ -1556,6 +1630,7 @@ export class TR_OPT10035Input implements ITRInputBase {
     '시장구분': string = '';
     '매매구분': string = '';
     '기준일구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10035MultiItem {
     '종목코드': string = '';
@@ -1592,6 +1667,7 @@ export class TR_OPT10036Input implements ITRInputBase {
     tr_code: string = 'OPT10036';
     '시장구분': string = '';
     '기간': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10036MultiItem {
     '순위': string = '';
@@ -1630,6 +1706,7 @@ export class TR_OPT10037Input implements ITRInputBase {
     '매매구분': string = '';
     '정렬구분': string = '';
     '현재가조건': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10037MultiItem {
     '순위': string = '';
@@ -1704,6 +1781,7 @@ export class TR_OPT10039Input implements ITRInputBase {
     '매매구분': string = '';
     '기간': string = '';
     '금액수량구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10039MultiItem {
     '순위': string = '';
@@ -1996,6 +2074,7 @@ export class TR_OPT10046MultiItem {
     '체결강도5분': string = '';
     '체결강도20분': string = '';
     '체결강도60분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10046Output implements ITROutputBase {
     multiT: new () => TR_OPT10046MultiItem;
@@ -2149,6 +2228,7 @@ export class TR_OPT10051Input implements ITRInputBase {
     '시장구분': string = '';
     '금액수량구분': string = '';
     '기준일자': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10051MultiItem {
     '업종코드': string = '';
@@ -2195,6 +2275,7 @@ export class TR_OPT10052Input implements ITRInputBase {
     '시장구분': string = '';
     '수량구분': string = '';
     '가격구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10052MultiItem {
     '시간': string = '';
@@ -2207,6 +2288,7 @@ export class TR_OPT10052MultiItem {
     '현재가': string = '';
     '전일대비기호': string = '';
     '전일대비': string = '';
+    '등락율': string = '';
 };
 export class TR_OPT10052Output implements ITROutputBase {
     multiT: new () => TR_OPT10052MultiItem;
@@ -2268,6 +2350,7 @@ export class TR_OPT10054Input implements ITRInputBase {
     '최소거래대금': string = '';
     '최대거래대금': string = '';
     '발동방향': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10054MultiItem {
     '종목코드': string = '';
@@ -2283,6 +2366,7 @@ export class TR_OPT10054MultiItem {
     '정적괴리율': string = '';
     '시가대비등락률': string = '';
     'VI발동횟수': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10054Output implements ITROutputBase {
     multiT: new () => TR_OPT10054MultiItem;
@@ -2338,6 +2422,7 @@ export class TR_OPT10058Input implements ITRInputBase {
     '매매구분': string = '';
     '시장구분': string = '';
     '투자자구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10058MultiItem {
     '종목코드': string = '';
@@ -2505,6 +2590,7 @@ export class TR_OPT10062Input implements ITRInputBase {
     '매매구분': string = '';
     '정렬조건': string = '';
     '단위구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10062MultiItem {
     '종목코드': string = '';
@@ -2547,6 +2633,7 @@ export class TR_OPT10063Input implements ITRInputBase {
     '투자자별': string = '';
     '외국계전체': string = '';
     '동시순매수구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10063MultiItem {
     '종목코드': string = '';
@@ -2656,6 +2743,7 @@ export class TR_OPT10066Input implements ITRInputBase {
     '금액수량구분': string = '';
     '매매구분': string = '';
     '종목코드': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10066MultiItem {
     '종목코드': string = '';
@@ -3008,6 +3096,7 @@ export class TR_OPT10075Input implements ITRInputBase {
     '매매구분': string = '';
     '종목코드': string = '';
     '체결구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10075MultiItem {
     '계좌번호': string = '';
@@ -3036,6 +3125,10 @@ export class TR_OPT10075MultiItem {
     '당일매매수수료': string = '';
     '당일매매세금': string = '';
     '개인투자자': string = '';
+    '거래소구분': string = '';
+    '거래소구분명': string = '';
+    'SOR구분': string = '';
+    '스톱가': string = '';
 };
 export class TR_OPT10075Output implements ITROutputBase {
     multiT: new () => TR_OPT10075MultiItem;
@@ -3062,6 +3155,7 @@ export class TR_OPT10076Input implements ITRInputBase {
     '비밀번호': string = '';
     '주문번호': string = '';
     '체결구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10076MultiItem {
     '주문번호': string = '';
@@ -3079,6 +3173,10 @@ export class TR_OPT10076MultiItem {
     '원주문번호': string = '';
     '주문시간': string = '';
     '종목코드': string = '';
+    '거래소구분': string = '';
+    '거래소구분명': string = '';
+    'SOR구분': string = '';
+    '스톱가': string = '';
 };
 export class TR_OPT10076Output implements ITROutputBase {
     multiT: new () => TR_OPT10076MultiItem;
@@ -3380,6 +3478,7 @@ export class TR_OPT10084MultiItem {
     '누적거래량': string = '';
     '누적거래대금': string = '';
     '체결강도': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10084Output implements ITROutputBase {
     multiT: new () => TR_OPT10084MultiItem;
@@ -3400,6 +3499,7 @@ export class TR_OPT10084 extends TRBase<TR_OPT10084Input, TR_OPT10084Output> {
 export class TR_OPT10085Input implements ITRInputBase {
     tr_code: string = 'OPT10085';
     '계좌번호': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10085MultiItem {
     '일자': string = '';
@@ -3550,6 +3650,44 @@ export class TR_OPT10087 extends TRBase<TR_OPT10087Input, TR_OPT10087Output> {
     }
 };
 
+export class TR_OPT10088Input implements ITRInputBase {
+    tr_code: string = 'OPT10088';
+    '계좌번호': string = '';
+    '주문번호': string = '';
+};
+export class TR_OPT10088MultiItem {
+    '종목코드': string = '';
+    '계좌번호': string = '';
+    '종목명': string = '';
+    '주문번호': string = '';
+    '주문수량': string = '';
+    '주문가격': string = '';
+    '미체결수량': string = '';
+    '매매구분': string = '';
+    '매도수구분': string = '';
+    '체결량': string = '';
+    '주문상태': string = '';
+    '현재가': string = '';
+    '거래소구분': string = '';
+    '거래소구분명': string = '';
+    '주문구분': string = '';
+};
+export class TR_OPT10088Output implements ITROutputBase {
+    multiT: new () => TR_OPT10088MultiItem;
+    multi_items: TR_OPT10088MultiItem[] = [];
+    constructor() { this.multiT = TR_OPT10088MultiItem; }
+    next: boolean = false;
+};
+/**
+ * 미체결분할주문상세
+ */
+export class TR_OPT10088 extends TRBase<TR_OPT10088Input, TR_OPT10088Output> {
+    constructor(input: TR_OPT10088Input) {
+        super(input, TR_OPT10088Output);
+        this.input.tr_code = 'OPT10088';
+    }
+};
+
 export class TR_OPT10094Input implements ITRInputBase {
     tr_code: string = 'OPT10094';
     '종목코드': string = '';
@@ -3639,6 +3777,7 @@ export class TR_OPT10131Input implements ITRInputBase {
     '순매도수구분': string = '';
     '종목업종구분': string = '';
     '금액수량구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT10131MultiItem {
     '순위': string = '';
@@ -4799,6 +4938,7 @@ export class TR_OPT40004Input implements ITRInputBase {
     '운용사': string = '';
     '과세여부': string = '';
     '추적지수': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT40004MultiItem {
     '종목코드': string = '';
@@ -5391,6 +5531,7 @@ export class TR_OPT50008Input implements ITRInputBase {
     tr_code: string = 'OPT50008';
     '종목코드': string = '';
     '시간구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT50008MultiItem {
     '체결시간': string = '';
@@ -7071,6 +7212,7 @@ export class TR_OPT90001Input implements ITRInputBase {
     '날짜구분': string = '';
     '테마명': string = '';
     '등락수익구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT90001MultiItem {
     '종목코드': string = '';
@@ -7103,6 +7245,7 @@ export class TR_OPT90002Input implements ITRInputBase {
     tr_code: string = 'OPT90002';
     '날짜구분': string = '';
     '종목코드': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT90002MultiItem {
     '종목코드': string = '';
@@ -7141,6 +7284,7 @@ export class TR_OPT90003Input implements ITRInputBase {
     '매매상위구분': string = '';
     '금액수량구분': string = '';
     '시장구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT90003MultiItem {
     '순위': string = '';
@@ -7175,6 +7319,7 @@ export class TR_OPT90004Input implements ITRInputBase {
     tr_code: string = 'OPT90004';
     '일자': string = '';
     '시장구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT90004MultiItem {
     '종목코드': string = '';
@@ -7218,9 +7363,11 @@ export class TR_OPT90005Input implements ITRInputBase {
     '금액수량구분': string = '';
     '시장구분': string = '';
     '분틱구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT90005MultiItem {
     '체결시간': string = '';
+    '일자': string = '';
     '차익거래매도': string = '';
     '차익거래매수': string = '';
     '차익거래순매수': string = '';
@@ -7258,6 +7405,7 @@ export class TR_OPT90005 extends TRBase<TR_OPT90005Input, TR_OPT90005Output> {
 export class TR_OPT90006Input implements ITRInputBase {
     tr_code: string = 'OPT90006';
     '날짜': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT90006MultiItem {
     '일자': string = '';
@@ -7289,6 +7437,7 @@ export class TR_OPT90007Input implements ITRInputBase {
     '날짜': string = '';
     '금액수량구분': string = '';
     '시장구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT90007MultiItem {
     '일자': string = '';
@@ -7342,6 +7491,7 @@ export class TR_OPT90008MultiItem {
     '기준가시간': string = '';
     '대차거래상환주수합': string = '';
     '잔고수주합': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT90008Output implements ITROutputBase {
     multiT: new () => TR_OPT90008MultiItem;
@@ -7365,6 +7515,7 @@ export class TR_OPT90009Input implements ITRInputBase {
     '금액수량구분': string = '';
     '조회일자구분': string = '';
     '날짜': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT90009MultiItem {
     '외인순매도종목코드': string = '';
@@ -7603,6 +7754,7 @@ export class TR_OPT90013MultiItem {
     '기준가시간': string = '';
     '대차거래상환주수합': string = '';
     '잔고수주합': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPT90013Output implements ITROutputBase {
     multiT: new () => TR_OPT90013MultiItem;
@@ -8024,6 +8176,7 @@ export class TR_OPW00004Input implements ITRInputBase {
     '비밀번호': string = '';
     '상장폐지조회구분': string = '';
     '비밀번호입력매체구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPW00004MultiItem {
     '종목코드': string = '';
@@ -8082,6 +8235,7 @@ export class TR_OPW00005Input implements ITRInputBase {
     '계좌번호': string = '';
     '비밀번호': string = '';
     '비밀번호입력매체구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPW00005MultiItem {
     '신용구분': string = '';
@@ -8198,6 +8352,7 @@ export class TR_OPW00007Input implements ITRInputBase {
     '매도수구분': string = '';
     '종목코드': string = '';
     '시작주문번호': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPW00007MultiItem {
     '주문번호': string = '';
@@ -8220,6 +8375,8 @@ export class TR_OPW00007MultiItem {
     '통신구분': string = '';
     '정정취소': string = '';
     '확인시간': string = '';
+    '거래소구분': string = '';
+    '스톱가': string = '';
 };
 export class TR_OPW00007Output implements ITROutputBase {
     multiT: new () => TR_OPW00007MultiItem;
@@ -8295,6 +8452,7 @@ export class TR_OPW00009Input implements ITRInputBase {
     '조회구분': string = '';
     '종목코드': string = '';
     '시작주문번호': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPW00009MultiItem {
     '주식채권구분': string = '';
@@ -8317,6 +8475,8 @@ export class TR_OPW00009MultiItem {
     '통신구분': string = '';
     '정정취소구분': string = '';
     '체결시간': string = '';
+    '거래소구분': string = '';
+    '스톱가': string = '';
 };
 export class TR_OPW00009Output implements ITROutputBase {
     multiT: new () => TR_OPW00009MultiItem;
@@ -8607,6 +8767,7 @@ export class TR_OPW00015Input implements ITRInputBase {
     '내부정보제한여부': string = '';
     '원화대용입출금제외여부': string = '';
     '해외거래소코드': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPW00015MultiItem {
     '거래일자': string = '';
@@ -8793,6 +8954,7 @@ export class TR_OPW00018Input implements ITRInputBase {
     '비밀번호': string = '';
     '비밀번호입력매체구분': string = '';
     '조회구분': string = '';
+    '거래소구분': string = '';
 };
 export class TR_OPW00018MultiItem {
     '종목번호': string = '';
