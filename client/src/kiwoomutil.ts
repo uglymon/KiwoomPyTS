@@ -239,7 +239,7 @@ export class KiwoomUtil {
 
     private on_receive_msg: IKiwoomEventHandler['onReceiveMsg']
         = async (scr_no, rq_name, tr_code, msg) => {
-            console.log(chalk.yellow('TEST'), 'onReceiveMsg', scr_no, rq_name, tr_code, msg);
+            // console.log(chalk.yellow('TEST'), 'onReceiveMsg', scr_no, rq_name, tr_code, msg);
             if (this.ws_log) console.log('onReceiveMsg', scr_no, rq_name, tr_code, msg);
         };
 
