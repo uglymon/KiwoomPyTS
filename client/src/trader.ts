@@ -1,39 +1,70 @@
 import chalk from 'chalk';
 import { KiwoomUtil } from './kiwoomutil';
 
+export type TradeItemType = {
+    code: string;
+    gap: number;
+    check_interval: number;
+    trade_unit: number;
+}
+
 export class Trader1 {
     private kiwoomutil: KiwoomUtil;
-    private timer: NodeJS.Timeout | null = null;
+    private timer: (NodeJS.Timeout | null)[] = [];
 
-    readonly code_default = '033160';
-    private gap = 0.02;
-    private trade_unit = 300000;
+    readonly default_items: TradeItemType[] = [
+        /* 엠케이전자 */
+        { code: '033160', gap: 0.02, check_interval: 30, trade_unit: 400000 },
+        /* 삼성전자 */
+        { code: '005930', gap: 0.02, check_interval: 30, trade_unit: 500000 },
+    ];
+
+    readonly starttime = '09:01:00';
+    readonly endtime = '15:29:00';
 
     constructor(kiwoomutil: KiwoomUtil) {
         this.kiwoomutil = kiwoomutil;
+        for (let i = 0; i < this.default_items.length; i++) {
+            this.timer.push(null);
+        }
     }
 
     async start() {
-        if (this.timer !== null) return;
-        const infolist = await this.kiwoomutil.getStockInfo([this.code_default]);
+        if (this.timer[0] !== null) return;
+        const infolist = await this.kiwoomutil.getStockInfo(this.default_items.map(i => i.code));
         for (const info of infolist) {
             await this.kiwoomutil.updateStockList(info);
         }
         console.log(`[${chalk.green('Trader1')}] started.`);
-        this.check();
-        this.timer = setInterval(async () => { this.check(); }, 60 * 1000);
-    }
-    async stop() {
-        if (this.timer === null) return;
-        console.log(`[${chalk.red('Trader1')}] stopped.`);
-        clearInterval(this.timer);
-        this.timer = null;
-    }
-    isRunning() {
-        return this.timer !== null;
+        for (let i = 0; i < this.default_items.length; i++) {
+            const item = this.default_items[i];
+            await this.check(item);
+            this.timer[i] = setInterval(async () => { await this.check(item); },
+                item.check_interval * 1000);
+        }
     }
 
-    async check(code = this.code_default) {
+    async stop() {
+        console.log(`[${chalk.red('Trader1')}] stopped.`);
+        for (let i = 0; i < this.default_items.length; i++) {
+            const timer = this.timer[i];
+            if (timer !== null) {
+                clearInterval(timer);
+                this.timer[i] = null;
+            }
+        }
+    }
+    isRunning() {
+        return this.timer[0] !== null;
+    }
+
+    async check(item: TradeItemType) {
+        const now = new Date();
+        const start = new Date(`${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${this.starttime}`);
+        const end = new Date(`${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${this.endtime}`);
+        if (now < start || now > end) return;
+
+        const code = item.code;
         const stockinfo = this.kiwoomutil.stockinfo_list[code];
         if (stockinfo === undefined) {
             console.log(`[${chalk.red('Trader1')}] cannot find stockinfo of ${code}.`);
@@ -65,6 +96,12 @@ export class Trader1 {
             return;
         }
 
+        // 주식보유가 없어서 매수주문이 하나만 있는경우도 계속 기다림
+        if (orderlist_waiting.length === 1 && orderlist_waiting[0].type === 'buy') {
+            const order = orderlist_waiting[0];
+            if (order.price * order.qty > item.trade_unit * 2) return;
+        }
+
         // 그 외의 경우 모든 주문 취소
         for (const order of orderlist_waiting) {
             await this.kiwoomutil.cancel(code, order.qty, order.orderno, order.type);
@@ -76,16 +113,17 @@ export class Trader1 {
         const baseprice = Math.abs(lastorder === undefined ? stockinfo.price : lastorder.price);
 
         // 새로운 주문 생성
-        const buyprice = this.kiwoomutil.makePrice(baseprice * (1 - this.gap * 0.5));
-        const buyqty = Math.round(this.trade_unit / buyprice);
-        const sellprice = this.kiwoomutil.makePrice(baseprice * (1 + this.gap * 0.5));
-        const sellqty = Math.round(this.trade_unit / sellprice);
+        const buyprice = this.kiwoomutil.makePrice(baseprice * (1 - item.gap * 0.5));
+        const buyqty = Math.round(item.trade_unit / buyprice);
+        const sellprice = this.kiwoomutil.makePrice(baseprice * (1 + item.gap * 0.5));
+        const sellqty = Math.round(item.trade_unit / sellprice);
 
         await this.kiwoomutil.getAccountStatus();
         const holdingitem = this.kiwoomutil.stockholding_list.find(h => h.code === code);
         if (holdingitem === undefined || holdingitem.current_count < sellqty) {
-            await this.kiwoomutil.buy(code, buyqty * 3, baseprice);
-            console.log(`[${chalk.green('Trader1')}] buy(baseprice) ${code} ${baseprice}x${buyqty}`);
+            const basebuyprice = this.kiwoomutil.makePrice(baseprice * 1.02);
+            await this.kiwoomutil.buy(code, buyqty * 3, basebuyprice);
+            console.log(`[${chalk.green('Trader1')}] buy(baseprice) ${code} ${basebuyprice}x${buyqty}`);
 
         } else {
             await this.kiwoomutil.sell(code, sellqty, sellprice);

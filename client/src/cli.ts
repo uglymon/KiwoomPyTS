@@ -52,7 +52,7 @@ export class CLI {
                         const stockinfo = stockinfolist.find(
                             i => i.종목코드.slice(-6) === item.종목번호.slice(-6));
                         const currentprice = Math.abs(parseInt(stockinfo?.현재가 ?? '0'));
-                        if (stockinfo?.종목코드.endsWith(this.trader.code_default)) continue;
+                        if (this.trader.default_items.some(item => stockinfo?.종목코드.endsWith(item.code))) continue;
 
                         if (item.주문유형구분.includes('매도')) {
                             total_sell += parseInt(item.체결수량) * parseInt(item.체결단가);
