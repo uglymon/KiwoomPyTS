@@ -103,6 +103,7 @@ export type OrderInfoType = {
     code: string;
     name: string;
     type: 'buy' | 'sell';
+    date: string;
     orderno: number;
     price: number;
     qty: number;

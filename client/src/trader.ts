@@ -22,7 +22,6 @@ export class Trader1 {
     constructor(kiwoomutil: KiwoomUtil) {
         this.kiwoomutil = kiwoomutil;
         this.tradeitemlist = JSON.parse(readFileSync('../data/tradeitem.json', 'utf8'));
-        console.log(this.tradeitemlist);
         for (let i = 0; i < this.tradeitemlist.length; i++) {
             this.timer.push(null);
         }
@@ -70,11 +69,15 @@ export class Trader1 {
             return;
         }
 
-        // 전체 주문 리스트 중 해당 종목만 가져와서 체결시간순으로 정렬
+        // 전체 주문 리스트 중 해당 종목만 가져와서 체결날짜-시간순으로 정렬
         // 체결시간이 없는것들이 앞쪽에 있음
-        const orderlist_all = await this.kiwoomutil.getOrderInfo();
-        const orderlist = orderlist_all.filter(o => o.code === code)
-            .sort((a, b) => a.time_executed.localeCompare(b.time_executed));
+        const orderlist_all = (await this.kiwoomutil.getOrderInfo()).filter(o => o.code === code);
+        if (orderlist_all.length === 0)
+            orderlist_all.push(...(await this.kiwoomutil.getAllTransactionsByCode(code)));
+        const orderlist = orderlist_all.sort((a, b) => {
+            if (a.date !== b.date) return a.date.localeCompare(b.date);
+            return a.time_executed.localeCompare(b.time_executed)
+        });
 
         // 매도와 매수가 하나씩 있으면 계속 기다림
         const orderlist_waiting = orderlist.filter(o => o.qty_executed === 0);

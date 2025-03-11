@@ -493,7 +493,7 @@ export class KiwoomUtil {
                     주식채권구분: '1', // 0:전체, 1:주식, 2:채권
                     시장구분: '0',
                     매도수구분: '0', // 0:전체, 1:매도, 2:매수
-                    조회구분: '1',
+                    조회구분: '1',  // 0:전체, 1:체결
                     종목코드: '', // 공백일때 전체종목
                     시작주문번호: '', // 공백일때 전체주문
                     거래소구분: '', // KRX | NXT, 공백시 KRX
@@ -540,7 +540,6 @@ export class KiwoomUtil {
             const d = new Date();
             date_yyyymmdd = `${d.getFullYear()}${(d.getMonth() + 1).toString().padStart(2, '0')}${d.getDate().toString().padStart(2, '0')}`;
         }
-        const orderlist: OrderInfoType[] = [];
 
         const result = await this.sendTR(TR_OPW00009, {
             주문일자: date_yyyymmdd,
@@ -560,13 +559,26 @@ export class KiwoomUtil {
             .filter(item => parseInt(item.주문번호) >= orderno)
             .sort((a, b) => a.주문번호.localeCompare(b.주문번호));
 
-        for (const item of filtered) {
+        const orderlist: OrderInfoType[] = this.makeOrderInfo(filtered, date_yyyymmdd);
+
+        orderlist.sort((a, b) => {
+            const cmp = a.code.localeCompare(b.code);
+            if (cmp !== 0) return cmp;
+            return a.orderno - b.orderno;
+        });
+        return orderlist;
+    }
+
+    private makeOrderInfo(items: TR_OPW00009MultiItem[], date: string) {
+        const orderlist: OrderInfoType[] = [];
+        for (const item of items) {
             const orderprice = parseInt(item.주문단가);
             const executedprice = parseInt(item.체결단가);
             const orderitem: OrderInfoType = {
                 code: item.종목번호.slice(-6),
                 name: item.종목명,
                 type: item.주문유형구분.includes('매도') ? 'sell' : 'buy',
+                date,
                 orderno: parseInt(item.주문번호),
                 price: executedprice === 0 ? orderprice : executedprice,
                 qty: parseInt(item.주문수량),
@@ -591,12 +603,18 @@ export class KiwoomUtil {
                 orderlist.push(orderitem);
             }
         }
+        return orderlist;
+    }
 
-        orderlist.sort((a, b) => {
-            const cmp = a.code.localeCompare(b.code);
-            if (cmp !== 0) return cmp;
+    async getAllTransactionsByCode(code: string) {
+        const transactions = await this.getAllTransactions();
+        const result: OrderInfoType[] = [];
+        for (const [date, items] of Object.entries(transactions)) {
+            result.push(...this.makeOrderInfo(items.filter(i => i.종목번호.endsWith(code)), date));
+        }
+        return result.sort((a, b) => {
+            if (a.date !== b.date) return a.date.localeCompare(b.date);
             return a.orderno - b.orderno;
         });
-        return orderlist;
     }
 }

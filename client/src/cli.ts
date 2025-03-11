@@ -72,51 +72,74 @@ export class CLI {
                 }
             });
 
-        vorpal.command('show transaction by code <code>')
+        vorpal.command('show transactions by code')
+            .option('-c, --code <code>', '6 digit stock code')
             .validate(args => {
-                const code = Number(args.code);
+                if (args.options.code === undefined) return true;
+                const code = Number(args.options.code);
                 if (isNaN(code) || code > 999999) {
-                    return chalk.red('Invalid code : ') + chalk.yellow(args.code);
+                    return chalk.red('Invalid code : ') + chalk.yellow(args.options.code);
                 }
                 return true;
             })
             .action(async (args) => {
                 if (typeof args === 'string') return;
-                const code = Number(args.code).toString().padStart(6, '0');
-                const name = await this.kiwoomapi.GetMasterCodeName(code);
-                if (name === '') {
-                    console.log(chalk.red('Invalid code : ') + chalk.yellow(code));
-                    return;
-                }
+                const optioncode = args.options.code === undefined ? '' : Number(args.options.code).toString().padStart(6, '0');
                 const transactions = await this.kiwoomutil.getAllTransactions();
-                let total_buy_count = 0;
-                let total_buy_value = 0;
-                let total_sell_count = 0;
-                let total_sell_value = 0;
+                const allcodelist: string[] = [];
                 for (const [, dateitems] of Object.entries(transactions)) {
                     for (const item of dateitems) {
-                        if (item.종목번호.slice(-6) !== code) continue;
-                        if (item.주문유형구분.includes('매도')) {
-                            total_sell_count += parseInt(item.체결수량);
-                            total_sell_value += parseInt(item.체결수량) * parseInt(item.체결단가);
-                        } else {
-                            total_buy_count += parseInt(item.체결수량);
-                            total_buy_value += parseInt(item.체결수량) * parseInt(item.체결단가);
-                        }
+                        const code = item.종목번호.slice(-6);
+                        if (code === '' || allcodelist.includes(code)) continue;
+                        if (optioncode === '' || code === optioncode)
+                            allcodelist.push(code);
                     }
                 }
-                const avg_buy_price = total_buy_value / total_buy_count;
-                const avg_sell_price = total_sell_value / total_sell_count;
-                console.log(name,
-                    chalk.blue(total_buy_count.toString().padStart(10)),
-                    chalk.blueBright(total_buy_value.toString().padStart(10)),
-                    chalk.magenta(avg_buy_price.toFixed(2).padStart(10)),
-                    chalk.red(total_sell_count.toString().padStart(10)),
-                    chalk.redBright(total_sell_value.toString().padStart(10)),
-                    chalk.magenta(avg_sell_price.toFixed(2).padStart(10)),
-                );
 
-                console.log(args);
+                if (allcodelist.length > 0) console.log('--------------------------------');
+                for (const code of allcodelist) {
+                    const name = await this.kiwoomapi.GetMasterCodeName(code);
+                    let total_buy_count = 0;
+                    let total_buy_value = 0;
+                    let total_sell_count = 0;
+                    let total_sell_value = 0;
+                    for (const [, dateitems] of Object.entries(transactions)) {
+                        for (const item of dateitems) {
+                            if (item.종목번호.slice(-6) !== code) continue;
+                            if (item.주문유형구분.includes('매도')) {
+                                total_sell_count += parseInt(item.체결수량);
+                                total_sell_value += parseInt(item.체결수량) * parseInt(item.체결단가);
+                            } else {
+                                total_buy_count += parseInt(item.체결수량);
+                                total_buy_value += parseInt(item.체결수량) * parseInt(item.체결단가);
+                            }
+                        }
+                    }
+                    const avg_buy_price = total_buy_value / total_buy_count;
+                    const avg_sell_price = total_sell_value / total_sell_count;
+                    console.log(name,
+                        chalk.blue(total_buy_count.toString().padStart(10)),
+                        chalk.blueBright(total_buy_value.toString().padStart(10)),
+                        chalk.magenta(avg_buy_price.toFixed(2).padStart(10)),
+                        chalk.red(total_sell_count.toString().padStart(10)),
+                        chalk.redBright(total_sell_value.toString().padStart(10)),
+                        chalk.magenta(avg_sell_price.toFixed(2).padStart(10)),
+                    );
+                    const trans_code = await this.kiwoomutil.getAllTransactionsByCode(code);
+                    for (const item of trans_code) {
+                        console.log(
+                            item.date,
+                            item.orderno.toString().padStart(6),
+                            item.code, item.name.padEnd(16 - getHangulCount(item.name)),
+                            item.type.toString().padStart(4),
+                            item.price.toString().padStart(8),
+                            item.qty_executed.toString().padStart(4),
+                            '/' + item.qty.toString().padStart(3),
+                            (item.price * item.qty_executed).toString().padStart(10)
+                        );
+                    }
+                    console.log('--------------------------------');
+                }
             });
 
         vorpal.command('trade auto <command>', 'command : start | stop | status')
@@ -283,6 +306,21 @@ export class CLI {
 
         vorpal.command('test2').action(async () => {
             await this.cmd_test2(this);
+        });
+        vorpal.command('test3').action(async () => {
+            const result = await this.kiwoomutil.getAllTransactionsByCode('033160');
+            for (const item of result) {
+                console.log(
+                    item.date,
+                    item.orderno.toString().padStart(6),
+                    item.code, item.name.padEnd(16 - getHangulCount(item.name)),
+                    item.type.toString().padStart(4),
+                    item.price.toString().padStart(8),
+                    item.qty_executed.toString().padStart(4),
+                    '/' + item.qty.toString().padStart(3),
+                    (item.price * item.qty_executed).toString().padStart(10)
+                );
+            }
         });
 
         if (this.kiwoomutil.server_type === 'TEST') {
