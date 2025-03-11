@@ -407,6 +407,20 @@ export class KiwoomUtil {
         if (price <= 500000) return Math.floor(price / 500) * 500;
         return Math.floor(price / 1000) * 1000;
     }
+    nextPrice(price: number) {
+        const p = this.makePrice(price);
+        do {
+            price++;
+        } while (p === this.makePrice(price));
+        return this.makePrice(price);
+    }
+    prevPrice(price: number) {
+        const p = this.makePrice(price);
+        do {
+            price--;
+        } while (p === this.makePrice(price));
+        return this.makePrice(price);
+    }
 
     async buy(code: string, qty: number, price: number): Promise<number> {
         const result = await this.kiwoom.SendOrder('buyorder', '2000',
@@ -547,12 +561,14 @@ export class KiwoomUtil {
             .sort((a, b) => a.주문번호.localeCompare(b.주문번호));
 
         for (const item of filtered) {
+            const orderprice = parseInt(item.주문단가);
+            const executedprice = parseInt(item.체결단가);
             const orderitem: OrderInfoType = {
                 code: item.종목번호.slice(-6),
                 name: item.종목명,
                 type: item.주문유형구분.includes('매도') ? 'sell' : 'buy',
                 orderno: parseInt(item.주문번호),
-                price: parseInt(item.주문단가),
+                price: executedprice === 0 ? orderprice : executedprice,
                 qty: parseInt(item.주문수량),
                 qty_executed: parseInt(item.체결수량),
                 time_executed: item.체결시간,
@@ -576,7 +592,11 @@ export class KiwoomUtil {
             }
         }
 
-        orderlist.sort((a, b) => a.orderno - b.orderno);
+        orderlist.sort((a, b) => {
+            const cmp = a.code.localeCompare(b.code);
+            if (cmp !== 0) return cmp;
+            return a.orderno - b.orderno;
+        });
         return orderlist;
     }
 }
