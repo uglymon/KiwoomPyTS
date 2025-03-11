@@ -1,8 +1,10 @@
 import chalk from 'chalk';
 import { KiwoomUtil } from './kiwoomutil';
+import { readFileSync } from 'fs';
 
 export type TradeItemType = {
     code: string;
+    name: string;
     gap: number;
     check_interval: number;
     trade_unit: number;
@@ -12,32 +14,29 @@ export class Trader1 {
     private kiwoomutil: KiwoomUtil;
     private timer: (NodeJS.Timeout | null)[] = [];
 
-    readonly default_items: TradeItemType[] = [
-        /* 엠케이전자 */
-        { code: '033160', gap: 0.02, check_interval: 30, trade_unit: 400000 },
-        /* 삼성전자 */
-        { code: '005930', gap: 0.02, check_interval: 30, trade_unit: 500000 },
-    ];
-
     readonly starttime = '09:01:00';
     readonly endtime = '15:29:00';
 
+    tradeitemlist: TradeItemType[] = [];
+
     constructor(kiwoomutil: KiwoomUtil) {
         this.kiwoomutil = kiwoomutil;
-        for (let i = 0; i < this.default_items.length; i++) {
+        this.tradeitemlist = JSON.parse(readFileSync('../data/tradeitem.json', 'utf8'));
+        console.log(this.tradeitemlist);
+        for (let i = 0; i < this.tradeitemlist.length; i++) {
             this.timer.push(null);
         }
     }
 
     async start() {
         if (this.timer[0] !== null) return;
-        const infolist = await this.kiwoomutil.getStockInfo(this.default_items.map(i => i.code));
+        const infolist = await this.kiwoomutil.getStockInfo(this.tradeitemlist.map(i => i.code));
         for (const info of infolist) {
             await this.kiwoomutil.updateStockList(info);
         }
         console.log(`[${chalk.green('Trader1')}] started.`);
-        for (let i = 0; i < this.default_items.length; i++) {
-            const item = this.default_items[i];
+        for (let i = 0; i < this.tradeitemlist.length; i++) {
+            const item = this.tradeitemlist[i];
             await this.check(item);
             this.timer[i] = setInterval(async () => { await this.check(item); },
                 item.check_interval * 1000);
@@ -46,7 +45,7 @@ export class Trader1 {
 
     async stop() {
         console.log(`[${chalk.red('Trader1')}] stopped.`);
-        for (let i = 0; i < this.default_items.length; i++) {
+        for (let i = 0; i < this.tradeitemlist.length; i++) {
             const timer = this.timer[i];
             if (timer !== null) {
                 clearInterval(timer);
