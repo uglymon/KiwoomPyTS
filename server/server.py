@@ -1,11 +1,18 @@
 import asyncio
+import ctypes
 import inspect
 import json
+import os
 import re
+import sys
+import time
 
 import colorama
 import pythoncom
 import websockets
+import win32api
+import win32con
+import win32gui
 from kiwoomapiwrapper import KiwoomAPIWrapper
 
 # 웹소켓 연결을 전역적으로 관리
@@ -398,8 +405,81 @@ def on_receive_tr_condition(
             colorama.Fore.MAGENTA, "websocket_connection not found", colorama.Fore.RESET
         )
 
+def window_enumeration_handler(hwnd, top_windows):
+    top_windows.append((hwnd, win32gui.GetWindowText(hwnd)))
+
+def find_window(caption):
+    hwnd = win32gui.FindWindow(None, caption)
+    if hwnd == 0:
+        windows = []
+        win32gui.EnumWindows(window_enumeration_handler, windows)
+        for handle, title in windows:
+            if caption in title:
+                hwnd = handle
+                break
+    return hwnd
+
+def left_click(x, y, hwnd):
+    lParam = win32api.MAKELONG(x, y)
+    win32gui.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
+    win32api.Sleep(50)
+    win32gui.SendMessage(hwnd, win32con.WM_LBUTTONUP, 0, lParam)
+    win32api.Sleep(50)
+
+def double_click(x, y, hwnd):
+    left_click(x, y, hwnd)
+    win32api.Sleep(100)
+    left_click(x, y, hwnd)
+    win32api.Sleep(150)
+
+def enter_keys(hwnd, data, interval=150):
+    win32api.SendMessage(hwnd, win32con.EM_SETSEL, 0, -1)
+    win32api.SendMessage(hwnd, win32con.EM_REPLACESEL, 0, data)
+    win32api.Sleep(interval)
+
+def auto_login(userid, userpwd, usercertpwd):
+    hwnd = 0
+    while hwnd == 0:
+        hwnd = find_window("Open API Login")
+        if hwnd == 0:
+            time.sleep(0.1)
+        else:
+            break
+
+    print("Open API Login window found, handle :", hwnd)
+    time.sleep(0.5)
+    input_id = win32gui.GetDlgItem(hwnd, 0x3E8)
+    input_pwd = win32gui.GetDlgItem(hwnd, 0x3E9)
+    input_certpwd = win32gui.GetDlgItem(hwnd, 0x3EA)
+    button_login = win32gui.GetDlgItem(hwnd, 0x1)
+
+    double_click(15, 15, input_id)
+    time.sleep(0.1)
+    enter_keys(input_id, userid)
+    time.sleep(0.1)
+
+    double_click(15, 15, input_pwd)
+    time.sleep(0.1)
+    enter_keys(input_pwd, userpwd)
+    time.sleep(0.1)
+
+    double_click(15, 15, input_certpwd)
+    time.sleep(0.1)
+    enter_keys(input_certpwd, usercertpwd)
+    time.sleep(0.1)
+    
+    left_click(15, 15, button_login)
+
 
 if __name__ == "__main__":
+    if ctypes.windll.shell32.IsUserAnAdmin() == False:
+        print("Please run as administrator!")
+        sys.exit()
+
+    userid = sys.argv[1] if len(sys.argv) > 1 else None
+    userpwd = sys.argv[2] if len(sys.argv) > 2 else None
+    usercertpwd = sys.argv[3] if len(sys.argv) > 3 else None
+
     kiwoom = KiwoomAPIWrapper(
         on_event_connect=on_event_connect,
         on_receive_msg=on_receive_msg,
@@ -413,5 +493,8 @@ if __name__ == "__main__":
     module_path = kiwoom.GetAPIModulePath()
     print("module_path :", module_path)
     kiwoom.CommConnect()
+
+    if os.path.isfile("C:/KiwoomApi/OpenAPI/system/Autologin.dat") == False:
+        auto_login(userid, userpwd, usercertpwd)
 
     asyncio.run(server_loop())
