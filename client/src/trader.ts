@@ -121,9 +121,9 @@ export class Trader1 {
         await this.kiwoomutil.getAccountStatus();
         const holdingitem = this.kiwoomutil.stockholding_list.find(h => h.code === code);
         if (holdingitem === undefined || holdingitem.current_count < sellqty) {
-            const basebuyprice = this.kiwoomutil.makePrice(baseprice * 1.002);
-            await this.kiwoomutil.buy(code, Math.floor(buyqty * 2.5), basebuyprice);
-            console.log(`[${chalk.green('Trader1')}] buy(baseprice) ${code} ${basebuyprice}x${Math.floor(buyqty * 2.5)}`);
+            const startbuyprice = lastorder === undefined ? stockinfo.price : buyprice;
+            await this.kiwoomutil.buy(code, Math.floor(buyqty * 2.5), startbuyprice);
+            console.log(`[${chalk.green('Trader1')}] buy(baseprice) ${code} ${startbuyprice}x${Math.floor(buyqty * 2.5)}`);
 
         } else {
             await this.kiwoomutil.sell(code, sellqty, sellprice);
